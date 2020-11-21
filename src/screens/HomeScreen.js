@@ -7,8 +7,8 @@ MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
 
 const HomeScreen = ({ route, navigation }) => {
   const { email } = route.params;
-
   const [coordinates] = useState([-83.7028, 9.3755]);
+
   return (
     <View style={styles.mainView}>
       <Text style={{ marginTop: 20 }}>Mapa</Text>
