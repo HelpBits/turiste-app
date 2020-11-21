@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Image, Text, TextInput, TouchableOpacity, View, StyleSheet} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import { colors } from '../styles/theme'
+import auth from '@react-native-firebase/auth';
 
 
 export default function LoginScreen({navigation}) {
@@ -12,7 +13,29 @@ export default function LoginScreen({navigation}) {
     navigation.navigate('SignUpScreen');
   };
 
-  const onLoginPress = () => {};
+  const onLoginPress = async() => {
+    if (!email) {
+      alert("E-mail is required.");
+      return;
+    }
+
+    if (!password) {
+      alert("Passwords is required.");
+      return;
+    }
+
+
+    
+    try {
+      console.log('login data ' + email  + ' ---- ' + password);
+      const login = await auth().signInWithEmailAndPassword(email, password);
+      if(login.user) {
+        navigation.navigate('HomeScreen');
+      }
+    }catch (e) {
+      Alert.alert(e.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
