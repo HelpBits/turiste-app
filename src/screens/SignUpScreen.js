@@ -1,9 +1,22 @@
 import React, {useState} from 'react';
-import {Alert, Image, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {colors} from '../styles/theme';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
+import {RolesEnum} from '../constants/RoleEnum';
+import {MFUser} from '../firebase/collections/MFUser';
 
+const users = firestore().collection(FirebaseCollectionEnum.MFUser);
+const roles = firestore().collection(FirebaseCollectionEnum.MFRole);
 
 export default function RegistrationScreen({navigation}) {
   const [username, setUsername] = useState('');
@@ -22,12 +35,28 @@ export default function RegistrationScreen({navigation}) {
     }
 
     try {
-      const register = await auth().createUserWithEmailAndPassword(email, password);
-      if(register.user) {
-        // TODO: Create user document firebase 
-        navigation.navigate('LoginScreen');
+      const register = await auth().createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+      if (register.user) {
+        roles.onSnapshot(async(snapshot) => {
+          const rolesCollection = snapshot.docs.map((doc) => ({
+            ...doc.data(),
+          }));
+
+          const userRole = rolesCollection.filter(
+            (role) => (role.name == RolesEnum.User),
+          );
+          
+          const newUser = new MFUser(email, username, false, userRole[0], [], []);
+           
+          await users.add(newUser);
+          navigation.navigate('LoginScreen');
+        });
+
       }
-    }catch (e) {
+    } catch (e) {
       Alert.alert(e.message);
     }
   };
