@@ -66,6 +66,7 @@ const LoginScreen = ({ navigation }) => {
         <TouchableOpacity onPress={doSignIn} style={styles.loginButton}>
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
+        <Text>Crear cuenta</Text>
       </View>
     </React.Fragment>
   );
