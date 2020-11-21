@@ -26,9 +26,10 @@ const HomeScreen = ({route, navigation}) => {
     return navigation.navigate('LoginScreen');
   }
 
-  const [coordinates] = useState([-83.7028, 9.3755]);
+  // const [coordinates] = useState([-83.7028, 9.3755]);
   return (
-    <View style={styles.mainView}>
+    <Text>HELLO WORLD</Text>
+   /* <View style={styles.mainView}>
       <Text style={{marginTop: 20}}>Mapa</Text>
       <Text style={{margin: 10}}>Hi {email}</Text>
       <View style={styles.container}>
@@ -45,7 +46,7 @@ const HomeScreen = ({route, navigation}) => {
         title="Log Out"
         onPress={() => navigation.navigate('LoginScreen')}
       />
-    </View>
+    </View>*/
   );
 };
 
