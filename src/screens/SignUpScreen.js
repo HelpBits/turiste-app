@@ -5,6 +5,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -13,10 +14,28 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
 import {RolesEnum} from '../constants/RoleEnum';
+import {FirebaseAuthErrorEnum} from '../constants/FirebaseAuthErrorEnum';
+import {MessagesConstants} from '../constants/MessagesConstants';
 import {MFUser} from '../firebase/collections/MFUser';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import validations from '../utils/validation';
 
 const users = firestore().collection(FirebaseCollectionEnum.MFUser);
 const roles = firestore().collection(FirebaseCollectionEnum.MFRole);
+
+// calculate the date five year ago
+const currentDate = new Date();
+const fiveYearsAgo = new Date(
+  currentDate.getFullYear() - 5,
+  currentDate.getMonth(),
+  currentDate.getDay(),
+);
+const minDate = new Date(
+  currentDate.getFullYear() - 100,
+  currentDate.getMonth(),
+  currentDate.getDay(),
+);
+const defaultDate = fiveYearsAgo;
 
 export default function RegistrationScreen({navigation}) {
   const [username, setUsername] = useState('');
@@ -24,13 +43,59 @@ export default function RegistrationScreen({navigation}) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  // date picker
+  // taken from https://github.com/react-native-datetimepicker/datetimepicker
+  const [birthdate, setBirthdate] = useState(defaultDate);
+  const [mode, setMode] = useState('date');
+  const [show, setShow] = useState(false);
+
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || birthdate;
+    setShow(Platform.OS === 'ios');
+    setBirthdate(currentDate);
+  };
+
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
   const onFooterLinkPress = () => {
     navigation.navigate('LoginScreen');
   };
 
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const getDate = () => {
+    if (birthdate === defaultDate) return 'Date of birth';
+    return birthdate.toLocaleDateString();
+  };
+
   const onRegisterPress = async () => {
+    if (!username) {
+      Alert.alert('Email is required.');
+      return;
+    }
+
+    if (!birthdate === defaultDate) {
+      Alert.alert('Date of birth is required.');
+      return;
+    }
+
+    if (!email) {
+      Alert.alert('Email is required.');
+      return;
+    }
+
+    if (!validations.validateEmail(email)) {
+      Alert.alert('Incorect email format');
+      return;
+    }
+
     if (password !== confirmPassword) {
-      alert("Passwords don't match.");
+      Alert.alert("Passwords don't match.");
       return;
     }
 
@@ -40,24 +105,37 @@ export default function RegistrationScreen({navigation}) {
         password,
       );
       if (register.user) {
-        roles.onSnapshot(async(snapshot) => {
+        roles.onSnapshot(async (snapshot) => {
           const rolesCollection = snapshot.docs.map((doc) => ({
             ...doc.data(),
           }));
 
           const userRole = rolesCollection.filter(
-            (role) => (role.name == RolesEnum.User),
+            (role) => role.name == RolesEnum.User,
           );
-          
-          const newUser = new MFUser(email, username, false, userRole[0], [], []);
-           
+
+          const newUser = new MFUser(
+            email,
+            username,
+            birthdate,
+            false,
+            userRole[0],
+            [],
+            [],
+          );
+
           await users.add(newUser);
           navigation.navigate('LoginScreen');
         });
-
       }
     } catch (e) {
-      Alert.alert(e.message);
+      if (e.code === FirebaseAuthErrorEnum.InUse) {
+        Alert.alert(MessagesConstants.EmailInUse);
+      }
+      if (e.code === FirebaseAuthErrorEnum.InvalidEmail) {
+        Alert.alert(MessagesConstants.EmailInvalid);
+      }
+      console.log(e);
     }
   };
 
@@ -76,6 +154,29 @@ export default function RegistrationScreen({navigation}) {
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
+        <TouchableWithoutFeedback
+          style={styles.birthdatePicker}
+          onPress={showDatepicker}>
+          <View style={styles.birthdatePicker}>
+            <Image
+              style={styles.birthdatePhoto}
+              source={require('../../assets/icon-calendar.png')}
+            />
+            <Text> {getDate()}</Text>
+          </View>
+        </TouchableWithoutFeedback>
+        {show && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={birthdate}
+            mode={mode}
+            minimumDate={minDate}
+            maximumDate={defaultDate}
+            is24Hour={true}
+            display="default"
+            onChange={onChange}
+          />
+        )}
         <TextInput
           style={styles.input}
           placeholder="E-mail"
@@ -84,6 +185,8 @@ export default function RegistrationScreen({navigation}) {
           value={email}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
+          keyboardType="email-address"
+          returnKeyType="next"
         />
         <TextInput
           style={styles.input}
@@ -142,7 +245,7 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 5,
     overflow: 'hidden',
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     marginTop: 10,
     marginBottom: 10,
     marginLeft: 30,
@@ -177,5 +280,34 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  birthdatePicker: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    flex: 1,
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
+    paddingLeft: 16,
+    height: 48,
+  },
+  birthdateButton: {
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  birthdateText: {
+    backgroundColor: colors.primary,
+    width: '30%',
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 10,
+  },
+  birthdatePhoto: {
+    height: 40,
+    width: 40,
   },
 });

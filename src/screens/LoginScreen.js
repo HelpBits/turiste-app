@@ -1,9 +1,20 @@
 import React, {useState} from 'react';
-import {Image, Text, TextInput, TouchableOpacity, View, StyleSheet} from 'react-native';
+import {
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  Alert
+} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import { colors } from '../styles/theme'
+import {colors} from '../styles/theme';
 import auth from '@react-native-firebase/auth';
+import validations from '../utils/validation';
 
+import {FirebaseAuthErrorEnum} from '../constants/FirebaseAuthErrorEnum';
+import {MessagesConstants} from '../constants/MessagesConstants';
 
 export default function LoginScreen({navigation}) {
   const [email, setEmail] = useState('');
@@ -13,27 +24,44 @@ export default function LoginScreen({navigation}) {
     navigation.navigate('SignUpScreen');
   };
 
-  const onLoginPress = async() => {
+  const onLoginPress = async () => {
     if (!email) {
-      alert("E-mail is required.");
+      Alert.alert('E-mail is required.');
+      return;
+    }
+
+    if (!validations.validateEmail(email)) {
+      Alert.alert('Incorect email format');
       return;
     }
 
     if (!password) {
-      alert("Passwords is required.");
+      Alert.alert('Passwords is required.');
       return;
     }
 
-
-    
     try {
-      console.log('login data ' + email  + ' ---- ' + password);
       const login = await auth().signInWithEmailAndPassword(email, password);
-      if(login.user) {
+      if (login.user) {
         navigation.navigate('HomeScreen');
       }
-    }catch (e) {
-      Alert.alert(e.message);
+    } catch (e) {
+      if (e.code === FirebaseAuthErrorEnum.InUse) {
+        Alert.alert(MessagesConstants.EmailInUse);
+      }
+
+      if (e.code === FirebaseAuthErrorEnum.InvalidEmail) {
+        Alert.alert(MessagesConstants.EmailInvalid);
+      }
+
+      if (e.code === FirebaseAuthErrorEnum.UserNotFound) {
+        Alert.alert(MessagesConstants.EmailNotFound);
+      }
+
+      if (e.code === FirebaseAuthErrorEnum.WrongPassword) {
+        Alert.alert(MessagesConstants.WrongPassword);
+      }
+      console.log(e);
     }
   };
 
@@ -42,10 +70,7 @@ export default function LoginScreen({navigation}) {
       <KeyboardAwareScrollView
         style={{flex: 1, width: '100%'}}
         keyboardShouldPersistTaps="always">
-        <Image
-          style={styles.logo}
-          source={require('../../assets/icon3.png')}
-        />
+        <Image style={styles.logo} source={require('../../assets/icon3.png')} />
         <TextInput
           style={styles.input}
           placeholder="E-mail"
@@ -54,6 +79,8 @@ export default function LoginScreen({navigation}) {
           value={email}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
+          returnKeyType="next"
+          keyboardType="email-address"
         />
         <TextInput
           style={styles.input}
@@ -79,8 +106,6 @@ export default function LoginScreen({navigation}) {
       </KeyboardAwareScrollView>
     </View>
   );
-
-  
 }
 
 const styles = StyleSheet.create({
