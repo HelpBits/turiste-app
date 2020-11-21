@@ -9,18 +9,19 @@ import {
 
 const { width, height } = Dimensions.get('window');
 
-const DashboardComponent = ({ setModalVisible, modalVisible }) => {
+const DashboardComponent = ({ setModalVisible, modalVisible, selectedPoint }) => {
   return (
     <View style={styles.centeredView}>
       <View style={styles.modalView}>
-        <Text style={styles.modalText}>Hello World!</Text>
+        <Text style={styles.modalText}>{selectedPoint.name}</Text>
+        <Text style={styles.modalText}>{selectedPoint.point.toString()}</Text>
 
         <TouchableHighlight
           style={styles.closeButton}
           onPress={() => {
             setModalVisible(!modalVisible);
           }}>
-          <Text style={styles.textStyle}>Hide Modal</Text>
+          <Text style={styles.textStyle}>Ocultar</Text>
         </TouchableHighlight>
       </View>
     </View>
@@ -55,6 +56,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2,
+    width: width - 256,
   },
   textStyle: {
     color: 'white',
