@@ -1,13 +1,12 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { StyleSheet } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Map from "./src/components/Map";
 
 import LoginScreen from './src/screens/LoginScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import DetailsScreen from './src/screens/DetailsScreen';
 
 const Stack = createStackNavigator();
 
@@ -26,8 +25,8 @@ const App = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="MapScreen"
-          component={Map}
+          name="DetailsScreen"
+          component={DetailsScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

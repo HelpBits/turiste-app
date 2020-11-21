@@ -9,8 +9,9 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
+import login from '../services/login.service';
 
-import { colors } from "../styles/theme";
+import { colors } from '../styles/theme';
 
 const { width, height } = Dimensions.get('window');
 
@@ -18,23 +19,29 @@ const LoginScreen = ({ navigation }) => {
   let [email, handleEmail] = useState('');
   let [password, handlePassword] = useState('');
 
-  let login = () => {
+  let doSignIn = () => {
     if (!email) {
-      Alert.alert("Ingresa un correo valido")
+      Alert.alert('Ingresa un correo valido');
     }
     if (!password) {
-      Alert.alert("Ingresa tu contrasena")
+      Alert.alert('Ingresa tu contrasena');
     }
     if (email && password) {
       navigation.navigate('HomeScreen', { email: email });
+      login()
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
     }
   };
 
   return (
     <React.Fragment>
       <View style={styles.container}>
-        <Image source={require('../../assets/icon3.png')} styles={styles.logo} />
-        <View style={{ marginTop: 50 }}></View>
+        <Image
+          source={require('../../assets/icon3.png')}
+          styles={styles.logo}
+        />
+        <View style={{ marginTop: 50 }} />
         <TextInput
           style={styles.input}
           onChangeText={handleEmail}
@@ -56,7 +63,7 @@ const LoginScreen = ({ navigation }) => {
           textContentType="password"
           secureTextEntry={true}
         />
-        <TouchableOpacity onPress={login} style={styles.loginButton}>
+        <TouchableOpacity onPress={doSignIn} style={styles.loginButton}>
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
       </View>
