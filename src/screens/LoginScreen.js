@@ -1,104 +1,116 @@
-import React, { useState } from 'react';
-import {
-  TouchableOpacity,
-  Dimensions,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TextInput,
-  Alert,
-} from 'react-native';
-import login from '../services/login.service';
+import React, {useState} from 'react';
+import {Image, Text, TextInput, TouchableOpacity, View, StyleSheet} from 'react-native';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { colors } from '../styles/theme'
 
-import { colors } from '../styles/theme';
 
-const { width, height } = Dimensions.get('window');
+export default function LoginScreen({navigation}) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-const LoginScreen = ({ navigation }) => {
-  let [email, handleEmail] = useState('');
-  let [password, handlePassword] = useState('');
-
-  let doSignIn = () => {
-    if (!email) {
-      Alert.alert('Ingresa un correo valido');
-    }
-    if (!password) {
-      Alert.alert('Ingresa tu contrasena');
-    }
-    if (email && password) {
-      navigation.navigate('HomeScreen', { email: email });
-      login()
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
-    }
+  const onFooterLinkPress = () => {
+    navigation.navigate('SignUpScreen');
   };
 
+  const onLoginPress = () => {};
+
   return (
-    <React.Fragment>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <KeyboardAwareScrollView
+        style={{flex: 1, width: '100%'}}
+        keyboardShouldPersistTaps="always">
         <Image
+          style={styles.logo}
           source={require('../../assets/icon3.png')}
-          styles={styles.logo}
         />
-        <View style={{ marginTop: 50 }} />
         <TextInput
           style={styles.input}
-          onChangeText={handleEmail}
+          placeholder="E-mail"
+          placeholderTextColor="#aaaaaa"
+          onChangeText={(text) => setEmail(text)}
           value={email}
-          placeholder="Email"
-          placeholderTextColor="#888888"
+          underlineColorAndroid="transparent"
           autoCapitalize="none"
-          returnKeyType="next"
-          keyboardType="email-address"
         />
         <TextInput
           style={styles.input}
-          onChangeText={handlePassword}
-          value={password}
+          placeholderTextColor="#aaaaaa"
+          secureTextEntry
           placeholder="Password"
-          placeholderTextColor="#888888"
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+          underlineColorAndroid="transparent"
           autoCapitalize="none"
-          returnKeyType="done"
-          textContentType="password"
-          secureTextEntry={true}
         />
-        <TouchableOpacity onPress={doSignIn} style={styles.loginButton}>
-          <Text style={styles.buttonText}>Sign In</Text>
+        <TouchableOpacity style={styles.button} onPress={() => onLoginPress()}>
+          <Text style={styles.buttonTitle}>Log in</Text>
         </TouchableOpacity>
-        <Text>Crear cuenta</Text>
-      </View>
-    </React.Fragment>
+        <View style={styles.footerView}>
+          <Text style={styles.footerText}>
+            Don't have an account?{' '}
+            <Text onPress={onFooterLinkPress} style={styles.footerLink}>
+              Sign up
+            </Text>
+          </Text>
+        </View>
+      </KeyboardAwareScrollView>
+    </View>
   );
-};
+
+  
+}
 
 const styles = StyleSheet.create({
-  logo: {
-    marginBottom: 50,
-  },
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 23,
   },
-  loginButton: {
-    backgroundColor: colors.primary,
-    padding: 12,
-    marginTop: 10,
-    width: 150,
-    alignItems: 'center',
-    borderRadius: 20,
+  title: {},
+  logo: {
+    flex: 1,
+    height: 120,
+    width: 90,
+    alignSelf: 'center',
+    margin: 30,
   },
   input: {
-    margin: 10,
-    padding: 10,
-    height: 40,
-    width: width - (width - 256),
-    borderColor: '#888888',
-    borderWidth: 1,
-    borderRadius: 50,
+    height: 48,
+    borderRadius: 5,
+    overflow: 'hidden',
+    backgroundColor: 'white',
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 30,
+    marginRight: 30,
+    paddingLeft: 16,
+  },
+  button: {
+    backgroundColor: colors.primary,
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 20,
+    height: 48,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonTitle: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  footerView: {
+    flex: 1,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  footerText: {
+    fontSize: 16,
+    color: '#2e2e2d',
+  },
+  footerLink: {
+    color: colors.primary,
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
-
-export default LoginScreen;
