@@ -9,11 +9,10 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import login from '../services/login.service';
 
 import { colors } from '../styles/theme';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const LoginScreen = ({ navigation }) => {
   let [email, handleEmail] = useState('');
@@ -28,9 +27,6 @@ const LoginScreen = ({ navigation }) => {
     }
     if (email && password) {
       navigation.navigate('HomeScreen', { email: email });
-      login()
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
     }
   };
 
@@ -66,7 +62,6 @@ const LoginScreen = ({ navigation }) => {
         <TouchableOpacity onPress={doSignIn} style={styles.loginButton}>
           <Text style={styles.buttonText}>Sign In</Text>
         </TouchableOpacity>
-        <Text>Crear cuenta</Text>
       </View>
     </React.Fragment>
   );
