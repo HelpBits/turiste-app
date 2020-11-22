@@ -1,23 +1,36 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  Button,
-  StyleSheet,
-  Alert,
-  Modal,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, Text, Button, StyleSheet, Alert, Modal} from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
-import { MAPBOX_ACCESSTOKEN } from '@env';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import {MAPBOX_ACCESSTOKEN} from '@env';
+import {TouchableHighlight} from 'react-native-gesture-handler';
 import DashboardComponent from '../components/DashboardComponent';
+import auth from '@react-native-firebase/auth';
 
-MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
+MapboxGL.setAccessToken(
+  'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA',
+);
 
-const HomeScreen = ({ route, navigation }) => {
-  const { email } = route.params;
+const HomeScreen = ({route, navigation}) => {
+  const [initiliazing, setInitiliazing] = useState(true);
+  const [user, setUser] = useState();
   const [coordinates] = useState([-83.7028, 9.3755]);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const onAuthStateChanged = (user) => {
+    setUser(user);
+    if (initiliazing) setInitiliazing(false);
+  };
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  }, []);
+
+  if (initiliazing) return null;
+
+  if (!user) {
+    return navigation.navigate('LoginScreen');
+  }
 
   return (
     <>
@@ -34,7 +47,6 @@ const HomeScreen = ({ route, navigation }) => {
         />
       </Modal>
       <View style={styles.mainView}>
-        <Text style={{ margin: 10 }}>Hi {email}</Text>
         <View style={styles.container}>
           <MapboxGL.MapView style={styles.map} showUserLocation={true}>
             <MapboxGL.Camera zoomLevel={6} centerCoordinate={coordinates} />
