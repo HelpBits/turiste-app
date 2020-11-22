@@ -17,6 +17,7 @@
 		2DCD954D1E0B4F2C00145EB5 /* turisteAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* turisteAppTests.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8D3A6812519FC8CEE87CF397 /* libPods-turisteApp-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 73C9A71462B2BFD41ACAA756 /* libPods-turisteApp-tvOSTests.a */; };
+		AD4580F9256A1E810054571C /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = AD4580F8256A1E810054571C /* GoogleService-Info.plist */; };
 		C8C1AFCA2D85B1F6EC5372EF /* libPods-turisteApp-turisteAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ED2F80E34EF21B34D457989 /* libPods-turisteApp-turisteAppTests.a */; };
 		DB757F26A8C2597A205E4C82 /* libPods-turisteApp-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E9CE322669FF5213173CB199 /* libPods-turisteApp-tvOS.a */; };
 		E55DB650303A42D7F1C2FF04 /* libPods-turisteApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6AD8C0D16ACE71ADA5ECC90 /* libPods-turisteApp.a */; };
@@ -59,6 +60,7 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = turisteApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9878DC06D12B403BBA1054DE /* Pods-turisteApp-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-turisteApp-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-turisteApp-tvOSTests/Pods-turisteApp-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		9ED2F80E34EF21B34D457989 /* libPods-turisteApp-turisteAppTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-turisteApp-turisteAppTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD4580F8256A1E810054571C /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		AF07B244F29EAA0234C143BE /* Pods-turisteApp-turisteAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-turisteApp-turisteAppTests.release.xcconfig"; path = "Target Support Files/Pods-turisteApp-turisteAppTests/Pods-turisteApp-turisteAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		D60676EEFE3B7249B540A28E /* Pods-turisteApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-turisteApp.debug.xcconfig"; path = "Target Support Files/Pods-turisteApp/Pods-turisteApp.debug.xcconfig"; sourceTree = "<group>"; };
 		E6AD8C0D16ACE71ADA5ECC90 /* libPods-turisteApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-turisteApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,6 +127,7 @@
 		13B07FAE1A68108700A75B9A /* turisteApp */ = {
 			isa = PBXGroup;
 			children = (
+				AD4580F8256A1E810054571C /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -194,7 +197,6 @@
 				6B281B2666FB207ACB3B5788 /* Pods-turisteApp-tvOSTests.debug.xcconfig */,
 				9878DC06D12B403BBA1054DE /* Pods-turisteApp-tvOSTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -345,6 +347,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				AD4580F9256A1E810054571C /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -557,6 +560,7 @@
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC-C++/gRPCCertificates-Cpp.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -578,6 +582,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gRPCCertificates-Cpp.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -609,6 +614,7 @@
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/gRPC-C++/gRPCCertificates-Cpp.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
@@ -630,6 +636,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/gRPCCertificates-Cpp.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -785,7 +792,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.turisteapp;
 				PRODUCT_NAME = turisteApp;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -807,7 +814,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.turisteapp;
 				PRODUCT_NAME = turisteApp;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
