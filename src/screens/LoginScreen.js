@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Image,
   Text,
@@ -8,15 +8,15 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {colors} from '../styles/theme';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { colors } from '../styles/theme';
 import auth from '@react-native-firebase/auth';
 import validations from '../utils/validation';
 
-import {FirebaseAuthErrorEnum} from '../constants/FirebaseAuthErrorEnum';
-import {MessagesConstants} from '../constants/MessagesConstants';
+import { FirebaseAuthErrorEnum } from '../constants/FirebaseAuthErrorEnum';
+import { MessagesConstants } from '../constants/MessagesConstants';
 
-export default function LoginScreen({navigation}) {
+export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -67,7 +67,7 @@ export default function LoginScreen({navigation}) {
   return (
     <View style={styles.container}>
       <KeyboardAwareScrollView
-        style={{flex: 1, width: '100%'}}
+        style={{ flex: 1, width: '100%' }}
         keyboardShouldPersistTaps="always">
         <Image style={styles.logo} source={require('../../assets/icon3.png')} />
         <TextInput
