@@ -4,7 +4,6 @@ import {
   Image,
   Text,
   TextInput,
-  Input,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -49,9 +48,9 @@ export default function RegistrationScreen({ navigation }) {
   const [show, setShow] = useState(false);
 
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || birthdate;
+    const date = selectedDate || birthdate;
     setShow(Platform.OS === 'ios');
-    setBirthdate(currentDate);
+    setBirthdate(date);
   };
 
   const showMode = (currentMode) => {
@@ -195,7 +194,6 @@ export default function RegistrationScreen({ navigation }) {
           placeholderTextColor="#aaaaaa"
           secureTextEntry={true}
           placeholder="Contraseña"
-          // placeholderTextColor="#888888"
           onChangeText={setPassword}
           value={password}
           underlineColorAndroid="transparent"

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,18 +7,18 @@ import {
   Alert,
   TouchableOpacity,
   Modal,
-  Dimensions,
 } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
-import {MAPBOX_ACCESSTOKEN} from '@env';
+import { MAPBOX_ACCESSTOKEN } from '@env';
 import DashboardComponent from '../components/DashboardComponent';
-import AddNewPointComponent from '../components/AddNewPointComponent';
+import SelectNewPointComponent from '../components/SelectNewPointComponent';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import auth from '@react-native-firebase/auth';
+import AnnotationContent from '../components/AnnotationContentComponent';
 
 MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   const [initiliazing, setInitiliazing] = useState(true);
   const [user, setUser] = useState();
   const [modalVisible, setModalVisible] = useState(false);
@@ -29,26 +29,13 @@ const HomeScreen = ({navigation}) => {
   const [selectedPoint, setSelectedPoint] = useState({});
 
   const testCoordinates = [
-    {id: '001', name: 'PZ', point: [-83.7028, 9.3755]},
-    {id: '002', name: 'SC', point: [-85.3509, 10.1929]},
-    {id: '003', name: 'Maquenque', point: [-84.1319, 10.6552]},
+    { id: '001', name: 'PZ', point: [-83.7028, 9.3755] },
+    { id: '002', name: 'SC', point: [-85.3509, 10.1929] },
+    { id: '003', name: 'Maquenque', point: [-84.1319, 10.6552] },
   ];
 
-  const iconPressed = ({coordinate}) => {
-    setSelectedPoint(coordinate);
-  };
-
-  const AnnotationContent = ({coordinate}) => (
-    <TouchableOpacity
-      style={styles.touchable}
-      onPress={() => iconPressed({coordinate})}>
-      <Icon name="map-marker" color="red" />
-      <Text style={styles.touchableText}>{coordinate.name}</Text>
-    </TouchableOpacity>
-  );
-
-  const onAuthStateChanged = (user) => {
-    setUser(user);
+  const onAuthStateChanged = (actualUser) => {
+    setUser(actualUser);
     if (initiliazing) {
       setInitiliazing(false);
     }
@@ -88,14 +75,13 @@ const HomeScreen = ({navigation}) => {
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
         }}>
-        <AddNewPointComponent
-          newPointModalVisible={newPointModalVisible}
+        <SelectNewPointComponent
           setNewPointModalVisible={setNewPointModalVisible}
         />
       </Modal>
       <View style={styles.mainView}>
         <View style={styles.header}>
-          <Text style={{margin: 10}}>Hi</Text>
+          <Text style={{ margin: 10 }}>Hi</Text>
           <Button
             title="LOGOUT"
             onPress={() => navigation.navigate('LoginScreen')}
@@ -109,7 +95,10 @@ const HomeScreen = ({navigation}) => {
                 coordinate={coordinate.point}
                 id={coordinate.id}
                 key={coordinate.id}>
-                <AnnotationContent coordinate={coordinate} />
+                <AnnotationContent
+                  coordinate={coordinate}
+                  setSelectedPoint={setSelectedPoint}
+                />
               </MapboxGL.PointAnnotation>
             ))}
             <TouchableOpacity
@@ -135,6 +124,7 @@ const styles = StyleSheet.create({
   mainView: {
     flex: 1,
     marginTop: 75,
+    height: '80%',
   },
   mapContainer: {
     height: '95%',
