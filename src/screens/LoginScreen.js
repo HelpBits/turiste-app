@@ -26,17 +26,17 @@ export default function LoginScreen({navigation}) {
 
   const onLoginPress = async () => {
     if (!email) {
-      Alert.alert('E-mail is required.');
+      Alert.alert('Correo es requerido.');
       return;
     }
 
     if (!validations.validateEmail(email)) {
-      Alert.alert('Incorect email format');
+      Alert.alert('Formato de correo incorrecto');
       return;
     }
 
     if (!password) {
-      Alert.alert('Passwords is required.');
+      Alert.alert('Contraseña es requerida');
       return;
     }
 
