@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
-  Alert
+  Alert,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {colors} from '../styles/theme';
@@ -61,7 +61,6 @@ export default function LoginScreen({navigation}) {
       if (e.code === FirebaseAuthErrorEnum.WrongPassword) {
         Alert.alert(MessagesConstants.WrongPassword);
       }
-      console.log(e);
     }
   };
 
@@ -73,7 +72,7 @@ export default function LoginScreen({navigation}) {
         <Image style={styles.logo} source={require('../../assets/icon3.png')} />
         <TextInput
           style={styles.input}
-          placeholder="E-mail"
+          placeholder="Correo"
           placeholderTextColor="#aaaaaa"
           onChangeText={(text) => setEmail(text)}
           value={email}
@@ -86,20 +85,20 @@ export default function LoginScreen({navigation}) {
           style={styles.input}
           placeholderTextColor="#aaaaaa"
           secureTextEntry
-          placeholder="Password"
+          placeholder="Contraseña"
           onChangeText={(text) => setPassword(text)}
           value={password}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
         <TouchableOpacity style={styles.button} onPress={() => onLoginPress()}>
-          <Text style={styles.buttonTitle}>Log in</Text>
+          <Text style={styles.buttonTitle}>Iniciar sesión</Text>
         </TouchableOpacity>
         <View style={styles.footerView}>
           <Text style={styles.footerText}>
-            Don't have an account?{' '}
+            ¿No tienes cuenta?{' '}
             <Text onPress={onFooterLinkPress} style={styles.footerLink}>
-              Sign up
+              Crear cuenta
             </Text>
           </Text>
         </View>

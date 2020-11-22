@@ -6,7 +6,9 @@ import {TouchableHighlight} from 'react-native-gesture-handler';
 import DashboardComponent from '../components/DashboardComponent';
 import auth from '@react-native-firebase/auth';
 
-MapboxGL.setAccessToken('pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA');
+MapboxGL.setAccessToken(
+  'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA',
+);
 
 const HomeScreen = ({route, navigation}) => {
   const [initiliazing, setInitiliazing] = useState(true);

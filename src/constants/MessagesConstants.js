@@ -1,6 +1,6 @@
-export const MessagesConstants = { 
-    EmailInUse: 'Email ya está siendo utilizado.',
-    EmailNotFound: 'Email no coincide con ninguna cuenta.',
-    EmailInvalid: 'Email inválido.',
-    WrongPassword: 'Contraseña incorrecta'
+export const MessagesConstants = {
+  EmailInUse: 'Correo ya está siendo utilizado.',
+  EmailNotFound: 'Correo no coincide con ninguna cuenta.',
+  EmailInvalid: 'Correo inválido.',
+  WrongPassword: 'Contraseña incorrecta',
 };

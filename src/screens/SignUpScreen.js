@@ -43,8 +43,6 @@ export default function RegistrationScreen({navigation}) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  // date picker
-  // taken from https://github.com/react-native-datetimepicker/datetimepicker
   const [birthdate, setBirthdate] = useState(defaultDate);
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
@@ -69,33 +67,33 @@ export default function RegistrationScreen({navigation}) {
   };
 
   const getDate = () => {
-    if (birthdate === defaultDate) return 'Date of birth';
+    if (birthdate === defaultDate) return 'Fecha de nacimiento';
     return birthdate.toLocaleDateString();
   };
 
   const onRegisterPress = async () => {
     if (!username) {
-      Alert.alert('Email is required.');
+      Alert.alert('Usuario es requerido');
       return;
     }
 
     if (!birthdate === defaultDate) {
-      Alert.alert('Date of birth is required.');
+      Alert.alert('Fecha de nacimiento es requerida');
       return;
     }
 
     if (!email) {
-      Alert.alert('Email is required.');
+      Alert.alert('Correo es requerido.');
       return;
     }
 
     if (!validations.validateEmail(email)) {
-      Alert.alert('Incorect email format');
+      Alert.alert('Formato de correo incorrecto');
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert("Passwords don't match.");
+      Alert.alert('Contraseñas no coinciden.');
       return;
     }
 
@@ -135,7 +133,6 @@ export default function RegistrationScreen({navigation}) {
       if (e.code === FirebaseAuthErrorEnum.InvalidEmail) {
         Alert.alert(MessagesConstants.EmailInvalid);
       }
-      console.log(e);
     }
   };
 
@@ -147,7 +144,7 @@ export default function RegistrationScreen({navigation}) {
         <Image style={styles.logo} source={require('../../assets/icon3.png')} />
         <TextInput
           style={styles.input}
-          placeholder="Username"
+          placeholder="Usuario"
           placeholderTextColor="#aaaaaa"
           onChangeText={(text) => setUsername(text)}
           value={username}
@@ -179,7 +176,7 @@ export default function RegistrationScreen({navigation}) {
         )}
         <TextInput
           style={styles.input}
-          placeholder="E-mail"
+          placeholder="Correo"
           placeholderTextColor="#aaaaaa"
           onChangeText={(text) => setEmail(text)}
           value={email}
@@ -192,7 +189,7 @@ export default function RegistrationScreen({navigation}) {
           style={styles.input}
           placeholderTextColor="#aaaaaa"
           secureTextEntry
-          placeholder="Password"
+          placeholder="Contraseña"
           onChangeText={(text) => setPassword(text)}
           value={password}
           underlineColorAndroid="transparent"
@@ -202,7 +199,7 @@ export default function RegistrationScreen({navigation}) {
           style={styles.input}
           placeholderTextColor="#aaaaaa"
           secureTextEntry
-          placeholder="Confirm Password"
+          placeholder="Confirmar contraseña"
           onChangeText={(text) => setConfirmPassword(text)}
           value={confirmPassword}
           underlineColorAndroid="transparent"
@@ -211,13 +208,13 @@ export default function RegistrationScreen({navigation}) {
         <TouchableOpacity
           style={styles.button}
           onPress={() => onRegisterPress()}>
-          <Text style={styles.buttonTitle}>Create account</Text>
+          <Text style={styles.buttonTitle}>Crear cuenta</Text>
         </TouchableOpacity>
         <View style={styles.footerView}>
           <Text style={styles.footerText}>
-            Already got an account?{' '}
+            ¿Ya tienes cuenta?{' '}
             <Text onPress={onFooterLinkPress} style={styles.footerLink}>
-              Log in
+              Iniciar sesión
             </Text>
           </Text>
         </View>
