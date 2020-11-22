@@ -11,6 +11,7 @@ import {
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import { MAPBOX_ACCESSTOKEN } from '@env';
 import DashboardComponent from '../components/DashboardComponent';
+import NewPointComponent from '../components/NewPointComponent';
 import SelectNewPointComponent from '../components/SelectNewPointComponent';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import auth from '@react-native-firebase/auth';
@@ -78,6 +79,10 @@ const HomeScreen = ({ navigation }) => {
         <SelectNewPointComponent
           setNewPointModalVisible={setNewPointModalVisible}
         />
+        {/* <NewPointComponent
+          setShowPointModalCreation={setNewPointModalVisible}
+          // newPoinCoordinates={newPoinCoordinates}
+        /> */}
       </Modal>
       <View style={styles.mainView}>
         <View style={styles.header}>
@@ -101,12 +106,12 @@ const HomeScreen = ({ navigation }) => {
                 />
               </MapboxGL.PointAnnotation>
             ))}
-            <TouchableOpacity
-              style={styles.addPointButton}
-              onPress={() => setNewPointModalVisible(true)}>
-              <Icon name="plus" size={30} color="red" />
-            </TouchableOpacity>
           </MapboxGL.MapView>
+          <TouchableOpacity
+            style={styles.addPointButton}
+            onPress={() => setNewPointModalVisible(true)}>
+            <Icon name="plus" size={30} color="red" />
+          </TouchableOpacity>
         </View>
       </View>
       <TouchableOpacity

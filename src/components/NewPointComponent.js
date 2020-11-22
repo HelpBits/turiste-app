@@ -7,15 +7,46 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
+import moment from 'moment';
+import firestore from '@react-native-firebase/firestore';
+import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
+import { MFChallengePoint } from '../firebase/collections/MFChallengePoint';
 
-const NewPointComponent = ({ setShowPointModalCreation }) => {
+const NewPointComponent = ({ setShowPointModalCreation, newPoinCoordinates }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [labels, setLabels] = useState('');
   const [photo, setPhoto] = useState('');
 
+  const points = firestore().collection(
+    FirebaseCollectionEnum.MFChallengePoint,
+  );
+
   const addNewPoint = () => {
-    Alert.alert('nice');
+    const geometry = {
+      latitude: newPoinCoordinates[0],
+      longitude: newPoinCoordinates[1],
+    };
+    const creationDate = moment().toISOString();
+    const newPoint = new MFChallengePoint(
+      name,
+      description,
+      photo,
+      geometry,
+      labels.split(','),
+      creationDate,
+    );
+
+    points
+      .add(newPoint)
+      .then(() => {
+        Alert.alert('Point created');
+        setShowPointModalCreation(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        Alert.alert('Error on point creation');
+      });
   };
 
   return (

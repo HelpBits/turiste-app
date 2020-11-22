@@ -48,6 +48,7 @@ const SelectNewPointComponent = ({ setNewPointModalVisible }) => {
         visible={showPointModalCreation}>
         <NewPointComponent
           setShowPointModalCreation={setShowPointModalCreation}
+          newPoinCoordinates={newPoinCoordinates}
         />
       </Modal>
       <View style={styles.mapContainer}>
