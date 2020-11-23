@@ -1,28 +1,26 @@
 import 'react-native-gesture-handler';
-import React, { Fragment } from 'react'
+import React, { Fragment, useState, useEffect } from 'react';
+import { mapping, light as lightTheme } from '@eva-design/eva';
+import { ApplicationProvider, IconRegistry } from 'react-native-ui-kitten';
+import { EvaIconsPack } from '@ui-kitten/eva-icons';
+import TabNavigator from './src/navigation/TabNavigator';
+import AuthNavigator from './src/navigation/AuthNavigator';
+import auth from '@react-native-firebase/auth';
 
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-
-import LoginScreen from './src/screens/LoginScreen';
-import HomeScreen from './src/screens/HomeScreen';
-import DetailsScreen from './src/screens/DetailsScreen';
-import SignUpScreen from './src/screens/SignUpScreen';
-import { mapping, light as lightTheme } from '@eva-design/eva'
-import { ApplicationProvider, IconRegistry } from 'react-native-ui-kitten'
-import { EvaIconsPack } from '@ui-kitten/eva-icons'
-
-
-import TabNavigator from './src/navigation/TabNavigator'
-
-// const Stack = createStackNavigator();
 
 const App = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(setUser);
+    return subscriber;
+  }, []);
+
   return (
     < Fragment >
       <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
-        <TabNavigator />
+        {!user ? <AuthNavigator /> : <TabNavigator />}
       </ApplicationProvider>
     </Fragment >
   );

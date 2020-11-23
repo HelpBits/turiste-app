@@ -24,7 +24,7 @@ const TabNavigator = createBottomTabNavigator({
       )
     }
   },
-  Map: {
+  Mapa: {
     screen: MapScreen,
     navigationOptions: {
       tabBarIcon: ({ focused }) => (
@@ -37,7 +37,7 @@ const TabNavigator = createBottomTabNavigator({
       )
     }
   },
-  Add: {
+  Agregar: {
     screen: AddScreen,
     navigationOptions: {
       tabBarIcon: ({ focused }) => (
@@ -50,7 +50,7 @@ const TabNavigator = createBottomTabNavigator({
       )
     }
   },
-  Challenge: {
+  Retos: {
     screen: ChallengeScreen,
     navigationOptions: {
       tabBarIcon: ({ focused }) => (
@@ -64,7 +64,7 @@ const TabNavigator = createBottomTabNavigator({
 
     }
   },
-  User: {
+  Usuario: {
     screen: UserScreen,
     navigationOptions: {
       tabBarIcon: ({ focused }) => (

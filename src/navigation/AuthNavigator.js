@@ -1,20 +1,11 @@
 import 'react-native-gesture-handler';
-import React, { Fragment, useState, useEffect } from 'react'
-
+import React, { useState, useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
 import LoginScreen from '../screens/LoginScreen';
 import HomeScreen from '../screens/HomeScreen';
 import DetailsScreen from '../screens/DetailsScreen';
 import SignUpScreen from '../screens/SignUpScreen';
-import LoadingScreen from '../screens/LoadingScreen';
-import { mapping, light as lightTheme } from '@eva-design/eva'
-import { ApplicationProvider, IconRegistry } from 'react-native-ui-kitten'
-import { EvaIconsPack } from '@ui-kitten/eva-icons'
-
-
-import TabNavigator from '../navigation/TabNavigator'
 
 const AuthStack = createStackNavigator();
 
@@ -43,17 +34,7 @@ const AuthStackScreen = () => (
   </AuthStack.Navigator>
 );
 
-export default () => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(()=> {
-      setIsLoading(false);
-    }, 1000)
-  }, [])
-
-  if(isLoading) return LoadingScreen;
-
+const AuthNavigator =  () => {
   return (
     <NavigationContainer>
       <AuthStackScreen />
@@ -61,3 +42,4 @@ export default () => {
   );
 };
 
+export default AuthNavigator;
