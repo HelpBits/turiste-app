@@ -36,7 +36,7 @@ const SelectNewPointComponent = ({
       <View style={styles.mapContainer}>
         <Text style={{ marginBottom: 15 }}>Agregar nuevo punto</Text>
         <MapboxGL.MapView style={{ flex: 1 }} onPress={onPressMap}>
-          <MapboxGL.Camera zoomLevel={6} centerCoordinate={center} />
+          <MapboxGL.Camera zoomLevel={12} centerCoordinate={center} />
           {newPoinCoordinates && (
             <MapboxGL.PointAnnotation
               coordinate={newPoinCoordinates}
@@ -47,7 +47,9 @@ const SelectNewPointComponent = ({
           <MapboxGL.UserLocation visible={true} />
         </MapboxGL.MapView>
       </View>
-      <TouchableOpacity onPress={() => setShowChoosePointModal(false)}>
+      <TouchableOpacity
+        onPress={() => setShowChoosePointModal(false)}
+        style={{ marginTop: 20 }}>
         <Text>OCULTAR</Text>
       </TouchableOpacity>
     </View>
@@ -56,9 +58,13 @@ const SelectNewPointComponent = ({
 
 const styles = StyleSheet.create({
   mainView: {
-    flex: 1,
+    // flex: 1,
+    backgroundColor: 'green',
+    borderRadius: 20,
+    margin: 10,
     padding: 10,
-    marginTop: 60,
+    height: '40%',
+    marginTop: '60%',
     alignItems: 'center',
     justifyContent: 'center',
   },

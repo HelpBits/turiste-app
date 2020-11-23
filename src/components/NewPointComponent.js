@@ -13,6 +13,7 @@ import firestore from '@react-native-firebase/firestore';
 import SelectNewPointComponent from '../components/SelectNewPointComponent';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import { MFChallengePoint } from '../firebase/collections/MFChallengePoint';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const NewPointComponent = ({ setShowPointModalCreation }) => {
   const [name, setName] = useState('');
@@ -95,9 +96,10 @@ const NewPointComponent = ({ setShowPointModalCreation }) => {
         value={photo}
       />
       <TouchableOpacity
-        style={styles.touchable}
+        style={styles.addPointTouchable}
         onPress={() => setShowChoosePointModal(true)}>
-        <Text>Seleccionar punto en el mapa</Text>
+        <Text>Seleccionar punto</Text>
+        <Icon name="map" style={{ marginLeft: 5 }} />
       </TouchableOpacity>
       <View style={styles.actionButtons}>
         <TouchableOpacity
@@ -115,9 +117,10 @@ const NewPointComponent = ({ setShowPointModalCreation }) => {
 const styles = StyleSheet.create({
   mainView: {
     margin: 20,
-    marginTop: '50%',
+    marginTop: '40%',
+    height: '60%',
     justifyContent: 'center',
-    backgroundColor: 'lightblue',
+    backgroundColor: 'white',
     borderRadius: 50,
     padding: 30,
     alignItems: 'center',
@@ -141,6 +144,19 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 10,
     marginHorizontal: 10,
+  },
+  addPointTouchable: {
+    width: '75%',
+    height: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    // backgroundColor: 'green',
+    borderColor: 'red',
+    borderWidth: 0.5,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    marginTop: 10,
   },
   actionButtons: {
     marginTop: 20,

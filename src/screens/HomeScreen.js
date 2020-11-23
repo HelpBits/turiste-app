@@ -70,6 +70,7 @@ const HomeScreen = ({ navigation }) => {
         />
       </Modal>
       <Modal
+        // transparent={true}
         animationType="fade"
         visible={newPointModalVisible}
         onRequestClose={() => {

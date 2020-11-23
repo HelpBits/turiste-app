@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 
 import FeedScreen from '../screens/FeedScreen';
 import UserScreen from '../screens/UserScreen';
-import MapScreen from '../screens/MapScreen';
+import MapScreen from '../screens/HomeScreen';
 import AddScreen from '../screens/AddScreen';
 import ChallengeScreen from '../screens/ChallengeScreen';
 import Icon from 'react-native-vector-icons/FontAwesome5';
