@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {Text, View} from 'react-native';
 
 const MapScreen = () => (
@@ -7,4 +7,4 @@ const MapScreen = () => (
   </View>
 )
 
-export default MapScreen
+export default MapScreen;

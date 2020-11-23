@@ -1,14 +1,4 @@
-// import React from 'react'
-// import { Text, Layout } from 'react-native-ui-kitten'
-
-// const UserScreen = () => (
-//   <Layout style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//     <Text>User information Screen</Text>
-//   </Layout>
-// )
-
-// export default UserScreen
-import React from 'react'
+import React from 'react';
 import {Text, View} from 'react-native';
 
 const UserScreen = () => (
@@ -17,4 +7,4 @@ const UserScreen = () => (
   </View>
 )
 
-export default UserScreen
+export default UserScreen;
