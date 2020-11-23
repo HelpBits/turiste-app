@@ -16,11 +16,11 @@ const App = () => {
   }, []);
 
   return (
-    < Fragment >
+    <Fragment>
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
         {!user ? <AuthNavigator /> : <TabNavigator />}
       </ApplicationProvider>
-    </Fragment >
+    </Fragment>
   );
 };
 
