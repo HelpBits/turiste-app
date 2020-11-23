@@ -24,6 +24,11 @@ export default function LoginScreen({ navigation }) {
     navigation.navigate('SignUpScreen');
   };
 
+  useEffect(() => {
+    setEmail('');
+    setPassword('');
+  }, []);
+
   const onLoginPress = async () => {
     if (!email) {
       Alert.alert('Correo es requerido.');
@@ -74,7 +79,7 @@ export default function LoginScreen({ navigation }) {
           style={styles.input}
           placeholder="Correo"
           placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={setEmail}
           value={email}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
@@ -86,12 +91,12 @@ export default function LoginScreen({ navigation }) {
           placeholderTextColor="#aaaaaa"
           secureTextEntry
           placeholder="Contraseña"
-          onChangeText={(text) => setPassword(text)}
+          onChangeText={setPassword}
           value={password}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
-        <TouchableOpacity style={styles.button} onPress={() => onLoginPress()}>
+        <TouchableOpacity style={styles.button} onPress={onLoginPress}>
           <Text style={styles.buttonTitle}>Iniciar sesión</Text>
         </TouchableOpacity>
         <View style={styles.footerView}>

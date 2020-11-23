@@ -4,6 +4,7 @@ import {
   Image,
   Text,
   TextInput,
+  Input,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -67,7 +68,9 @@ export default function RegistrationScreen({ navigation }) {
   };
 
   const getDate = () => {
-    if (birthdate === defaultDate) return 'Fecha de nacimiento';
+    if (birthdate === defaultDate) {
+      return 'Fecha de nacimiento';
+    }
     return birthdate.toLocaleDateString();
   };
 
@@ -98,10 +101,12 @@ export default function RegistrationScreen({ navigation }) {
     }
 
     try {
-      const register = await auth().createUserWithEmailAndPassword(
-        email,
-        password,
-      );
+      const register = await auth()
+        .createUserWithEmailAndPassword(email, password)
+        .catch((err) => {
+          Alert.alert('Ha ocurrido un error!');
+          console.log(err);
+        });
       if (register.user) {
         roles.onSnapshot(async (snapshot) => {
           const rolesCollection = snapshot.docs.map((doc) => ({
@@ -146,7 +151,7 @@ export default function RegistrationScreen({ navigation }) {
           style={styles.input}
           placeholder="Usuario"
           placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setUsername(text)}
+          onChangeText={setUsername}
           value={username}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
@@ -178,7 +183,7 @@ export default function RegistrationScreen({ navigation }) {
           style={styles.input}
           placeholder="Correo"
           placeholderTextColor="#aaaaaa"
-          onChangeText={(text) => setEmail(text)}
+          onChangeText={setEmail}
           value={email}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
@@ -188,9 +193,10 @@ export default function RegistrationScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholderTextColor="#aaaaaa"
-          secureTextEntry
+          secureTextEntry={true}
           placeholder="Contraseña"
-          onChangeText={(text) => setPassword(text)}
+          // placeholderTextColor="#888888"
+          onChangeText={setPassword}
           value={password}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
@@ -200,14 +206,12 @@ export default function RegistrationScreen({ navigation }) {
           placeholderTextColor="#aaaaaa"
           secureTextEntry
           placeholder="Confirmar contraseña"
-          onChangeText={(text) => setConfirmPassword(text)}
+          onChangeText={setConfirmPassword}
           value={confirmPassword}
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => onRegisterPress()}>
+        <TouchableOpacity style={styles.button} onPress={onRegisterPress}>
           <Text style={styles.buttonTitle}>Crear cuenta</Text>
         </TouchableOpacity>
         <View style={styles.footerView}>
