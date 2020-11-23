@@ -47,9 +47,6 @@ export default function LoginScreen({ navigation }) {
 
     try {
       const login = await auth().signInWithEmailAndPassword(email, password);
-      if (login.user) {
-        navigation.navigate('HomeScreen');
-      }
     } catch (e) {
       if (e.code === FirebaseAuthErrorEnum.InUse) {
         Alert.alert(MessagesConstants.EmailInUse);
