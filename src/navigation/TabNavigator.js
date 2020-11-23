@@ -7,8 +7,7 @@ import UserScreen from '../screens/UserScreen'
 import MapScreen from '../screens/MapScreen'
 import AddScreen from '../screens/AddScreen'
 import ChallengeScreen from '../screens/ChallengeScreen'
-import { Icon } from 'react-native-ui-kitten'
-
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const TabNavigator = createBottomTabNavigator({
   Feed: {
@@ -16,10 +15,9 @@ const TabNavigator = createBottomTabNavigator({
     navigationOptions: {
       tabBarIcon: ({ focused }) => (
         <Icon
-          name="home-outline"
-          width={32}
-          height={32}
-          fill={focused ? '#111' : '#939393'}
+          name="home"
+          size={20}
+          color={focused ? '#111' : '#939393'}
         />
       )
     }
@@ -29,10 +27,9 @@ const TabNavigator = createBottomTabNavigator({
     navigationOptions: {
       tabBarIcon: ({ focused }) => (
         <Icon
-          name="map-outline"
-          width={32}
-          height={32}
-          fill={focused ? '#111' : '#939393'}
+          name="map"
+          size={20}
+          color={focused ? '#111' : '#939393'}
         />
       )
     }
@@ -42,10 +39,9 @@ const TabNavigator = createBottomTabNavigator({
     navigationOptions: {
       tabBarIcon: ({ focused }) => (
         <Icon
-          name="plus-square-outline"
-          width={32}
-          height={32}
-          fill={focused ? '#111' : '#939393'}
+          name="plus"
+          size={20}
+          color={focused ? '#111' : '#939393'}
         />
       )
     }
@@ -55,10 +51,9 @@ const TabNavigator = createBottomTabNavigator({
     navigationOptions: {
       tabBarIcon: ({ focused }) => (
         <Icon
-          name="flag-outline"
-          width={32}
-          height={32}
-          fill={focused ? '#111' : '#939393'}
+          name="flag"
+          size={20}
+          color={focused ? '#111' : '#939393'}
         />
       )
 
@@ -69,14 +64,13 @@ const TabNavigator = createBottomTabNavigator({
     navigationOptions: {
       tabBarIcon: ({ focused }) => (
         <Icon
-          name="person-outline"
-          width={32}
-          height={32}
-          fill={focused ? '#111' : '#939393'}
+          name="user"
+          size={20}
+          color={focused ? '#111' : '#939393'}
         />
       )
     }
   },
 })
 
-export default createAppContainer(TabNavigator)
+export default createAppContainer(TabNavigator);

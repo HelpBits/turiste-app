@@ -1,8 +1,7 @@
 import 'react-native-gesture-handler';
 import React, { Fragment, useState, useEffect } from 'react';
 import { mapping, light as lightTheme } from '@eva-design/eva';
-import { ApplicationProvider, IconRegistry } from 'react-native-ui-kitten';
-import { EvaIconsPack } from '@ui-kitten/eva-icons';
+import { ApplicationProvider } from 'react-native-ui-kitten';
 import TabNavigator from './src/navigation/TabNavigator';
 import AuthNavigator from './src/navigation/AuthNavigator';
 import auth from '@react-native-firebase/auth';
@@ -18,7 +17,6 @@ const App = () => {
 
   return (
     < Fragment >
-      <IconRegistry icons={EvaIconsPack} />
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
         {!user ? <AuthNavigator /> : <TabNavigator />}
       </ApplicationProvider>
