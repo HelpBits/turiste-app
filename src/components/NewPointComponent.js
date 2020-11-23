@@ -6,23 +6,28 @@ import {
   View,
   TextInput,
   Alert,
+  Modal,
 } from 'react-native';
 import moment from 'moment';
 import firestore from '@react-native-firebase/firestore';
+import SelectNewPointComponent from '../components/SelectNewPointComponent';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import { MFChallengePoint } from '../firebase/collections/MFChallengePoint';
 
-const NewPointComponent = ({ setShowPointModalCreation, newPoinCoordinates }) => {
+const NewPointComponent = ({ setShowPointModalCreation }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [labels, setLabels] = useState('');
   const [photo, setPhoto] = useState('');
+  const [newPoinCoordinates, setNewPoinCoordinates] = useState(null);
+  const [showChoosePointModal, setShowChoosePointModal] = useState(false);
 
   const points = firestore().collection(
     FirebaseCollectionEnum.MFChallengePoint,
   );
 
   const addNewPoint = () => {
+    console.log(newPoinCoordinates);
     const geometry = {
       latitude: newPoinCoordinates[0],
       longitude: newPoinCoordinates[1],
@@ -51,6 +56,19 @@ const NewPointComponent = ({ setShowPointModalCreation, newPoinCoordinates }) =>
 
   return (
     <View style={styles.mainView}>
+      <Modal
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+        }}
+        visible={showChoosePointModal}>
+        <SelectNewPointComponent
+          setShowChoosePointModal={setShowChoosePointModal}
+          newPoinCoordinates={newPoinCoordinates}
+          setNewPoinCoordinates={setNewPoinCoordinates}
+        />
+      </Modal>
       <Text style={{ marginVertical: 30 }}>Informacion de Nuevo Punto</Text>
       <TextInput
         style={styles.inputStyle}
@@ -76,6 +94,11 @@ const NewPointComponent = ({ setShowPointModalCreation, newPoinCoordinates }) =>
         placeholder="Foto"
         value={photo}
       />
+      <TouchableOpacity
+        style={styles.touchable}
+        onPress={() => setShowChoosePointModal(true)}>
+        <Text>Seleccionar punto en el mapa</Text>
+      </TouchableOpacity>
       <View style={styles.actionButtons}>
         <TouchableOpacity
           style={styles.touchable}

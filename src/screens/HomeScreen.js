@@ -12,7 +12,6 @@ import MapboxGL from '@react-native-mapbox-gl/maps';
 import { MAPBOX_ACCESSTOKEN } from '@env';
 import DashboardComponent from '../components/DashboardComponent';
 import NewPointComponent from '../components/NewPointComponent';
-import SelectNewPointComponent from '../components/SelectNewPointComponent';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import auth from '@react-native-firebase/auth';
 import AnnotationContent from '../components/AnnotationContentComponent';
@@ -76,13 +75,9 @@ const HomeScreen = ({ navigation }) => {
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
         }}>
-        <SelectNewPointComponent
-          setNewPointModalVisible={setNewPointModalVisible}
-        />
-        {/* <NewPointComponent
+        <NewPointComponent
           setShowPointModalCreation={setNewPointModalVisible}
-          // newPoinCoordinates={newPoinCoordinates}
-        /> */}
+        />
       </Modal>
       <View style={styles.mainView}>
         <View style={styles.header}>
