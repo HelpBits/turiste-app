@@ -4,7 +4,6 @@ import {
   Image,
   Text,
   TextInput,
-  Input,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
@@ -49,9 +48,9 @@ export default function RegistrationScreen({ navigation }) {
   const [show, setShow] = useState(false);
 
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || birthdate;
+    const date = selectedDate || birthdate;
     setShow(Platform.OS === 'ios');
-    setBirthdate(currentDate);
+    setBirthdate(date);
   };
 
   const showMode = (currentMode) => {
@@ -195,7 +194,6 @@ export default function RegistrationScreen({ navigation }) {
           placeholderTextColor="#aaaaaa"
           secureTextEntry={true}
           placeholder="Contraseña"
-          // placeholderTextColor="#888888"
           onChangeText={setPassword}
           value={password}
           underlineColorAndroid="transparent"
@@ -234,7 +232,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  title: {},
   logo: {
     flex: 1,
     height: 120,
@@ -293,19 +290,6 @@ const styles = StyleSheet.create({
     marginRight: 30,
     paddingLeft: 16,
     height: 48,
-  },
-  birthdateButton: {
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  birthdateText: {
-    backgroundColor: colors.primary,
-    width: '30%',
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 10,
   },
   birthdatePhoto: {
     height: 40,

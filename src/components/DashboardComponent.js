@@ -1,26 +1,24 @@
-import React, { useState } from 'react';
-import {
-  TouchableHighlight,
-  Dimensions,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React from 'react';
+import { TouchableHighlight, StyleSheet, Text, View } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
+const DashboardComponent = ({
+  setModalVisible,
+  modalVisible,
+  selectedPoint,
+  setSelectedPoint,
+}) => {
+  const closeModal = () => {
+    setModalVisible(!modalVisible);
+    setSelectedPoint(null);
+  };
 
-const DashboardComponent = ({ setModalVisible, modalVisible }) => {
   return (
     <View style={styles.centeredView}>
       <View style={styles.modalView}>
-        <Text style={styles.modalText}>Hello World!</Text>
-
-        <TouchableHighlight
-          style={styles.closeButton}
-          onPress={() => {
-            setModalVisible(!modalVisible);
-          }}>
-          <Text style={styles.textStyle}>Hide Modal</Text>
+        <Text style={styles.modalText}>{selectedPoint.name}</Text>
+        <Text style={styles.modalText}>{selectedPoint.point.toString()}</Text>
+        <TouchableHighlight style={styles.closeButton} onPress={closeModal}>
+          <Text style={styles.textStyle}>Ocultar</Text>
         </TouchableHighlight>
       </View>
     </View>
@@ -47,14 +45,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    width: width,
-    height: height - 256,
+    width: '100%',
+    height: '80%',
   },
   closeButton: {
     backgroundColor: 'gray',
     borderRadius: 20,
     padding: 10,
     elevation: 2,
+    width: '80%',
   },
   textStyle: {
     color: 'white',
