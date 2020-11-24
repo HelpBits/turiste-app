@@ -25,8 +25,8 @@ export default function LoginScreen({ navigation }) {
   };
 
   useEffect(() => {
-    setEmail('geo@mail.com');
-    setPassword('123456');
+    setEmail('');
+    setPassword('');
   }, []);
 
   const onLoginPress = async () => {
@@ -115,7 +115,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 30,
   },
-  title: {},
   logo: {
     flex: 1,
     height: 120,

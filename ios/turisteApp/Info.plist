@@ -43,7 +43,9 @@
 			<string>Please enable precise location. Turn-by-turn directions only work when precise location data is available.</string>
 		</dict>
 		<key>NSLocationWhenInUseUsageDescription</key>
-		<string></string>
+		<string>Your precise location is used to calculate turn-by-turn directions, show your location on the map, and help improve the map.</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>Your precise location is used to calculate turn-by-turn directions, show your location on the map, and help improve the map.</string>
 		<key>UIAppFonts</key>
 		<array>
 			<string>FontAwesome5_Regular.ttf</string>

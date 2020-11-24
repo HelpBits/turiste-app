@@ -21,7 +21,7 @@ const AuthStackScreen = () => (
   </AuthStack.Navigator>
 );
 
-const AuthNavigator =  () => {
+const AuthNavigator = () => {
   return (
     <NavigationContainer>
       <AuthStackScreen />

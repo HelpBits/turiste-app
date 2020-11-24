@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { TouchableOpacity, StyleSheet, Text, View, Alert } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import { MAPBOX_ACCESSTOKEN } from '@env';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { globalStyleSheet } from '../styles/theme';
+// import Geolocation from '@react-native-community/geolocation';
 
 MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
 
@@ -11,9 +13,23 @@ const SelectNewPointComponent = ({
   setNewPoinCoordinates,
   setShowChoosePointModal,
 }) => {
-  const center = [-84.0795, 9.9328];
+  const [center, setCenter] = useState([-84.0795, 9.9328]);
 
   useEffect(() => {
+    // Geolocation.getCurrentPosition(
+    //   (position) => {
+    //     console.log(position);
+    //     setCenter(position.coords);
+    //   },
+    //   (error) => {
+    //     console.log(error);
+    //     Alert.alert('No podimos encontrar tu ubicacion');
+    //   },
+    //   {
+    //     enableHighAccuracy: true,
+    //     timeout: 2000000,
+    //   },
+    // );
     setNewPoinCoordinates(null);
   }, []);
 
@@ -22,19 +38,22 @@ const SelectNewPointComponent = ({
     setNewPoinCoordinates(geometry.coordinates);
   };
 
+  const addNewPoint = () => {
+    newPoinCoordinates
+      ? setShowChoosePointModal(false)
+      : Alert.alert('Necesita elegir un punto');
+  };
+
   const NewPointAnnotationContent = () => (
-    <TouchableOpacity
-      style={styles.touchable}
-      onPress={() => setShowChoosePointModal(false)}>
-      <Icon name="map-marker" color="red" />
-      <Text style={styles.touchableText}>Agregar</Text>
-    </TouchableOpacity>
+    <View style={styles.touchable}>
+      <Icon name="map-marker" color="red" size={20} />
+    </View>
   );
 
   return (
     <View style={styles.mainView}>
+      <Text style={globalStyleSheet.title}>Agregar nuevo punto</Text>
       <View style={styles.mapContainer}>
-        <Text style={{ marginBottom: 15 }}>Agregar nuevo punto</Text>
         <MapboxGL.MapView style={{ flex: 1 }} onPress={onPressMap}>
           <MapboxGL.Camera zoomLevel={12} centerCoordinate={center} />
           {newPoinCoordinates && (
@@ -44,39 +63,36 @@ const SelectNewPointComponent = ({
               <NewPointAnnotationContent coordinate={newPoinCoordinates} />
             </MapboxGL.PointAnnotation>
           )}
-          <MapboxGL.UserLocation visible={true} />
+          <MapboxGL.UserLocation />
         </MapboxGL.MapView>
       </View>
-      <TouchableOpacity
-        onPress={() => setShowChoosePointModal(false)}
-        style={{ marginTop: 20 }}>
-        <Text>OCULTAR</Text>
-      </TouchableOpacity>
+      <View style={{ flexDirection: 'row' }}>
+        <TouchableOpacity
+          onPress={() => setShowChoosePointModal(false)}
+          style={styles.hideModal}>
+          <Text>OCULTAR</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={addNewPoint} style={styles.hideModal}>
+          <Text>AGREGAR</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   mainView: {
-    // flex: 1,
     backgroundColor: 'green',
     borderRadius: 20,
     margin: 10,
-    padding: 10,
-    height: '40%',
+    padding: 15,
+    height: '50%',
     marginTop: '60%',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  hideButton: {
-    padding: 10,
-    width: '30%',
-    marginTop: 45,
-    borderRadius: 10,
-    backgroundColor: 'gray',
-  },
   mapContainer: {
-    height: '80%',
+    height: '75%',
     width: '100%',
   },
   touchable: {
@@ -84,14 +100,13 @@ const styles = StyleSheet.create({
     height: 30,
     alignItems: 'center',
   },
-  touchableText: {
-    color: 'black',
-    backgroundColor: 'lightblue',
-    borderWidth: 0.5,
-    borderColor: 'black',
-    borderRadius: 5,
-    padding: 1,
-    marginTop: 3,
+  hideModal: {
+    marginVertical: 20,
+    backgroundColor: 'lightgray',
+    padding: 10,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    marginHorizontal: 10,
   },
 });
 

@@ -9,11 +9,12 @@ import {
   Modal,
 } from 'react-native';
 import moment from 'moment';
+import { globalStyleSheet } from '../styles/theme';
 import firestore from '@react-native-firebase/firestore';
-import SelectNewPointComponent from '../components/SelectNewPointComponent';
-import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
-import { MFChallengePoint } from '../firebase/collections/MFChallengePoint';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
+import SelectNewPointComponent from '../components/SelectNewPointComponent';
+import { MFChallengePoint } from '../firebase/collections/MFChallengePoint';
 
 const NewPointComponent = ({ setShowPointModalCreation }) => {
   const [name, setName] = useState('');
@@ -46,12 +47,11 @@ const NewPointComponent = ({ setShowPointModalCreation }) => {
     points
       .add(newPoint)
       .then(() => {
-        Alert.alert('Point created');
+        Alert.alert('Punto Creado');
         setShowPointModalCreation(false);
       })
-      .catch((err) => {
-        console.log(err);
-        Alert.alert('Error on point creation');
+      .catch(() => {
+        Alert.alert('Error al crear el punto');
       });
   };
 
@@ -70,7 +70,7 @@ const NewPointComponent = ({ setShowPointModalCreation }) => {
           setNewPoinCoordinates={setNewPoinCoordinates}
         />
       </Modal>
-      <Text style={{ marginVertical: 30 }}>Informacion de Nuevo Punto</Text>
+      <Text style={globalStyleSheet.title}>Informacion de Nuevo Punto</Text>
       <TextInput
         style={styles.inputStyle}
         onChangeText={setName}
@@ -117,13 +117,14 @@ const NewPointComponent = ({ setShowPointModalCreation }) => {
 const styles = StyleSheet.create({
   mainView: {
     margin: 20,
-    marginTop: '40%',
+    marginTop: '50%',
     height: '60%',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#f7f7f7',
     borderRadius: 50,
     padding: 30,
     alignItems: 'center',
+    borderWidth: 0.5,
   },
   inputStyle: {
     height: 40,
@@ -133,6 +134,7 @@ const styles = StyleSheet.create({
     padding: 5,
     margin: 5,
     borderRadius: 10,
+    backgroundColor: 'white',
   },
   touchable: {
     width: '30%',
@@ -146,12 +148,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   addPointTouchable: {
+    backgroundColor: 'white',
     width: '75%',
     height: 35,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    // backgroundColor: 'green',
     borderColor: 'red',
     borderWidth: 0.5,
     borderRadius: 10,
