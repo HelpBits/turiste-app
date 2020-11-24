@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -6,26 +6,43 @@ import {
   Alert,
   TouchableOpacity,
   Modal,
+  Platform,
 } from 'react-native';
 import { MAPBOX_ACCESSTOKEN } from '@env';
 import MapboxGL from '@react-native-mapbox-gl/maps';
+import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import DashboardComponent from '../components/DashboardComponent';
 import AnnotationContent from '../components/AnnotationContentComponent';
+import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 
 MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
 
-const MapScreen = () => {
-  const [modalVisible, setModalVisible] = useState(false);
+const points = firestore().collection(FirebaseCollectionEnum.MFChallengePoint);
 
+const MapScreen = () => {
+  const zoom = 6.3;
   const center = [-84.0795, 9.9328];
+  const [modalVisible, setModalVisible] = useState(false);
   const [selectedPoint, setSelectedPoint] = useState(null);
 
-  const testCoordinates = [
-    { id: '001', name: 'PZ', point: [-83.7028, 9.3755] },
-    { id: '002', name: 'SC', point: [-85.3509, 10.1929] },
-    { id: '003', name: 'Maquenque', point: [-84.1319, 10.6552] },
-  ];
+  const [mapPoints, setMapPoints] = useState(null);
+
+  useEffect(() => {
+    if (Platform.OS !== 'ios') {
+      MapboxGL.requestAndroidLocationPermissions()
+        .then((res) => console.log(res))
+        .catch(() => Alert.alert('Error obteniendo permisos de ubicacion'));
+    }
+
+    points.onSnapshot(async (snapshot) => {
+      setMapPoints(
+        snapshot.docs.map((doc) => {
+          return { id: doc.id, ...doc.data() };
+        }),
+      );
+    });
+  }, []);
 
   return (
     <>
@@ -46,18 +63,20 @@ const MapScreen = () => {
       <View style={styles.mainView}>
         <View style={styles.mapContainer}>
           <MapboxGL.MapView style={styles.mapView}>
-            <MapboxGL.Camera zoomLevel={6} centerCoordinate={center} />
-            {testCoordinates.map((coordinate) => (
-              <MapboxGL.PointAnnotation
-                coordinate={coordinate.point}
-                id={coordinate.id}
-                key={coordinate.id}>
-                <AnnotationContent
-                  coordinate={coordinate}
-                  setSelectedPoint={setSelectedPoint}
-                />
-              </MapboxGL.PointAnnotation>
-            ))}
+            <MapboxGL.Camera zoomLevel={zoom} centerCoordinate={center} />
+            {mapPoints
+              ? mapPoints.map((coordinate) => (
+                <MapboxGL.PointAnnotation
+                  coordinate={Object.values(coordinate.geometry)}
+                  id={coordinate.id}
+                  key={coordinate.id}>
+                  <AnnotationContent
+                    coordinate={coordinate}
+                    setSelectedPoint={setSelectedPoint}
+                  />
+                </MapboxGL.PointAnnotation>
+              ))
+              : null}
           </MapboxGL.MapView>
         </View>
       </View>

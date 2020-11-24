@@ -4,7 +4,7 @@ import MapboxGL from '@react-native-mapbox-gl/maps';
 import { MAPBOX_ACCESSTOKEN } from '@env';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { globalStyleSheet } from '../styles/theme';
-// import Geolocation from '@react-native-community/geolocation';
+import Geolocation from '@react-native-community/geolocation';
 
 MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
 
@@ -16,20 +16,21 @@ const SelectNewPointComponent = ({
   const [center, setCenter] = useState([-84.0795, 9.9328]);
 
   useEffect(() => {
-    // Geolocation.getCurrentPosition(
-    //   (position) => {
-    //     console.log(position);
-    //     setCenter(position.coords);
-    //   },
-    //   (error) => {
-    //     console.log(error);
-    //     Alert.alert('No podimos encontrar tu ubicacion');
-    //   },
-    //   {
-    //     enableHighAccuracy: true,
-    //     timeout: 2000000,
-    //   },
-    // );
+    Geolocation.getCurrentPosition(
+      (position) => {
+        console.log(position.coords);
+        setCenter([position.coords.longitude, position.coords.latitude]);
+      },
+      (error) => {
+        console.log(error);
+        Alert.alert('No podimos encontrar tu ubicacion');
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 2000000000,
+        maximumAge: 1000,
+      },
+    );
     setNewPointCoordinates(null);
   }, []);
 

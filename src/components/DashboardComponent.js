@@ -16,7 +16,9 @@ const DashboardComponent = ({
     <View style={styles.centeredView}>
       <View style={styles.modalView}>
         <Text style={styles.modalText}>{selectedPoint.name}</Text>
-        <Text style={styles.modalText}>{selectedPoint.point.toString()}</Text>
+        <Text style={styles.modalText}>
+          {Object.values(selectedPoint.geometry).toString()}
+        </Text>
         <TouchableHighlight style={styles.closeButton} onPress={closeModal}>
           <Text style={styles.textStyle}>Ocultar</Text>
         </TouchableHighlight>
