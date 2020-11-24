@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableHighlight, StyleSheet, Text, View } from 'react-native';
+import {TouchableHighlight, StyleSheet, Text, View} from 'react-native';
 
 const DashboardComponent = ({
   setModalVisible,
@@ -16,9 +16,8 @@ const DashboardComponent = ({
     <View style={styles.centeredView}>
       <View style={styles.modalView}>
         <Text style={styles.modalText}>{selectedPoint.name}</Text>
-        <Text style={styles.modalText}>
-          {Object.values(selectedPoint.geometry).toString()}
-        </Text>
+        <Text style={styles.modalText}>{selectedPoint.desc}</Text>
+        <Text>Has visitado este lugar 8 veces</Text>
         <TouchableHighlight style={styles.closeButton} onPress={closeModal}>
           <Text style={styles.textStyle}>Ocultar</Text>
         </TouchableHighlight>
@@ -63,7 +62,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   modalText: {
-    marginBottom: 15,
     textAlign: 'center',
   },
 });
