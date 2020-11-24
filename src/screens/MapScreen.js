@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import {
   Modal,
 } from 'react-native';
 import { MAPBOX_ACCESSTOKEN } from '@env';
-import auth from '@react-native-firebase/auth';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import DashboardComponent from '../components/DashboardComponent';
@@ -16,9 +15,7 @@ import AnnotationContent from '../components/AnnotationContentComponent';
 
 MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
 
-const MapScreen = ({ navigation }) => {
-  const [initiliazing, setInitiliazing] = useState(true);
-  const [user, setUser] = useState();
+const MapScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const center = [-84.0795, 9.9328];
@@ -29,30 +26,6 @@ const MapScreen = ({ navigation }) => {
     { id: '002', name: 'SC', point: [-85.3509, 10.1929] },
     { id: '003', name: 'Maquenque', point: [-84.1319, 10.6552] },
   ];
-
-  const onAuthStateChanged = (actualUser) => {
-    setUser(actualUser);
-    if (initiliazing) {
-      setInitiliazing(false);
-    }
-  };
-
-  useEffect(() => {
-    setSelectedPoint(null);
-  }, []);
-
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
-  }, []);
-
-  if (initiliazing) {
-    return null;
-  }
-
-  if (!user) {
-    return navigation.navigate('LoginScreen');
-  }
 
   return (
     <>

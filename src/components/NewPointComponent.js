@@ -8,7 +8,6 @@ import {
   Alert,
   Modal,
 } from 'react-native';
-import moment from 'moment';
 import { globalStyleSheet } from '../styles/theme';
 import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -16,25 +15,24 @@ import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import SelectNewPointComponent from '../components/SelectNewPointComponent';
 import { MFChallengePoint } from '../firebase/collections/MFChallengePoint';
 
-const NewPointComponent = ({ setShowPointModalCreation }) => {
+const NewPointComponent = ({ setShowPointCreationModal }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [labels, setLabels] = useState('');
   const [photo, setPhoto] = useState('');
-  const [newPoinCoordinates, setNewPoinCoordinates] = useState(null);
-  const [showChoosePointModal, setShowChoosePointModal] = useState(false);
+  const [newPointCoordinates, setNewPointCoordinates] = useState(null);
+  const [showSelectPointModal, setShowSelectPointModal] = useState(false);
 
   const points = firestore().collection(
     FirebaseCollectionEnum.MFChallengePoint,
   );
 
   const addNewPoint = () => {
-    console.log(newPoinCoordinates);
     const geometry = {
-      latitude: newPoinCoordinates[0],
-      longitude: newPoinCoordinates[1],
+      latitude: newPointCoordinates[0],
+      longitude: newPointCoordinates[1],
     };
-    const creationDate = moment().toISOString();
+    const creationDate = new Date();
     const newPoint = new MFChallengePoint(
       name,
       description,
@@ -48,7 +46,7 @@ const NewPointComponent = ({ setShowPointModalCreation }) => {
       .add(newPoint)
       .then(() => {
         Alert.alert('Punto Creado');
-        setShowPointModalCreation(false);
+        setShowPointCreationModal(false);
       })
       .catch(() => {
         Alert.alert('Error al crear el punto');
@@ -63,11 +61,11 @@ const NewPointComponent = ({ setShowPointModalCreation }) => {
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
         }}
-        visible={showChoosePointModal}>
+        visible={showSelectPointModal}>
         <SelectNewPointComponent
-          setShowChoosePointModal={setShowChoosePointModal}
-          newPoinCoordinates={newPoinCoordinates}
-          setNewPoinCoordinates={setNewPoinCoordinates}
+          setShowSelectPointModal={setShowSelectPointModal}
+          newPointCoordinates={newPointCoordinates}
+          setNewPointCoordinates={setNewPointCoordinates}
         />
       </Modal>
       <Text style={globalStyleSheet.title}>Informacion de Nuevo Punto</Text>
@@ -97,14 +95,14 @@ const NewPointComponent = ({ setShowPointModalCreation }) => {
       />
       <TouchableOpacity
         style={styles.addPointTouchable}
-        onPress={() => setShowChoosePointModal(true)}>
+        onPress={() => setShowSelectPointModal(true)}>
         <Text>Seleccionar punto</Text>
         <Icon name="map" style={{ marginLeft: 5 }} />
       </TouchableOpacity>
       <View style={styles.actionButtons}>
         <TouchableOpacity
           style={styles.touchable}
-          onPress={() => setShowPointModalCreation(false)}>
+          onPress={() => setShowPointCreationModal(false)}>
           <Text>Cancelar</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.touchable} onPress={addNewPoint}>

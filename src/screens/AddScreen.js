@@ -18,7 +18,7 @@ const AddScreen = () => {
           Alert.alert('Modal has been closed.');
         }}>
         <NewPointComponent
-          setShowPointModalCreation={setNewPointModalVisible}
+          setShowPointCreationModal={setNewPointModalVisible}
         />
       </Modal>
       <Text style={globalStyleSheet.title}>agregar</Text>

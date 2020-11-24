@@ -9,9 +9,9 @@ import { globalStyleSheet } from '../styles/theme';
 MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
 
 const SelectNewPointComponent = ({
-  newPoinCoordinates,
-  setNewPoinCoordinates,
-  setShowChoosePointModal,
+  newPointCoordinates,
+  setNewPointCoordinates,
+  setShowSelectPointModal,
 }) => {
   const [center, setCenter] = useState([-84.0795, 9.9328]);
 
@@ -30,17 +30,17 @@ const SelectNewPointComponent = ({
     //     timeout: 2000000,
     //   },
     // );
-    setNewPoinCoordinates(null);
+    setNewPointCoordinates(null);
   }, []);
 
   const onPressMap = (e) => {
     const { geometry } = e;
-    setNewPoinCoordinates(geometry.coordinates);
+    setNewPointCoordinates(geometry.coordinates);
   };
 
   const addNewPoint = () => {
-    newPoinCoordinates
-      ? setShowChoosePointModal(false)
+    newPointCoordinates
+      ? setShowSelectPointModal(false)
       : Alert.alert('Necesita elegir un punto');
   };
 
@@ -56,11 +56,11 @@ const SelectNewPointComponent = ({
       <View style={styles.mapContainer}>
         <MapboxGL.MapView style={{ flex: 1 }} onPress={onPressMap}>
           <MapboxGL.Camera zoomLevel={12} centerCoordinate={center} />
-          {newPoinCoordinates && (
+          {newPointCoordinates && (
             <MapboxGL.PointAnnotation
-              coordinate={newPoinCoordinates}
+              coordinate={newPointCoordinates}
               id="newPoint">
-              <NewPointAnnotationContent coordinate={newPoinCoordinates} />
+              <NewPointAnnotationContent coordinate={newPointCoordinates} />
             </MapboxGL.PointAnnotation>
           )}
           <MapboxGL.UserLocation />
@@ -68,7 +68,7 @@ const SelectNewPointComponent = ({
       </View>
       <View style={{ flexDirection: 'row' }}>
         <TouchableOpacity
-          onPress={() => setShowChoosePointModal(false)}
+          onPress={() => setShowSelectPointModal(false)}
           style={styles.hideModal}>
           <Text>OCULTAR</Text>
         </TouchableOpacity>
