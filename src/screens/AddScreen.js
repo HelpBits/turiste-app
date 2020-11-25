@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import NewPointComponent from '../components/NewPointComponent';
-import { Text, View, StyleSheet, Modal, Alert } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Modal,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 
 import { globalStyleSheet } from '../styles/theme';
 
