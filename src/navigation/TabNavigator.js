@@ -7,6 +7,7 @@ import UserScreen from '../screens/UserScreen';
 import MapScreen from '../screens/MapScreen';
 import AddScreen from '../screens/AddScreen';
 import ChallengeScreen from '../screens/ChallengeScreen';
+import FeedScreen from '../screens/FeedScreen';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const TabNavigator = createBottomTabNavigator({
@@ -43,7 +44,7 @@ const TabNavigator = createBottomTabNavigator({
     },
   },
   Ayuda: {
-    screen: HelpScreen,
+    screen: FeedScreen,//HelpScreen, replacing just for testing the UI
     navigationOptions: {
       tabBarIcon: ({ focused }) => (
         <Icon name="home" size={20} color={focused ? '#111' : '#939393'} />
