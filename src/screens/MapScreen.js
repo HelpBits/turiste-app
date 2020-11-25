@@ -7,11 +7,14 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
-import { MAPBOX_ACCESSTOKEN } from '@env';
+//import { MAPBOX_ACCESSTOKEN } from '@env';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import DashboardComponent from '../components/DashboardComponent';
 import AnnotationContent from '../components/AnnotationContentComponent';
+
+MAPBOX_ACCESSTOKEN = 'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA';
+API_URL = 'API_URL';
 
 MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
 
