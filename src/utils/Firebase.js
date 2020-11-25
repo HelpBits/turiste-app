@@ -21,6 +21,7 @@ const Firebase = {
         return firebase
             .firestore()
             .collection('MFPost')
+            .where("id", "==", "post2")
             .get()
             .then(function (querySnapshot) {
                 let posts = querySnapshot.docs.map(doc => doc.data())
