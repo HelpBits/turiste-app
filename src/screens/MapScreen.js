@@ -8,7 +8,7 @@ import {
   Modal,
   Platform,
 } from 'react-native';
-//import { MAPBOX_ACCESSTOKEN } from '@env';
+import {MAPBOX_ACCESSTOKEN} from '@env';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -17,7 +17,8 @@ import AnnotationContent from '../components/AnnotationContentComponent';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import ChallengePointComponent from '../components/ChallengePointComponent';
 
-MAPBOX_ACCESSTOKEN = 'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA';
+MAPBOX_ACCESSTOKEN =
+  'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA';
 API_URL = 'API_URL';
 
 MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
@@ -49,22 +50,16 @@ const MapScreen = () => {
     });
   }, []);
 
-  // const [selectedPoint, setSelectedPoint] = useState({
-  //   id: '001',
-  //   name: 'Nombre del punto turistico',
-  //   desc:
-  //     'Lorem ipsum dolor sit amet' +
-  //     'consectetur adipiscing elit.Nulla congue vehicula sodales.' +
-  //     'Donec at suscipit urna, quis tempus sem.Fusce eget magna elit.',
-  //   point: [-83.7028, 9.3755],
-  // });
-
-  // const testCoordinates = [
-  //   {id: '001', name: 'PZ', point: [-83.7028, 9.3755]},
-  //   {id: '002', name: 'SC', point: [-85.3509, 10.1929]},
-  //   {id: '003', name: 'Maquenque', point: [-84.1319, 10.6552]},
-  // ];89... new design
-
+  const center = [-84.0795, 9.9328];
+  const [selectedPoint, setSelectedPoint] = useState({
+    id: 'post2',
+    name: 'Nombre del punto turistico',
+    desc:
+      'Lorem ipsum dolor sit amet' +
+      'consectetur adipiscing elit.Nulla congue vehicula sodales.' +
+      'Donec at suscipit urna, quis tempus sem.Fusce eget magna elit.',
+    point: [-83.7028, 9.3755],
+  });
   return (
     <>
       <Modal

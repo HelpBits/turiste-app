@@ -1,14 +1,26 @@
-import React, {useState, useRef, useEffect} from 'react';
-import {StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
-import {Modalize} from 'react-native-modalize';
-import faker from 'faker';
 
-import ChallengePointSummaryComponent from '../components/ChallengePointSummaryComponent';
+// import React, {useState, useRef, useEffect} from 'react';// import {StyleSheet, Text, View, TextInput, ScrollView} from 'react-native';
+// import {Modalize} from 'react-native-modalize';
+// import faker from 'faker';
+import React, { useRef, useState, useEffect } from 'react';
+
+import { StyleSheet, Text, View, TextInput, ScrollView } from 'react-native';
+import { Modalize } from 'react-native-modalize';
+import faker from 'faker';
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import auth from '@react-native-firebase/auth';
+
+import FeedScreen from '../screens/FeedScreen';
+
+const user = auth().currentUser;
 
 const ChallengePointComponent = ({selectedChallengePoint}) => {
   const [openModal, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [arrivesNumber, setArrivesNumber] = useState(0);
   const modalizeRef = useRef(null);
+
+
 
   const handleClosed = () => {
     console.log('closed');
@@ -21,7 +33,15 @@ const ChallengePointComponent = ({selectedChallengePoint}) => {
   };
 
   const getTotalArrives = () => {
-    return 0;
+    if(!selectedChallengePoint.checkins) return;
+
+    setArrivesNumber(
+      selectedChallengePoint
+        .checkins
+        .filter(checkin => {
+          checkin.userId === user.uid;
+        }).length
+    );
   };
 
   /*
@@ -58,10 +78,40 @@ const ChallengePointComponent = ({selectedChallengePoint}) => {
       </View>,
     ];
   */
+ 
+  const renderHeader = () => (
+    <>
+      <View style={styles.summaryHeader}>
+        <View>
+          <Text style={styles.summaryHeaderTitle}>
+            {selectedChallengePoint.name}
+          </Text>
+          {arrivesNumber <= 0 ?
+            <Text>Aún no lo has visitado</Text> :
+            <Text>Has visitado este lugar {arrivesNumber} veces</Text>}
+        </View>
+
+
+        {arrivesNumber <= 0 ?
+          <Icon
+            style={styles.summaryHeaderButton}
+            name="checkbox-blank-circle-outline"
+            size={40}
+            color="red"
+          /> :
+          <Icon
+            style={styles.summaryHeaderButton}
+            name="check-circle-outline"
+            size={40}
+            color="green"
+          />}
+
+      </View>
+    </>
+  );
+
   const renderContent = () => (
-    <ChallengePointSummaryComponent
-      selectChallengePoint={selectedChallengePoint}
-    />
+    <FeedScreen selectedChallengePointId={selectedChallengePoint.id} />
   );
 
   useEffect(() => {
