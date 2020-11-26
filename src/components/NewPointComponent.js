@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -6,12 +6,14 @@ import {
   View,
   TextInput,
   Alert,
+  Button,
 } from 'react-native';
 import { globalStyleSheet } from '../styles/theme';
 import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import SelectNewPointComponent from '../components/SelectNewPointComponent';
+import MultiselectComponent from '../components/MultiSelectComponent';
 import { MFChallengePoint } from '../firebase/collections/MFChallengePoint';
 import Modal from 'react-native-modal';
 
@@ -22,6 +24,14 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
   const [photo, setPhoto] = useState('');
   const [newPointCoordinates, setNewPointCoordinates] = useState(null);
   const [showSelectPointModal, setShowSelectPointModal] = useState(false);
+
+  const [selectedTags, setSelectedTags] = useState([]);
+
+  const [showSelectTagsModal, setShowSelectTagsModal] = useState(false);
+
+  useEffect(() => {
+    setSelectedTags([]);
+  }, []);
 
   const points = firestore().collection(
     FirebaseCollectionEnum.MFChallengePoint,
@@ -72,6 +82,13 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
           setNewPointCoordinates={setNewPointCoordinates}
         />
       </Modal>
+      <Modal isVisible={showSelectTagsModal}>
+        <MultiselectComponent
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
+          setShowSelectTagsModal={setShowSelectTagsModal}
+        />
+      </Modal>
       <Text style={globalStyleSheet.title}>Informacion de Nuevo Punto</Text>
       <TextInput
         style={styles.inputStyle}
@@ -85,12 +102,12 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
         placeholder="Descripcion"
         value={description}
       />
-      <TextInput
-        style={styles.inputStyle}
-        onChangeText={setLabels}
-        placeholder="Etiquetas"
-        value={labels}
-      />
+      <TouchableOpacity
+        style={styles.addPointTouchable}
+        onPress={() => setShowSelectTagsModal(true)}>
+        <Text>Seleccionar Etiquetas</Text>
+        <Icon name="tag" style={{ marginLeft: 5 }} />
+      </TouchableOpacity>
       <TextInput
         style={styles.inputStyle}
         onChangeText={setPhoto}
@@ -116,6 +133,7 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   mainView: {
     flex: 1,
@@ -157,7 +175,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 10,
     marginHorizontal: 10,
-    marginTop: 10,
+    margin: 5,
   },
   actionButtons: {
     marginTop: 20,
