@@ -1,27 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   Alert,
-  TouchableOpacity,
   Modal,
   Platform,
 } from 'react-native';
-import {MAPBOX_ACCESSTOKEN} from '@env';
+import { MAPBOX_ACCESSTOKEN } from '@env';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import firestore from '@react-native-firebase/firestore';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import DashboardComponent from '../components/DashboardComponent';
 import AnnotationContent from '../components/AnnotationContentComponent';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import ChallengePointComponent from '../components/ChallengePointComponent';
 
-MAPBOX_ACCESSTOKEN =
-  'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA';
-API_URL = 'API_URL';
-
-MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
+MapboxGL.setAccessToken('pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA');
 
 const points = firestore().collection(FirebaseCollectionEnum.MFChallengePoint);
 
@@ -30,7 +23,6 @@ const MapScreen = () => {
   const center = [-84.0795, 9.9328];
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedPoint, setSelectedPoint] = useState(null);
 
   const [mapPoints, setMapPoints] = useState(null);
 
@@ -50,16 +42,7 @@ const MapScreen = () => {
     });
   }, []);
 
-  const center = [-84.0795, 9.9328];
-  const [selectedPoint, setSelectedPoint] = useState({
-    id: 'post2',
-    name: 'Nombre del punto turistico',
-    desc:
-      'Lorem ipsum dolor sit amet' +
-      'consectetur adipiscing elit.Nulla congue vehicula sodales.' +
-      'Donec at suscipit urna, quis tempus sem.Fusce eget magna elit.',
-    point: [-83.7028, 9.3755],
-  });
+  const [selectedPoint, setSelectedPoint] = useState(null);
   return (
     <>
       <Modal
@@ -95,7 +78,7 @@ const MapScreen = () => {
         </MapboxGL.MapView>
       </View>
       {selectedPoint && (
-        <ChallengePointComponent selectedChallengePoint={selectedPoint} />
+        <ChallengePointComponent selectedPoint={selectedPoint} />
       )}
     </>
   );
@@ -113,11 +96,6 @@ const styles = StyleSheet.create({
     elevation: 2,
     height: '20%',
     borderRadius: 10,
-    // backgroundColor: 'white',
-    // borderRadius: 10,
-    // padding: 10,
-    // elevation: 3,
-    // height: '30%',ew design
     flexDirection: 'row',
     alignItems: 'flex-start',
     backgroundColor: 'lightgray',

@@ -1,11 +1,19 @@
 import React from 'react';
-import {Image, TouchableOpacity, StyleSheet, Text, View} from 'react-native';
-import {Avatar} from 'react-native-ui-kitten';
+import { Image, TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import { Avatar } from 'react-native-ui-kitten';
 
-const PostComponent = ({post}) => {
+const PostComponent = ({ post }) => {
+  console.log(post);
   return (
     <View style={styles.card}>
-      <Image source={{uri: post.photo.url}} style={styles.cardImage} />
+      <Image
+        source={{
+          uri: post.photo
+            ? post.photo.postPhoto
+            : 'https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.pngall.com%2Fwp-content%2Fuploads%2F2016%2F05%2FNature-Free-Download-PNG-180x180.png&f=1&nofb=1',
+        }}
+        style={styles.cardImage}
+      />
       <View style={styles.cardHeader}>
         <TouchableOpacity>
           <Avatar
@@ -28,7 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: 'red',
     marginBottom: 25,
   },
   cardImage: {

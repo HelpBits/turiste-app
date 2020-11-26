@@ -1,6 +1,6 @@
-import firebase from '@react-native-firebase/app'
+import firebase from '@react-native-firebase/app';
 import uuid from 'react-native-uuid';
-import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
+import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 
 
 const Firebase = {
@@ -35,4 +35,4 @@ const Firebase = {
   },
 };
 
-export default Firebase
+export default Firebase;

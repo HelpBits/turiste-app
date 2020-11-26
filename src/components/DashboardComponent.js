@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableHighlight, StyleSheet, Text, View} from 'react-native';
+import { TouchableHighlight, StyleSheet, Text, View } from 'react-native';
 
 const DashboardComponent = ({
   setModalVisible,

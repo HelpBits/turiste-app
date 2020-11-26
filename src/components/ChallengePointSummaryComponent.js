@@ -1,8 +1,8 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-const ChallengePointSummaryComponent = ({selectChallengePoint}) => {
+const ChallengePointSummaryComponent = ({ selectChallengePoint }) => {
   return (
     <View>
       <View style={styles.summaryHeader}>
