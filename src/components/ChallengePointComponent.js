@@ -33,7 +33,7 @@ const ChallengePointComponent = ({selectedChallengePoint}) => {
   };
 
   const getTotalArrives = () => {
-    if(!selectedChallengePoint.checkins) return;
+    if (!selectedChallengePoint.checkins) return;
 
     setArrivesNumber(
       selectedChallengePoint
@@ -80,34 +80,32 @@ const ChallengePointComponent = ({selectedChallengePoint}) => {
   */
  
   const renderHeader = () => (
-    <>
-      <View style={styles.summaryHeader}>
-        <View>
-          <Text style={styles.summaryHeaderTitle}>
-            {selectedChallengePoint.name}
-          </Text>
-          {arrivesNumber <= 0 ?
-            <Text>Aún no lo has visitado</Text> :
-            <Text>Has visitado este lugar {arrivesNumber} veces</Text>}
-        </View>
-
-
+    <View style={styles.summaryHeader}>
+      <View>
+        <Text style={styles.summaryHeaderTitle}>
+          {selectedChallengePoint.name}
+        </Text>
         {arrivesNumber <= 0 ?
-          <Icon
-            style={styles.summaryHeaderButton}
-            name="checkbox-blank-circle-outline"
-            size={40}
-            color="red"
-          /> :
-          <Icon
-            style={styles.summaryHeaderButton}
-            name="check-circle-outline"
-            size={40}
-            color="green"
-          />}
-
+          <Text>Aún no lo has visitado</Text> :
+          <Text>Has visitado este lugar {arrivesNumber} veces</Text>}
       </View>
-    </>
+
+
+      {arrivesNumber <= 0 ?
+        <Icon
+          style={styles.summaryHeaderButton}
+          name="checkbox-blank-circle-outline"
+          size={40}
+          color="red"
+        /> :
+        <Icon
+          style={styles.summaryHeaderButton}
+          name="check-circle-outline"
+          size={40}
+          color="green"
+        />}
+
+    </View>
   );
 
   const renderContent = () => (
@@ -136,6 +134,22 @@ const ChallengePointComponent = ({selectedChallengePoint}) => {
 };
 
 const s = StyleSheet.create({
+  summaryHeader: {
+    flexDirection: 'row',
+    flex: 1,
+    height: 200,
+    justifyContent: 'space-between',
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    padding: 15,
+    backgroundColor: 'green',
+  },
+  summaryHeaderTitle: {
+    fontSize: 20,
+  },
+  summaryHeaderButton: {
+    alignSelf: 'baseline',
+  },
   content__header: {
     padding: 15,
     paddingBottom: 0,

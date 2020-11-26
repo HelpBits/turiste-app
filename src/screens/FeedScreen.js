@@ -1,15 +1,13 @@
 //-- Developed by Carlos Delgado
-import React, {useEffect, useState, Component} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  Image,
   View,
-  TouchableOpacity,
+  Text,
   ActivityIndicator,
   StyleSheet,
   ScrollView,
 } from 'react-native';
-import {Text, Avatar, withStyles, List} from 'react-native-ui-kitten';
-import uuid from 'react-native-uuid';
+import {List} from 'react-native-ui-kitten';
 import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
 
 import firestore from '@react-native-firebase/firestore';

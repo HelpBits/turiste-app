@@ -1,8 +1,6 @@
 import React from 'react';
-import {TouchableHighlight, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-
-import faker from 'faker';
 
 const ChallengePointSummaryComponent = ({selectChallengePoint}) => {
   return (
