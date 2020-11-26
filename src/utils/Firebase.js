@@ -1,9 +1,10 @@
 import firebase from '@react-native-firebase/app'
-import uuid from 'uuid'
+import uuid from 'react-native-uuid';
+
 
 const Firebase = {
     uploadPost: post => {
-        const id = uuid.v4()
+        const id = uuid.v4();
         const uploadData = {
             id: id,
             postPhoto: post.photo,
