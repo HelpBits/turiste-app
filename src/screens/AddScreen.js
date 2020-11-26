@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import NewPointComponent from '../components/NewPointComponent';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Modal,
-  Alert,
-  TouchableOpacity,
-} from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import Modal from 'react-native-modal';
 
 import { globalStyleSheet } from '../styles/theme';
 
@@ -17,12 +11,11 @@ const AddScreen = () => {
   return (
     <View style={styles.mainView}>
       <Modal
-        transparent={true}
-        animationType="fade"
-        visible={newPointModalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}>
+        animationIn="slideInRight"
+        animationOut="slideOutRight"
+        backdropColor="white"
+        backdropOpacity={1}
+        isVisible={newPointModalVisible}>
         <NewPointComponent
           setShowPointCreationModal={setNewPointModalVisible}
         />

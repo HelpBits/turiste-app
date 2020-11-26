@@ -3,7 +3,6 @@ import { TouchableOpacity, StyleSheet, Text, View, Alert } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import { MAPBOX_ACCESSTOKEN } from '@env';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { globalStyleSheet } from '../styles/theme';
 import Geolocation from '@react-native-community/geolocation';
 
 MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
@@ -53,7 +52,6 @@ const SelectNewPointComponent = ({
 
   return (
     <View style={styles.mainView}>
-      <Text style={globalStyleSheet.title}>Agregar nuevo punto</Text>
       <View style={styles.mapContainer}>
         <MapboxGL.MapView style={{ flex: 1 }} onPress={onPressMap}>
           <MapboxGL.Camera zoomLevel={12} centerCoordinate={center} />
@@ -67,7 +65,7 @@ const SelectNewPointComponent = ({
           <MapboxGL.UserLocation />
         </MapboxGL.MapView>
       </View>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={styles.actionButtons}>
         <TouchableOpacity
           onPress={() => setShowSelectPointModal(false)}
           style={styles.hideModal}>
@@ -83,17 +81,12 @@ const SelectNewPointComponent = ({
 
 const styles = StyleSheet.create({
   mainView: {
-    backgroundColor: 'green',
-    borderRadius: 20,
-    margin: 10,
-    padding: 15,
-    height: '50%',
-    marginTop: '60%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flex: 1,
   },
   mapContainer: {
-    height: '75%',
+    marginTop: '10%',
+    borderRadius: 30,
+    height: '80%',
     width: '100%',
   },
   touchable: {
@@ -108,6 +101,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     borderRadius: 10,
     marginHorizontal: 10,
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
 
