@@ -14,7 +14,8 @@ const UserScreen = () => (
 
 const styles = StyleSheet.create({
   touchable: {
-    padding: 30,
+    paddingHorizontal: 30,
+    paddingVertical: 15,
     margin: 10,
     backgroundColor: 'lightgray',
     borderRadius: 10,

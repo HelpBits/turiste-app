@@ -61,24 +61,22 @@ const MapScreen = () => {
         />
       </Modal>
       <View style={styles.mainView}>
-        <View style={styles.mapContainer}>
-          <MapboxGL.MapView style={styles.mapView}>
-            <MapboxGL.Camera zoomLevel={zoom} centerCoordinate={center} />
-            {mapPoints
-              ? mapPoints.map((coordinate) => (
-                <MapboxGL.PointAnnotation
-                  coordinate={Object.values(coordinate.geometry)}
-                  id={coordinate.id}
-                  key={coordinate.id}>
-                  <AnnotationContent
-                    coordinate={coordinate}
-                    setSelectedPoint={setSelectedPoint}
-                  />
-                </MapboxGL.PointAnnotation>
-              ))
-              : null}
-          </MapboxGL.MapView>
-        </View>
+        <MapboxGL.MapView style={styles.mapView}>
+          <MapboxGL.Camera zoomLevel={zoom} centerCoordinate={center} />
+          {mapPoints
+            ? mapPoints.map((coordinate) => (
+              <MapboxGL.PointAnnotation
+                coordinate={Object.values(coordinate.geometry)}
+                id={coordinate.id}
+                key={coordinate.id}>
+                <AnnotationContent
+                  coordinate={coordinate}
+                  setSelectedPoint={setSelectedPoint}
+                />
+              </MapboxGL.PointAnnotation>
+            ))
+            : null}
+        </MapboxGL.MapView>
       </View>
       {selectedPoint && (
         <TouchableOpacity
@@ -101,25 +99,19 @@ const MapScreen = () => {
 const styles = StyleSheet.create({
   mainView: {
     flex: 1,
-    marginTop: 75,
-    height: '80%',
-  },
-  mapContainer: {
-    height: '100%',
-    width: '100%',
   },
   mapView: {
     flex: 1,
   },
   openButton: {
-    backgroundColor: 'lightgray',
-    borderRadius: 10,
     padding: 10,
     elevation: 2,
     height: '20%',
+    borderRadius: 10,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'flex-start',
+    backgroundColor: 'lightgray',
+    justifyContent: 'space-between',
   },
   textStyle: {
     color: 'white',
@@ -130,8 +122,8 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     borderRadius: 20,
-    borderColor: 'black',
     borderWidth: 0.7,
+    borderColor: 'black',
   },
 });
 

@@ -6,7 +6,6 @@ import {
   View,
   TextInput,
   Alert,
-  Modal,
 } from 'react-native';
 import { globalStyleSheet } from '../styles/theme';
 import firestore from '@react-native-firebase/firestore';
@@ -14,6 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import SelectNewPointComponent from '../components/SelectNewPointComponent';
 import { MFChallengePoint } from '../firebase/collections/MFChallengePoint';
+import Modal from 'react-native-modal';
 
 const NewPointComponent = ({ setShowPointCreationModal }) => {
   const [name, setName] = useState('');
@@ -56,12 +56,16 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
   return (
     <View style={styles.mainView}>
       <Modal
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}
-        visible={showSelectPointModal}>
+        testID={'modal'}
+        isVisible={showSelectPointModal}
+        backdropColor="#B4B3DB"
+        backdropOpacity={0.3}
+        animationIn="zoomInDown"
+        animationOut="zoomOutUp"
+        animationInTiming={1000}
+        animationOutTiming={1000}
+        backdropTransitionInTiming={1000}
+        backdropTransitionOutTiming={1000}>
         <SelectNewPointComponent
           setShowSelectPointModal={setShowSelectPointModal}
           newPointCoordinates={newPointCoordinates}
@@ -114,15 +118,12 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
 };
 const styles = StyleSheet.create({
   mainView: {
-    margin: 20,
-    marginTop: '50%',
-    height: '60%',
+    flex: 1,
+    marginBottom: 20,
     justifyContent: 'center',
-    backgroundColor: '#f7f7f7',
-    borderRadius: 50,
+    backgroundColor: 'white',
     padding: 30,
     alignItems: 'center',
-    borderWidth: 0.5,
   },
   inputStyle: {
     height: 40,
