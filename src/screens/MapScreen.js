@@ -15,6 +15,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import DashboardComponent from '../components/DashboardComponent';
 import AnnotationContent from '../components/AnnotationContentComponent';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
+import ChallengePointComponent from '../components/ChallengePointComponent';
 
 MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
 
@@ -96,35 +97,7 @@ const MapScreen = () => {
         </MapboxGL.MapView>
       </View>
       {selectedPoint && (
-        <TouchableOpacity
-          style={styles.openButton}
-          onPress={() => {
-            console.log('abriendo');
-            setModalVisible(true);
-          }}>
-          <View>
-            <View style={styles.summaryHeader}>
-              <View>
-                <Text style={styles.summaryHeaderTitle}>
-                  {selectedPoint.name}
-                </Text>
-                <Text>Has visitado este lugar 8 veces</Text>
-              </View>
-              <Icon
-                style={styles.summaryHeaderButton}
-                name="check-circle"
-                size={35}
-                color="green"
-              />
-            </View>
-            <Text style={styles.modalText}>{selectedPoint.desc}</Text>
-          </View>
-          <TouchableOpacity
-            onPress={() => setSelectedPoint(null)}
-            style={styles.closePointInfo}>
-            <Icon name="arrow-down" size={35} color="red" />
-          </TouchableOpacity>
-        </TouchableOpacity>
+        <ChallengePointComponent selectedChallengePoint={selectedPoint} />
       )}
     </>
   );
@@ -163,18 +136,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 0.7,
     borderColor: 'black',
-  },
-  summaryHeader: {
-    flexDirection: 'row',
-    height: 50,
-    justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  summaryHeaderTitle: {
-    fontSize: 20,
-  },
-  summaryHeaderButton: {
-    marginRight: 5,
   },
 });
 
