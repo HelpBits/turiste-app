@@ -1,30 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   Alert,
-  TouchableOpacity,
   Modal,
   Platform,
 } from 'react-native';
 import { MAPBOX_ACCESSTOKEN } from '@env';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import firestore from '@react-native-firebase/firestore';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import DashboardComponent from '../components/DashboardComponent';
 import AnnotationContent from '../components/AnnotationContentComponent';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
+import ChallengePointComponent from '../components/ChallengePointComponent';
 
-MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
+MapboxGL.setAccessToken('pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA');
 
 const points = firestore().collection(FirebaseCollectionEnum.MFChallengePoint);
 
 const MapScreen = () => {
   const zoom = 6.3;
   const center = [-84.0795, 9.9328];
+
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedPoint, setSelectedPoint] = useState(null);
 
   const [mapPoints, setMapPoints] = useState(null);
 
@@ -44,6 +42,7 @@ const MapScreen = () => {
     });
   }, []);
 
+  const [selectedPoint, setSelectedPoint] = useState(null);
   return (
     <>
       <Modal
@@ -79,18 +78,7 @@ const MapScreen = () => {
         </MapboxGL.MapView>
       </View>
       {selectedPoint && (
-        <TouchableOpacity
-          style={styles.openButton}
-          onPress={() => {
-            setModalVisible(true);
-          }}>
-          <Text style={styles.textStyle}>{selectedPoint.name}</Text>
-          <TouchableOpacity
-            onPress={() => setSelectedPoint(null)}
-            style={styles.closePointInfo}>
-            <Icon name="arrow-down" size={15} color="red" />
-          </TouchableOpacity>
-        </TouchableOpacity>
+        <ChallengePointComponent selectedPoint={selectedPoint} />
       )}
     </>
   );

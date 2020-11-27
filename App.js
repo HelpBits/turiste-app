@@ -5,7 +5,7 @@ import { ApplicationProvider } from 'react-native-ui-kitten';
 import TabNavigator from './src/navigation/TabNavigator';
 import AuthNavigator from './src/navigation/AuthNavigator';
 import auth from '@react-native-firebase/auth';
-
+import Firebase, { FirebaseProvider } from './src/utils'
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -18,7 +18,9 @@ const App = () => {
   return (
     <Fragment>
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
-        {!user ? <AuthNavigator /> : <TabNavigator />}
+        <FirebaseProvider value={Firebase}>
+          {!user ? <AuthNavigator /> : <TabNavigator />}
+        </FirebaseProvider>
       </ApplicationProvider>
     </Fragment>
   );

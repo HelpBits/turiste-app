@@ -1,12 +1,12 @@
 import React from 'react';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-
-import HelpScreen from '../screens/HelpScreen';
 import UserScreen from '../screens/UserScreen';
 import MapScreen from '../screens/MapScreen';
 import AddScreen from '../screens/AddScreen';
 import ChallengeScreen from '../screens/ChallengeScreen';
+import HelpScreen from '../screens/HelpScreen';
+
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const TabNavigator = createBottomTabNavigator({
