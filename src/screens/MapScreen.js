@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  Alert,
-  Modal,
-  Platform,
-} from 'react-native';
-import { MAPBOX_ACCESSTOKEN } from '@env';
+import React, {useEffect, useState} from 'react';
+import {View, StyleSheet, Alert, Modal, Platform} from 'react-native';
+import {MAPBOX_ACCESSTOKEN} from '@env';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import firestore from '@react-native-firebase/firestore';
 import DashboardComponent from '../components/DashboardComponent';
 import AnnotationContent from '../components/AnnotationContentComponent';
-import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
+import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
 import ChallengePointComponent from '../components/ChallengePointComponent';
 
-MapboxGL.setAccessToken('pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA');
+MapboxGL.setAccessToken(
+  'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA',
+);
 
 const points = firestore().collection(FirebaseCollectionEnum.MFChallengePoint);
 
@@ -34,11 +30,12 @@ const MapScreen = () => {
     }
 
     points.onSnapshot(async (snapshot) => {
-      setMapPoints(
-        snapshot.docs.map((doc) => {
-          return { id: doc.id, ...doc.data() };
-        }),
-      );
+      const newPoints = snapshot.docs.map((doc) => {
+        return {id: doc.id, ...doc.data()};
+      });
+      setMapPoints(newPoints);
+
+      console.log('POINTS ---> ', newPoints, snapshot.docs.length);
     });
   }, []);
 
@@ -63,17 +60,20 @@ const MapScreen = () => {
         <MapboxGL.MapView style={styles.mapView}>
           <MapboxGL.Camera zoomLevel={zoom} centerCoordinate={center} />
           {mapPoints
-            ? mapPoints.map((coordinate) => (
-              <MapboxGL.PointAnnotation
-                coordinate={Object.values(coordinate.geometry)}
-                id={coordinate.id}
-                key={coordinate.id}>
-                <AnnotationContent
-                  coordinate={coordinate}
-                  setSelectedPoint={setSelectedPoint}
-                />
-              </MapboxGL.PointAnnotation>
-            ))
+            ? mapPoints.map((mapPoint) => (
+                <MapboxGL.PointAnnotation
+                  coordinate={[
+                    mapPoint.geometry.latitude,
+                    mapPoint.geometry.longitude,
+                  ]}
+                  id={mapPoint.id}
+                  key={mapPoint.id}>
+                  <AnnotationContent
+                    coordinate={mapPoint.geometry}
+                    setSelectedPoint={setSelectedPoint}
+                  />
+                </MapboxGL.PointAnnotation>
+              ))
             : null}
         </MapboxGL.MapView>
       </View>
