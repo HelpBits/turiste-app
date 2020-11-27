@@ -1,6 +1,6 @@
 //-- Developed by Carlos Delgado
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, ScrollView } from 'react-native';
+import { Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 
 import firestore from '@react-native-firebase/firestore';
@@ -9,23 +9,17 @@ import PostComponent from '../components/PostComponent';
 
 const postsRef = firestore().collection(FirebaseCollectionEnum.MFPost);
 
-
 const FeedScreen = ({ selectedChallengePoint }) => {
     const [posts, setPosts] = useState(null);
     const [isRefreshing, setIsRefreshing] = useState(false);
 
     const fetchPosts = (id) => {
+        console.log('******* id', id);
         try {
-            postsRef.where('challengePointId', '==', id).onSnapshot(
-                async (snapshot) => {
-                    const postList = snapshot.docs.map((doc) => ({
-                        ...doc.data(),
-                    }));
-                    setPosts(postList);
-                    setIsRefreshing(false);
-                },
-                (error) => console.log(error),
-            );
+            postsRef.where('challengePointId', '==', id).get()
+                .then(function (querySnapshot) {
+                    setPosts(querySnapshot.docs.map((doc) => { return { id: doc.id, ...doc.data() } }));
+                })
         } catch (e) {
             console.error(e);
         }
@@ -33,11 +27,18 @@ const FeedScreen = ({ selectedChallengePoint }) => {
 
     useEffect(() => {
         fetchPosts(selectedChallengePoint.id);
-    }, []);
+    }, [
+        selectedChallengePoint
+    ]);
 
     return (
         <ScrollView style={styles.scrollView}>
-            {posts && posts.map((post) => <PostComponent post={post} />)}
+            <Image style={styles.container}
+                source={{
+                    uri: selectedChallengePoint.photo,
+                }}
+            />
+            {posts && posts.map((post) => <PostComponent key={post.id} post={post} />)}
         </ScrollView>
     );
 };
@@ -56,6 +57,13 @@ const styles = StyleSheet.create({
         paddingTop: 5,
         paddingBottom: 5,
     },
+    container: {
+        width: '100%',
+        height: 300,
+    },
+    scrollView: {
+        marginBottom: 60,
+    }
 });
 
 export default FeedScreen;

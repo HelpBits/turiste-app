@@ -89,12 +89,12 @@ const styles = StyleSheet.create({
     summaryHeader: {
         flexDirection: 'row',
         flex: 1,
-        height: 200,
+        height: 120,
         justifyContent: 'space-between',
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
         padding: 15,
-        backgroundColor: 'green',
+        backgroundColor: 'white',
     },
     summaryHeaderTitle: {
         fontSize: 20,
