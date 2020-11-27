@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import NewPointComponent from '../components/NewPointComponent';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
-
 import { globalStyleSheet } from '../styles/theme';
 
 const AddScreen = () => {
@@ -20,8 +19,7 @@ const AddScreen = () => {
           setShowPointCreationModal={setNewPointModalVisible}
         />
       </Modal>
-      <Text style={globalStyleSheet.title}>agregar</Text>
-      <Text style={{ marginVertical: 10 }}>que comience la diversion u.u</Text>
+      <Text style={globalStyleSheet.title}>AGREGAR</Text>
       <TouchableOpacity
         style={styles.touchable}
         onPress={() => setNewPointModalVisible(true)}>
@@ -39,10 +37,12 @@ const styles = StyleSheet.create({
   touchable: {
     margin: 10,
     padding: 10,
-    paddingHorizontal: '20%',
+    paddingHorizontal: '22%',
     justifyContent: 'center',
     borderColor: 'orange',
-    borderWidth: 1,
+    backgroundColor: 'lightgray',
+    borderWidth: 0.5,
+    borderRadius: 10,
   },
   touchableText: {
     fontWeight: 'bold',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -12,22 +12,89 @@ import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import SelectNewPointComponent from '../components/SelectNewPointComponent';
+import MultiselectComponent from '../components/MultiSelectComponent';
 import { MFChallengePoint } from '../firebase/collections/MFChallengePoint';
 import Modal from 'react-native-modal';
+import uuid from 'react-native-uuid';
+import ImagePicker from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
 
 const NewPointComponent = ({ setShowPointCreationModal }) => {
   const [name, setName] = useState('');
+  const [tags, setTags] = useState([]);
+  const [photo, setPhoto] = useState(null);
   const [description, setDescription] = useState('');
-  const [labels, setLabels] = useState('');
-  const [photo, setPhoto] = useState('');
+  const [selectedTags, setSelectedTags] = useState([]);
   const [newPointCoordinates, setNewPointCoordinates] = useState(null);
   const [showSelectPointModal, setShowSelectPointModal] = useState(false);
+  const [showSelectTagsModal, setShowSelectTagsModal] = useState(false);
 
+  const tagModel = firestore().collection(FirebaseCollectionEnum.MFLabel);
   const points = firestore().collection(
     FirebaseCollectionEnum.MFChallengePoint,
   );
 
+  const setImageUrl = (reference) => {
+    reference
+      .getDownloadURL()
+      .then((res) => setPhoto(res))
+      .catch((err) => console.log(err));
+  };
+
+  const uploadImageToStorage = (path) => {
+    let reference = storage().ref(`media/photos/${uuid.v4()}`);
+    let task = reference.putFile(path);
+
+    task
+      .then((res) => {
+        setImageUrl(reference);
+      })
+      .catch((e) => console.log('uploading image error => ', e));
+  };
+
+  useEffect(() => {
+    tagModel.onSnapshot(async (snapshot) => {
+      setTags(
+        snapshot.docs.map((doc) => {
+          return { id: doc.id, ...doc.data() };
+        }),
+      );
+    });
+    setSelectedTags([]);
+  }, []);
+
+  const selectPhotoFromLibrary = () => {
+    ImagePicker.launchImageLibrary(
+      {
+        mediaType: 'photo',
+        includeBase64: false,
+        maxHeight: 200,
+        maxWidth: 200,
+      },
+      (response) => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+          console.log('User tapped custom button: ', response.customButton);
+        } else {
+          setPhoto(response.uri);
+          uploadImageToStorage(response.uri);
+        }
+      },
+      (error) => {
+        console.log('error', error);
+      },
+    );
+  };
+
   const addNewPoint = () => {
+    const labels = selectedTags.map((tagId) =>
+      tags.find((tag) => tag.id === tagId),
+    );
+    const popularity = 0;
+    const checkIns = [];
     const geometry = {
       latitude: newPointCoordinates[0],
       longitude: newPointCoordinates[1],
@@ -36,12 +103,13 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
     const newPoint = new MFChallengePoint(
       name,
       description,
-      photo,
       geometry,
-      labels.split(','),
+      popularity,
+      photo,
+      labels,
+      checkIns,
       creationDate,
     );
-
     points
       .add(newPoint)
       .then(() => {
@@ -72,7 +140,15 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
           setNewPointCoordinates={setNewPointCoordinates}
         />
       </Modal>
-      <Text style={globalStyleSheet.title}>Informacion de Nuevo Punto</Text>
+      <Modal isVisible={showSelectTagsModal}>
+        <MultiselectComponent
+          tags={tags}
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
+          setShowSelectTagsModal={setShowSelectTagsModal}
+        />
+      </Modal>
+      <Text style={globalStyleSheet.title}>Información del Nuevo Punto</Text>
       <TextInput
         style={styles.inputStyle}
         onChangeText={setName}
@@ -85,22 +161,33 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
         placeholder="Descripcion"
         value={description}
       />
-      <TextInput
-        style={styles.inputStyle}
-        onChangeText={setLabels}
-        placeholder="Etiquetas"
-        value={labels}
-      />
-      <TextInput
-        style={styles.inputStyle}
-        onChangeText={setPhoto}
-        placeholder="Foto"
-        value={photo}
-      />
+      <TouchableOpacity
+        style={styles.addPointTouchable}
+        onPress={() => setShowSelectTagsModal(true)}>
+        <Text>Etiquetas</Text>
+        <Icon name="tag" style={{ marginLeft: 5 }} />
+      </TouchableOpacity>
+      <View style={styles.tagsContainer}>
+        {selectedTags &&
+          selectedTags
+            .map((tagId) => tags.find((tag) => tag.id === tagId).name)
+            .map((tag) => (
+              <View style={styles.tagChip}>
+                <Icon name="tag" size={10} color="white" />
+                <Text style={styles.chipText}>{tag}</Text>
+              </View>
+            ))}
+      </View>
+      <TouchableOpacity
+        style={styles.addPointTouchable}
+        onPress={selectPhotoFromLibrary}>
+        <Text>Agregar Foto</Text>
+        <Icon name="image" style={{ marginLeft: 5 }} />
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.addPointTouchable}
         onPress={() => setShowSelectPointModal(true)}>
-        <Text>Seleccionar punto</Text>
+        <Text>Seleccionar Punto</Text>
         <Icon name="map" style={{ marginLeft: 5 }} />
       </TouchableOpacity>
       <View style={styles.actionButtons}>
@@ -116,54 +203,62 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   mainView: {
     flex: 1,
     marginBottom: 20,
     justifyContent: 'center',
     backgroundColor: 'white',
-    padding: 30,
     alignItems: 'center',
   },
   inputStyle: {
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    width: '75%',
+    width: '85%',
     padding: 5,
     margin: 5,
     borderRadius: 10,
     backgroundColor: 'white',
   },
   touchable: {
-    width: '30%',
+    width: '40%',
     height: 30,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'lightgray',
-    borderColor: 'red',
-    borderWidth: 0.5,
+    borderWidth: 0.3,
     borderRadius: 10,
     marginHorizontal: 10,
   },
   addPointTouchable: {
     backgroundColor: 'white',
-    width: '75%',
+    width: '85%',
     height: 35,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     borderColor: 'red',
-    borderWidth: 0.5,
+    borderWidth: 0.3,
     borderRadius: 10,
     marginHorizontal: 10,
-    marginTop: 10,
+    margin: 5,
   },
   actionButtons: {
     marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  tagsContainer: { flexDirection: 'row', flexWrap: 'wrap', width: '75%' },
+  tagChip: {
+    borderRadius: 10,
+    backgroundColor: 'gray',
+    margin: 1,
+    padding: 3,
+    flexDirection: 'row',
+  },
+  chipText: { color: 'white', marginLeft: 1 },
 });
 
 export default NewPointComponent;
