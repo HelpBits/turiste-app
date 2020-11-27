@@ -1,24 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Alert, Modal, Platform } from 'react-native';
-import { MAPBOX_ACCESSTOKEN } from '@env';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Alert, Platform} from 'react-native';
+import {MAPBOX_ACCESSTOKEN} from '@env';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import firestore from '@react-native-firebase/firestore';
-import DashboardComponent from '../components/DashboardComponent';
-import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
-import ChallengePointComponent from '../components/ChallengePointComponent';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-
-MapboxGL.setAccessToken(
-  'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA',
-);
+import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
+import MapComponent from '../components/MapComponent';
 
 const points = firestore().collection(FirebaseCollectionEnum.MFChallengePoint);
 
 const MapScreen = () => {
   const zoom = 6.3;
   const center = [-84.0795, 9.9328];
-
-  const [modalVisible, setModalVisible] = useState(false);
 
   const [mapPoints, setMapPoints] = useState(null);
 
@@ -31,52 +23,16 @@ const MapScreen = () => {
 
     points.onSnapshot(async (snapshot) => {
       const newPoints = snapshot.docs.map((doc) => {
-        return { id: doc.id, ...doc.data() };
+        return {id: doc.id, ...doc.data()};
       });
       setMapPoints(newPoints);
-
-      console.log('POINTS ---> ', newPoints, snapshot.docs.length);
     });
   }, []);
 
-  const [selectedPoint, setSelectedPoint] = useState(null);
   return (
     <>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}>
-        <DashboardComponent
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          selectedPoint={selectedPoint}
-          setSelectedPoint={setSelectedPoint}
-        />
-      </Modal>
-      <View style={styles.mainView}>
-        <MapboxGL.MapView style={styles.mapView}>
-          <MapboxGL.Camera zoomLevel={zoom} centerCoordinate={center} />
-          {mapPoints
-            ? mapPoints.map((mapPoint) => (
-              <MapboxGL.PointAnnotation
-                coordinate={[
-                  mapPoint.geometry.latitude,
-                  mapPoint.geometry.longitude,
-                ]}
-                id={mapPoint.id}
-                key={mapPoint.id}
-                onSelected={() => setSelectedPoint(mapPoint)}>
-                <Icon name="map-marker-alt" size={20} color="red" />
-              </MapboxGL.PointAnnotation>
-            ))
-            : null}
-        </MapboxGL.MapView>
-      </View>
-      {selectedPoint && (
-        <ChallengePointComponent selectedPoint={selectedPoint} />
+      {mapPoints && (
+        <MapComponent mapPoints={mapPoints} zoom={zoom} center={center} />
       )}
     </>
   );

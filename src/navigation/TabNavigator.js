@@ -1,10 +1,11 @@
 import React from 'react';
-import { createAppContainer } from 'react-navigation';
-import { createBottomTabNavigator } from 'react-navigation-tabs';
+import {createAppContainer} from 'react-navigation';
+import {createBottomTabNavigator} from 'react-navigation-tabs';
 import UserScreen from '../screens/UserScreen';
 import MapScreen from '../screens/MapScreen';
 import AddScreen from '../screens/AddScreen';
 import ChallengeScreen from '../screens/ChallengeScreen';
+import {ChallengeNavigator} from '../navigation/ChallengeNavigator';
 import HelpScreen from '../screens/HelpScreen';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -13,15 +14,15 @@ const TabNavigator = createBottomTabNavigator({
   Mapa: {
     screen: MapScreen,
     navigationOptions: {
-      tabBarIcon: ({ focused }) => (
+      tabBarIcon: ({focused}) => (
         <Icon name="map" size={20} color={focused ? '#111' : '#939393'} />
       ),
     },
   },
   Retos: {
-    screen: ChallengeScreen,
+    screen: ChallengeNavigator,
     navigationOptions: {
-      tabBarIcon: ({ focused }) => (
+      tabBarIcon: ({focused}) => (
         <Icon name="flag" size={20} color={focused ? '#111' : '#939393'} />
       ),
     },
@@ -29,7 +30,7 @@ const TabNavigator = createBottomTabNavigator({
   Agregar: {
     screen: AddScreen,
     navigationOptions: {
-      tabBarIcon: ({ focused }) => (
+      tabBarIcon: ({focused}) => (
         <Icon name="plus" size={20} color={focused ? '#111' : '#939393'} />
       ),
     },
@@ -37,7 +38,7 @@ const TabNavigator = createBottomTabNavigator({
   Usuario: {
     screen: UserScreen,
     navigationOptions: {
-      tabBarIcon: ({ focused }) => (
+      tabBarIcon: ({focused}) => (
         <Icon name="user" size={20} color={focused ? '#111' : '#939393'} />
       ),
     },
@@ -45,7 +46,7 @@ const TabNavigator = createBottomTabNavigator({
   Ayuda: {
     screen: HelpScreen,
     navigationOptions: {
-      tabBarIcon: ({ focused }) => (
+      tabBarIcon: ({focused}) => (
         <Icon name="home" size={20} color={focused ? '#111' : '#939393'} />
       ),
     },

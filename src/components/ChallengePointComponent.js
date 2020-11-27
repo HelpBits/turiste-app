@@ -11,8 +11,6 @@ const ChallengePointComponent = ({selectedPoint}) => {
   const [arrivesNumber, setArrivesNumber] = useState(0);
   const modalizeRef = useRef(null);
 
-  console.log('INTO --->', selectedPoint);
-
   const handleClosed = () => {
     console.log('closed');
   };
