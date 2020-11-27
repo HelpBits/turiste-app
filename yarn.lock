@@ -1207,6 +1207,11 @@
     "@types/geojson" "^7946.0.7"
     debounce "^1.2.0"
 
+"@react-native-picker/picker@^1.9.3":
+  version "1.9.3"
+  resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-1.9.3.tgz#60fba63445c539928f9cd32973ffa4c3221ffd83"
+  integrity sha512-8wNd1Cold2mciTq5Djo4c+FU1x4+weqmR8WAFWOJ1yfkh0sOiAa/9SdFbHZK2fWZCK+W08iLqWWi5KGQDaqlWw==
+
 "@react-navigation/core@^3.7.9":
   version "3.7.9"
   resolved "https://registry.yarnpkg.com/@react-navigation/core/-/core-3.7.9.tgz#3f7ba0fcb6c8d74a77a057382af198d84c7c4e3b"
