@@ -13,6 +13,7 @@ import AddPostScreen from './AddPostScreen';
 const postsRef = firestore().collection(FirebaseCollectionEnum.MFPost);
 
 const FeedScreen = ({ selectedChallengePoint }) => {
+<<<<<<< HEAD
     const [posts, setPosts] = useState(null);
     const [newPostModalVisible, setNewPostModalVisible] = useState(false);
 
@@ -64,6 +65,41 @@ const FeedScreen = ({ selectedChallengePoint }) => {
             {posts && posts.map((post) => <PostComponent key={post.id} post={post} />)}
         </ScrollView>
     );
+=======
+  const [posts, setPosts] = useState(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const fetchPosts = (id) => {
+    console.log('id', id);
+    try {
+      postsRef.where('challengePointId', '==', id).onSnapshot(
+        async (snapshot) => {
+          const postList = snapshot.docs.map((doc) => ({
+            ...doc.data(),
+          }));
+          setPosts(postList);
+          setIsRefreshing(false);
+          console.log(postList);
+        },
+        (error) => console.log(error),
+      );
+    } catch (e) {
+      console.error(e);
+    }
+    };
+
+    console.log('INTO --->', selectedChallengePoint);
+
+  useEffect(() => {
+      fetchPosts(selectedChallengePoint.id);
+  }, []);
+
+  return (
+      <ScrollView style={styles.scrollView}>
+            {posts && posts.map((post) => <PostComponent post={post} />)}
+    </ScrollView>
+  );
+>>>>>>> d64ec8a... modal header updated
 };
 
 const styles = StyleSheet.create({
