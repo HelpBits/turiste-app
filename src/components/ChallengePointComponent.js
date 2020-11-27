@@ -1,13 +1,17 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Modalize } from 'react-native-modalize';
+import React, {useRef, useState, useEffect} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import {Modalize} from 'react-native-modalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import auth from '@react-native-firebase/auth';
 
 import FeedScreen from '../screens/FeedScreen';
 
-const ChallengePointComponent = ({ selectedPoint }) => {
-  const [arrivesNumber, setArrivesNumber] = useState(1000);
+const user = auth().currentUser;
+const ChallengePointComponent = ({selectedPoint}) => {
+  const [arrivesNumber, setArrivesNumber] = useState(0);
   const modalizeRef = useRef(null);
+
+  console.log('INTO --->', selectedPoint);
 
   const handleClosed = () => {
     console.log('closed');
@@ -19,6 +23,18 @@ const ChallengePointComponent = ({ selectedPoint }) => {
     }
   };
 
+  const handleArrivesNumber = () => {
+    if (!selectedPoint.checkins) {
+      return;
+    }
+
+    const myCheckins = selectedPoint.checkins.filter(
+      (checkin) => checkin.userId === user.uid,
+    );
+
+    setArrivesNumber(myCheckins.length);
+  };
+
   const HeaderComponent = () => {
     return (
       <View style={styles.summaryHeader}>
@@ -27,8 +43,8 @@ const ChallengePointComponent = ({ selectedPoint }) => {
           {arrivesNumber <= 0 ? (
             <Text>Aún no lo has visitado</Text>
           ) : (
-              <Text>Has visitado este lugar {arrivesNumber} veces</Text>
-            )}
+            <Text>Has visitado este lugar {arrivesNumber} veces</Text>
+          )}
         </View>
 
         {arrivesNumber <= 0 ? (
@@ -39,13 +55,13 @@ const ChallengePointComponent = ({ selectedPoint }) => {
             color="red"
           />
         ) : (
-            <Icon
-              style={styles.summaryHeaderButton}
-              name="check-circle-outline"
-              size={40}
-              color="green"
-            />
-          )}
+          <Icon
+            style={styles.summaryHeaderButton}
+            name="check-circle-outline"
+            size={40}
+            color="green"
+          />
+        )}
       </View>
     );
   };
@@ -59,7 +75,7 @@ const ChallengePointComponent = ({ selectedPoint }) => {
       ref={modalizeRef}
       onClosed={handleClosed}
       alwaysOpen={200}
-      modalStyle={{ marginTop: '10%'}}
+      modalStyle={{marginTop: '10%'}}
       onOpen={() => console.log('OPEN')}
       onOpened={() => console.log('OPENED')}
       onPositionChange={(value) => console.log('position change', value)}
