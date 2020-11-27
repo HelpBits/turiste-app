@@ -3,6 +3,9 @@ import uuid from 'react-native-uuid';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import auth from '@react-native-firebase/auth';
 
+import storage from '@react-native-firebase/storage';
+
+
 const user = auth().currentUser;
 
 const Firebase = {
