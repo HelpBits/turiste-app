@@ -1,9 +1,8 @@
 import React from 'react';
-import { Image, TouchableOpacity, StyleSheet, Text, View } from 'react-native';
-import { Avatar } from 'react-native-ui-kitten';
+import {Image, TouchableOpacity, StyleSheet, Text, View} from 'react-native';
+import {Avatar} from 'react-native-ui-kitten';
 
-const PostComponent = ({ post }) => {
-  console.log(post);
+const PostComponent = ({post}) => {
   return (
     <View style={styles.card}>
       <Image
