@@ -43,7 +43,8 @@ const FeedScreen = ({ selectedChallengePoint }) => {
                 backdropOpacity={1}
                 isVisible={newPostModalVisible}>
                 <AddPostScreen
-                    setShowPostCreationModal={setNewPostModalVisible}
+                    setShowPostCreationModal={ setNewPostModalVisible }
+                    challengePoint={ selectedChallengePoint }
                 />
             </Modal>
             <Image style={styles.container}

@@ -26,7 +26,8 @@ class AddPost extends Component {
         }
         try {
             const post = {
-                photo: this.state.image,
+                challengePointId: this.props.challengePoint.id,
+                photo: this.state.image.uri,
                 description: this.state.description,
             };
             this.props.firebase.uploadPost(post);
