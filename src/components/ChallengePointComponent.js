@@ -1,11 +1,11 @@
-import React, {useRef, useState, useEffect} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {Modalize} from 'react-native-modalize';
+import React, { useRef, useState, useEffect } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { Modalize } from 'react-native-modalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import FeedScreen from '../screens/FeedScreen';
 
-const ChallengePointComponent = ({selectedPoint}) => {
+const ChallengePointComponent = ({ selectedPoint }) => {
   const [arrivesNumber, setArrivesNumber] = useState(0);
   const modalizeRef = useRef(null);
 
@@ -27,8 +27,8 @@ const ChallengePointComponent = ({selectedPoint}) => {
           {arrivesNumber <= 0 ? (
             <Text>Aún no lo has visitado</Text>
           ) : (
-            <Text>Has visitado este lugar {arrivesNumber} veces</Text>
-          )}
+              <Text>Has visitado este lugar {arrivesNumber} veces</Text>
+            )}
         </View>
 
         {arrivesNumber <= 0 ? (
@@ -39,13 +39,13 @@ const ChallengePointComponent = ({selectedPoint}) => {
             color="red"
           />
         ) : (
-          <Icon
-            style={styles.summaryHeaderButton}
-            name="check-circle-outline"
-            size={40}
-            color="green"
-          />
-        )}
+            <Icon
+              style={styles.summaryHeaderButton}
+              name="check-circle-outline"
+              size={40}
+              color="green"
+            />
+          )}
       </View>
     );
   };
@@ -59,7 +59,7 @@ const ChallengePointComponent = ({selectedPoint}) => {
       ref={modalizeRef}
       onClosed={handleClosed}
       alwaysOpen={200}
-      modalStyle={{marginTop: '10%'}}
+      modalStyle={{ marginTop: '10%' }}
       onOpen={() => console.log('OPEN')}
       onOpened={() => console.log('OPENED')}
       onPositionChange={(value) => console.log('position change', value)}
@@ -68,7 +68,7 @@ const ChallengePointComponent = ({selectedPoint}) => {
         stickyHeaderIndices: [0],
       }}>
       <HeaderComponent />
-      <FeedScreen selectedChallengePointId={selectedPoint.id} />
+      <FeedScreen selectedChallengePoint={selectedPoint} />
     </Modalize>
   );
 };
