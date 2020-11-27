@@ -1,7 +1,7 @@
 import {StyleSheet, ScrollView, Image} from 'react-native';
 import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
-import React, { useEffect, useState } from 'react';
-import { Button } from 'react-native-ui-kitten';
+import React, {useEffect, useState} from 'react';
+import {Button} from 'react-native-ui-kitten';
 import Modal from 'react-native-modal';
 
 import firestore from '@react-native-firebase/firestore';
@@ -54,7 +54,11 @@ const FeedScreen = ({selectedChallengePoint}) => {
       <Image
         style={styles.container}
         source={{
-          uri: selectedChallengePoint ? selectedChallengePoint.photo ? selectedChallengePoint.photo : '' : '',
+          uri: selectedChallengePoint
+            ? selectedChallengePoint.photo
+              ? selectedChallengePoint.photo
+              : ''
+            : '',
         }}
       />
       <Button
@@ -73,27 +77,27 @@ const FeedScreen = ({selectedChallengePoint}) => {
 };
 
 const styles = StyleSheet.create({
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        paddingLeft: 10,
-        paddingTop: 10,
-        paddingBottom: 5,
-    },
-    description: {
-        fontSize: 14,
-        paddingLeft: 10,
-        paddingTop: 5,
-        paddingBottom: 5,
-    },
-    container: {
-        width: '100%',
-        height: 300,
-        marginBottom:20,
-    },
-    scrollView: {
-        marginBottom: 60,
-    }
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    paddingLeft: 10,
+    paddingTop: 10,
+    paddingBottom: 5,
+  },
+  description: {
+    fontSize: 14,
+    paddingLeft: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
+  },
+  container: {
+    width: '100%',
+    height: 300,
+    marginBottom: 20,
+  },
+  scrollView: {
+    marginBottom: 60,
+  },
 });
 
 export default FeedScreen;
