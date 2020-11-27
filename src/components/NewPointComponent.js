@@ -15,8 +15,9 @@ import SelectNewPointComponent from '../components/SelectNewPointComponent';
 import MultiselectComponent from '../components/MultiSelectComponent';
 import { MFChallengePoint } from '../firebase/collections/MFChallengePoint';
 import Modal from 'react-native-modal';
-
+import uuid from 'react-native-uuid';
 import ImagePicker from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
 
 const NewPointComponent = ({ setShowPointCreationModal }) => {
   const [name, setName] = useState('');
@@ -32,6 +33,24 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
   const points = firestore().collection(
     FirebaseCollectionEnum.MFChallengePoint,
   );
+
+  const setImageUrl = (reference) => {
+    reference
+      .getDownloadURL()
+      .then((res) => setPhoto(res))
+      .catch((err) => console.log(err));
+  };
+
+  const uploadImageToStorage = (path) => {
+    let reference = storage().ref(`media/photos/${uuid.v4()}`);
+    let task = reference.putFile(path);
+
+    task
+      .then((res) => {
+        setImageUrl(reference);
+      })
+      .catch((e) => console.log('uploading image error => ', e));
+  };
 
   useEffect(() => {
     tagModel.onSnapshot(async (snapshot) => {
@@ -53,7 +72,19 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
         maxWidth: 200,
       },
       (response) => {
-        setPhoto(response.uri);
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+          console.log('User tapped custom button: ', response.customButton);
+        } else {
+          setPhoto(response.uri);
+          uploadImageToStorage(response.uri);
+        }
+      },
+      (error) => {
+        console.log('error', error);
       },
     );
   };
@@ -63,7 +94,7 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
       tags.find((tag) => tag.id === tagId),
     );
     const popularity = 0;
-    const checkIns = {};
+    const checkIns = [];
     const geometry = {
       latitude: newPointCoordinates[0],
       longitude: newPointCoordinates[1],
@@ -74,7 +105,7 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
       description,
       geometry,
       popularity,
-      photo, // missing
+      photo,
       labels,
       checkIns,
       creationDate,
@@ -179,7 +210,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     justifyContent: 'center',
     backgroundColor: 'white',
-    // padding: 10,
     alignItems: 'center',
   },
   inputStyle: {
