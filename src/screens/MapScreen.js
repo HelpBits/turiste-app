@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Alert, Modal, Platform} from 'react-native';
-import {MAPBOX_ACCESSTOKEN} from '@env';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Alert, Modal, Platform } from 'react-native';
+import { MAPBOX_ACCESSTOKEN } from '@env';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import firestore from '@react-native-firebase/firestore';
 import DashboardComponent from '../components/DashboardComponent';
-import AnnotationContent from '../components/AnnotationContentComponent';
-import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
+import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import ChallengePointComponent from '../components/ChallengePointComponent';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -32,7 +31,7 @@ const MapScreen = () => {
 
     points.onSnapshot(async (snapshot) => {
       const newPoints = snapshot.docs.map((doc) => {
-        return {id: doc.id, ...doc.data()};
+        return { id: doc.id, ...doc.data() };
       });
       setMapPoints(newPoints);
 
@@ -62,21 +61,17 @@ const MapScreen = () => {
           <MapboxGL.Camera zoomLevel={zoom} centerCoordinate={center} />
           {mapPoints
             ? mapPoints.map((mapPoint) => (
-                <MapboxGL.PointAnnotation
-                  coordinate={[
-                    mapPoint.geometry.latitude,
-                    mapPoint.geometry.longitude,
-                  ]}
-                  id={mapPoint.id}
-                  key={mapPoint.id}
-                  onSelected={() => setSelectedPoint(mapPoint)}>
-                  <AnnotationContent
-                    coordinate={mapPoint.geometry}
-                    setSelectedPoint={() => setSelectedPoint(mapPoint)}
-                  />
-                  <Icon name="map-marker-alt" size={30} color="red" />
-                </MapboxGL.PointAnnotation>
-              ))
+              <MapboxGL.PointAnnotation
+                coordinate={[
+                  mapPoint.geometry.latitude,
+                  mapPoint.geometry.longitude,
+                ]}
+                id={mapPoint.id}
+                key={mapPoint.id}
+                onSelected={() => setSelectedPoint(mapPoint)}>
+                <Icon name="map-marker-alt" size={20} color="red" />
+              </MapboxGL.PointAnnotation>
+            ))
             : null}
         </MapboxGL.MapView>
       </View>
