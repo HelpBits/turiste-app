@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\components",
+    "\\src\\constants",
+    "\\src\\firebase",
+    "\\src\\firebase\\collections",
+    "\\src\\screens",
+    "\\src\\utils"
+  ],
+  "SelectedNode": "\\src\\screens\\FeedScreen.js",
+  "PreviewInSolutionExplorer": false
+}
