@@ -60,7 +60,7 @@ const ChallengeMapScreen = ({route, navigation}) => {
   }, []);
 
   const noPointsRender = () => (
-    <View>
+    <View style={styles.noPointsContainer}>
       <Image
         style={styles.cardImage}
         source={{
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
   },
   noPointsText: {
-    fontSize: 20,
+    fontSize: 35,
   },
   cardImage: {
     flex: 0.5,

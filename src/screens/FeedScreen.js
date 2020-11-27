@@ -1,7 +1,7 @@
 //-- Developed by Carlos Delgado
-import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, ScrollView } from 'react-native';
-import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
+import React, {useEffect, useState} from 'react';
+import {Text, StyleSheet, ScrollView} from 'react-native';
+import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
 
 import firestore from '@react-native-firebase/firestore';
 
@@ -9,12 +9,11 @@ import PostComponent from '../components/PostComponent';
 
 const postsRef = firestore().collection(FirebaseCollectionEnum.MFPost);
 
-const FeedScreen = ({ selectedChallengePointId }) => {
+const FeedScreen = ({selectedChallengePointId}) => {
   const [posts, setPosts] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const fetchPosts = (id) => {
-    console.log('id', id);
     try {
       postsRef.where('challengePointId', '==', id).onSnapshot(
         async (snapshot) => {
@@ -23,7 +22,6 @@ const FeedScreen = ({ selectedChallengePointId }) => {
           }));
           setPosts(postList);
           setIsRefreshing(false);
-          console.log(postList);
         },
         (error) => console.log(error),
       );
@@ -43,7 +41,7 @@ const FeedScreen = ({ selectedChallengePointId }) => {
         Descripcion de este lugar, multilinea, usualmente tiene mas texto que
         los demas campos.
       </Text>
-      <Text style={[styles.description, { paddingBottom: 10 }]}>
+      <Text style={[styles.description, {paddingBottom: 10}]}>
         Has visitado este lugar n veces
       </Text>
       {posts && posts.map((post) => <PostComponent post={post} />)}

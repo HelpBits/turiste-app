@@ -84,16 +84,10 @@ const ChallengeScreen = ({navigation}) => {
       let completedChallenges = [];
       let inProgressChallenges = [];
 
-      // console.log('PROMISES ------', promisesPoints);
-      // const test = await Promise.all(promisesPoints);
-      // console.log('TEST ------', test);
-
       // filter challenges
       newChallenges.forEach(async (challenge) => {
-        //  console.log('BEFORE RESOLVES ---', challenge.points);
         challenge.points = await Promise.all(challenge.points);
 
-        // console.log('RESOLVES ---', challenge.points);
         let visitedPoints = 0;
         challenge.points.forEach((point) => {
           let userCheckinsNumber = 0;
@@ -117,11 +111,6 @@ const ChallengeScreen = ({navigation}) => {
 
         setChallenges(newChallenges);
       });
-
-      // console.log('CHALLENGE AVAL', avalaibleChallenges);
-      // console.log('CHALLENGE IN PRO', inProgressChallenges);
-      // console.log('CHALLENGE COMPL', completedChallenges);
-      // console.log('CHALLENGE CHAL', newChallenges);
 
       setAvalaibleChallenges(avalaibleChallenges);
       setCompletedChallenges(completedChallenges);

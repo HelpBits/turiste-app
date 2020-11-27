@@ -21,7 +21,6 @@ const ChallengeComponent = ({navigation, challenge}) => {
           style={styles.button}
           onPress={() => {
             navigation.navigate('ChallengeMap', {challengeId: challenge.id});
-            console.log('show point in map', challenge.id);
           }}>
           <Text style={styles.buttonTitle}>Ver en mapa</Text>
         </TouchableOpacity>
