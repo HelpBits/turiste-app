@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -6,30 +6,38 @@ import {
   View,
   TextInput,
   Alert,
-  Button,
 } from 'react-native';
-import { globalStyleSheet } from '../styles/theme';
+import {globalStyleSheet} from '../styles/theme';
 import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
+import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
 import SelectNewPointComponent from '../components/SelectNewPointComponent';
 import MultiselectComponent from '../components/MultiSelectComponent';
-import { MFChallengePoint } from '../firebase/collections/MFChallengePoint';
+import {MFChallengePoint} from '../firebase/collections/MFChallengePoint';
 import Modal from 'react-native-modal';
 
-const NewPointComponent = ({ setShowPointCreationModal }) => {
+const tagModel = firestore().collection(FirebaseCollectionEnum.MFLabel);
+
+const NewPointComponent = ({setShowPointCreationModal}) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [labels, setLabels] = useState('');
+  const [tags, setTags] = useState([]);
   const [photo, setPhoto] = useState('');
   const [newPointCoordinates, setNewPointCoordinates] = useState(null);
   const [showSelectPointModal, setShowSelectPointModal] = useState(false);
 
   const [selectedTags, setSelectedTags] = useState([]);
-
   const [showSelectTagsModal, setShowSelectTagsModal] = useState(false);
 
   useEffect(() => {
+    tagModel.onSnapshot(async (snapshot) => {
+      setTags(
+        snapshot.docs.map((doc) => {
+          return {id: doc.id, ...doc.data()};
+        }),
+      );
+    });
+
     setSelectedTags([]);
   }, []);
 
@@ -48,7 +56,7 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
       description,
       photo,
       geometry,
-      labels.split(','),
+      selectedTags,
       creationDate,
     );
 
@@ -84,6 +92,7 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
       </Modal>
       <Modal isVisible={showSelectTagsModal}>
         <MultiselectComponent
+          tags={tags}
           selectedTags={selectedTags}
           setSelectedTags={setSelectedTags}
           setShowSelectTagsModal={setShowSelectTagsModal}
@@ -106,7 +115,7 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
         style={styles.addPointTouchable}
         onPress={() => setShowSelectTagsModal(true)}>
         <Text>Seleccionar Etiquetas</Text>
-        <Icon name="tag" style={{ marginLeft: 5 }} />
+        <Icon name="tag" style={{marginLeft: 5}} />
       </TouchableOpacity>
       <TextInput
         style={styles.inputStyle}
@@ -118,7 +127,7 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
         style={styles.addPointTouchable}
         onPress={() => setShowSelectPointModal(true)}>
         <Text>Seleccionar punto</Text>
-        <Icon name="map" style={{ marginLeft: 5 }} />
+        <Icon name="map" style={{marginLeft: 5}} />
       </TouchableOpacity>
       <View style={styles.actionButtons}>
         <TouchableOpacity

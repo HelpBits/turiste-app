@@ -8,4 +8,5 @@ export const FirebaseCollectionEnum = {
   MFChallengePoint: 'MFChallengePoint',
   MFChallengePointMarker: 'MFChallengePointMarker',
   MFPost: 'MFPost',
+  MFLabel: 'MFLabel',
 };
