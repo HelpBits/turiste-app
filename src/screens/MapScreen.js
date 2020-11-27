@@ -7,6 +7,7 @@ import DashboardComponent from '../components/DashboardComponent';
 import AnnotationContent from '../components/AnnotationContentComponent';
 import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
 import ChallengePointComponent from '../components/ChallengePointComponent';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 MapboxGL.setAccessToken(
   'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA',
@@ -73,6 +74,7 @@ const MapScreen = () => {
                     coordinate={mapPoint.geometry}
                     setSelectedPoint={() => setSelectedPoint(mapPoint)}
                   />
+                  <Icon name="map-marker-alt" size={30} color="red" />
                 </MapboxGL.PointAnnotation>
               ))
             : null}
