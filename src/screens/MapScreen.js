@@ -67,10 +67,11 @@ const MapScreen = () => {
                     mapPoint.geometry.longitude,
                   ]}
                   id={mapPoint.id}
-                  key={mapPoint.id}>
+                  key={mapPoint.id}
+                  onSelected={() => setSelectedPoint(mapPoint)}>
                   <AnnotationContent
                     coordinate={mapPoint.geometry}
-                    setSelectedPoint={setSelectedPoint}
+                    setSelectedPoint={() => setSelectedPoint(mapPoint)}
                   />
                 </MapboxGL.PointAnnotation>
               ))
