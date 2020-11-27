@@ -27,6 +27,7 @@
     "buffer": "^6.0.3",
     "faker": "^5.1.0",
     "moment": "^2.29.1",
+    "node-fetch": "^2.6.1",
     "react": "16.13.1",
     "react-native": "0.63.3",
     "react-native-dotenv": "^2.4.2",
