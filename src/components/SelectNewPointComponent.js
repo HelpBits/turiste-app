@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   mapContainer: {
     marginTop: '10%',
     borderRadius: 30,
-    height: '80%',
+    height: '85%',
     width: '100%',
   },
   touchable: {
@@ -94,12 +94,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   hideModal: {
+    justifyContent: 'center',
+    alignItems: 'center',
     marginVertical: 20,
     backgroundColor: 'lightgray',
     padding: 10,
+    width: '45%',
     paddingHorizontal: 30,
     borderRadius: 10,
     marginHorizontal: 10,
+    borderWidth: 0.3,
   },
   actionButtons: {
     flexDirection: 'row',

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Image, View, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { Image, View, ScrollView } from 'react-native';
 import { Text, Button, Input } from 'react-native-ui-kitten';
 import ImagePicker from 'react-native-image-picker';
 import { withFirebaseHOC } from '../utils';
@@ -59,16 +59,16 @@ class AddPost extends Component {
               style={{ width: '100%', height: 300 }}
             />
           ) : (
-              <Button
-                onPress={this.selectImage}
-                style={{
-                  alignItems: 'center',
-                  padding: 10,
-                  margin: 30,
-                }}>
-                Elije una foto
-              </Button>
-            )}
+            <Button
+              onPress={this.selectImage}
+              style={{
+                alignItems: 'center',
+                padding: 10,
+                margin: 30,
+              }}>
+              Elije una foto
+            </Button>
+          )}
         </View>
         <View style={{ marginTop: 40, alignItems: 'center' }}>
           <Text category="h4">Detalles del post</Text>

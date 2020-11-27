@@ -1,13 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Alert,
-  Button,
-} from 'react-native';
+import React from 'react';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
 
 const MultiselectComponent = ({
@@ -39,35 +31,44 @@ const MultiselectComponent = ({
           selectedItemIconColor="#CCC"
           itemTextColor="red"
           displayKey="name"
-          searchInputStyle={{color: '#CCC'}}
+          searchInputStyle={{ color: '#CCC' }}
           submitButtonColor="#CCC"
           submitButtonText="Listo"
-          submitButtonStyle={{borderRadius: 5}}
+          submitButtonStyle={{ borderRadius: 5 }}
         />
       </View>
-
       <View>
         {this.multiSelect && this.multiSelect.getSelectedItemsExt(selectedTags)}
       </View>
-      <Button title="Cerrar" onPress={() => setShowSelectTagsModal(false)} />
+      <TouchableOpacity
+        onPress={() => setShowSelectTagsModal(false)}
+        style={styles.closeButton}>
+        <Text>Cerrar</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   mainView: {
-    backgroundColor: 'lightgreen',
-    minHeight: '30%',
     padding: 30,
-    justifyContent: 'space-between',
     borderRadius: 20,
+    backgroundColor: '#f2f2f2',
+    justifyContent: 'space-between',
   },
   multiSelectStyle: {
-    // width: '75%',
-    padding: 5,
     margin: 5,
+    padding: 5,
     borderRadius: 10,
     backgroundColor: 'white',
+  },
+  closeButton: {
+    padding: 10,
+    marginTop: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    backgroundColor: 'lightgray',
+    borderWidth: 0.3,
   },
 });
 
