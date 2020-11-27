@@ -2,11 +2,13 @@ import React, {useRef, useState, useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import auth from '@react-native-firebase/auth';
 
 import FeedScreen from '../screens/FeedScreen';
 
+const user = auth().currentUser;
 const ChallengePointComponent = ({selectedPoint}) => {
-  const [arrivesNumber, setArrivesNumber] = useState(1000);
+  const [arrivesNumber, setArrivesNumber] = useState(0);
   const modalizeRef = useRef(null);
 
   console.log('INTO --->', selectedPoint);
@@ -19,6 +21,18 @@ const ChallengePointComponent = ({selectedPoint}) => {
     if (modalizeRef.current) {
       modalizeRef.current.open();
     }
+  };
+
+  const handleArrivesNumber = () => {
+    if (!selectedPoint.checkins) {
+      return;
+    }
+
+    const myCheckins = selectedPoint.checkins.filter(
+      (checkin) => checkin.userId === user.uid,
+    );
+
+    setArrivesNumber(myCheckins.length);
   };
 
   const HeaderComponent = () => {
