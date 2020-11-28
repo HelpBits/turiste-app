@@ -20,17 +20,6 @@ const challengesRef = firestore().collection(
 );
 const user = auth().currentUser;
 
-
-const pointsRef = firestore().collection(
-    FirebaseCollectionEnum.MFChallengePoint,
-);
-
-const usersRef = firestore().collection(FirebaseCollectionEnum.MFUser);
-const challengesRef = firestore().collection(
-    FirebaseCollectionEnum.MFChallenge,
-);
-const user = auth().currentUser;
-
 const ChallengePointComponent = ({selectedPoint}) => {
   const [arrivesNumber, setArrivesNumber] = useState(0);
   const [userModel, setUserModel] = useState(null);
