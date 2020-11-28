@@ -1,11 +1,18 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, Alert, ScrollView} from 'react-native';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  View,
+  Alert,
+  ScrollView,
+} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
-
 import ChallengeComponent from '../components/ChallengeComponent';
+import Modal from 'react-native-modal';
 
 const ChallengeStatesEnum = {
   InProgress: 'En progreso',
@@ -38,6 +45,8 @@ const ChallengeScreen = ({navigation}) => {
   const [completedChallenges, setCompletedChallenges] = useState(null);
   const [avalaibleChallenges, setAvalaibleChallenges] = useState(null);
   const [inProgressChallenges, setinProgressChallenges] = useState(null);
+
+  const [pickerVisible, setPickerVisible] = useState(false);
 
   const handleChangeChallengeState = (newState) => {
     setChallengeState(newState);
@@ -129,16 +138,35 @@ const ChallengeScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Picker
-        selectedValue={challengeState}
-        style={styles.ChallengePickerState}
-        onValueChange={(itemValue, itemIndex) => {
-          handleChangeChallengeState(itemValue);
-        }}>
-        {challengeStates.map((state, index) => (
-          <Picker.Item label={state} value={state} key={index} />
-        ))}
-      </Picker>
+      <View style={{backgroundColor: 'yellow', flexDirection: 'column'}}>
+        <Modal
+          isVisible={pickerVisible}
+          backdropColor="#B4B3DB"
+          backdropOpacity={0.3}
+          animationIn="zoomInDown"
+          animationOut="zoomOutUp">
+          <View style={styles.pickerModal}>
+            <Picker
+              selectedValue={challengeState}
+              style={styles.ChallengePickerState}
+              onValueChange={(itemValue, itemIndex) => {
+                handleChangeChallengeState(itemValue);
+              }}>
+              {challengeStates.map((state, index) => (
+                <Picker.Item label={state} value={state} key={index} />
+              ))}
+            </Picker>
+            <TouchableOpacity
+              style={styles.hideActionContainer}
+              onPress={() => setPickerVisible(false)}>
+              <Text>OCULTAR</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+      </View>
+      <TouchableOpacity onPress={() => setPickerVisible(true)}>
+        <Text>{challengeState}</Text>
+      </TouchableOpacity>
       <ScrollView style={styles.challenges}>
         {filteredChallenges &&
           filteredChallenges.map((challenge, index) => (
@@ -169,14 +197,28 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   ChallengePickerState: {
-    height: 50,
+    height: '20%',
     width: '100%',
-    borderBottomColor: 'black',
-    borderWidth: 10,
-    paddingBottom: 5,
   },
   challenges: {
     marginTop: 10,
+  },
+  hideActionContainer: {
+    width: '80%',
+    backgroundColor: 'gray',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '50%',
+    padding: 15,
+    borderRadius: 10,
+  },
+  pickerModal: {
+    padding: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 30,
+    backgroundColor: 'white',
+    borderRadius: 10,
   },
 });
 
