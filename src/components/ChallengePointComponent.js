@@ -1,9 +1,18 @@
 import React, {useRef, useState, useEffect} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import FeedScreen from '../screens/FeedScreen';
+import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
+import {MFCheckin} from '../firebase/collections/MFCheckin';
+
+const pointsRef = firestore().collection(
+  FirebaseCollectionEnum.MFChallengePoint,
+);
+const user = auth().currentUser;
 
 const ChallengePointComponent = ({selectedPoint}) => {
   const [arrivesNumber, setArrivesNumber] = useState(0);
@@ -19,6 +28,38 @@ const ChallengePointComponent = ({selectedPoint}) => {
     }
   };
 
+  const setCheckinsNumber = () => {
+    const checkinNumber = selectedPoint.checkins.filter(
+      (chekin) => chekin.userId === user.uid,
+    ).length;
+
+    setArrivesNumber(checkinNumber);
+  };
+
+  const markCheckin = async () => {
+    try {
+      const point = await pointsRef.doc(selectedPoint.id).get();
+      console.log('DOCUMENT ', point);
+      const currentCheckin = new MFCheckin(user.uid, new Date());
+
+      // update chekins
+      selectedPoint.checkins = point.data().checkins;
+      selectedPoint.checkins.push(currentCheckin);
+
+      const newCheckins = {
+        checkins: selectedPoint.checkins,
+      };
+
+      await pointsRef.doc(selectedPoint.id).update(newCheckins);
+
+      setCheckinsNumber();
+      Alert.alert('Check-in realizado correctamente');
+    } catch (error) {
+      console.log('No se puedo marcar el chek-in ', error);
+      Alert.alert('No se puedo marcar el chek-in');
+    }
+  };
+
   const HeaderComponent = () => {
     return (
       <View style={styles.summaryHeader}>
@@ -30,28 +71,30 @@ const ChallengePointComponent = ({selectedPoint}) => {
             <Text>Has visitado este lugar {arrivesNumber} veces</Text>
           )}
         </View>
-
-        {arrivesNumber <= 0 ? (
-          <Icon
-            style={styles.summaryHeaderButton}
-            name="checkbox-blank-circle-outline"
-            size={40}
-            color="red"
-          />
-        ) : (
-          <Icon
-            style={styles.summaryHeaderButton}
-            name="check-circle-outline"
-            size={40}
-            color="green"
-          />
-        )}
+        <TouchableOpacity onPress={markCheckin}>
+          {arrivesNumber <= 0 ? (
+            <Icon
+              style={styles.summaryHeaderButton}
+              name="checkbox-blank-circle-outline"
+              size={40}
+              color="red"
+            />
+          ) : (
+            <Icon
+              style={styles.summaryHeaderButton}
+              name="check-circle-outline"
+              size={40}
+              color="black"
+            />
+          )}
+        </TouchableOpacity>
       </View>
     );
   };
 
   useEffect(() => {
     handleOpen();
+    setCheckinsNumber();
   }, []);
 
   return (
