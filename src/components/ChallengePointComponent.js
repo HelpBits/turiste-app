@@ -12,6 +12,8 @@ import {MFCheckin} from '../firebase/collections/MFCheckin';
 const pointsRef = firestore().collection(
   FirebaseCollectionEnum.MFChallengePoint,
 );
+
+const usersRef = firestore().collection(FirebaseCollectionEnum.MFUser);
 const user = auth().currentUser;
 
 const ChallengePointComponent = ({selectedPoint}) => {
@@ -39,11 +41,11 @@ const ChallengePointComponent = ({selectedPoint}) => {
   const markCheckin = async () => {
     try {
       const point = await pointsRef.doc(selectedPoint.id).get();
-      console.log('DOCUMENT ', point);
       const currentCheckin = new MFCheckin(user.uid, new Date());
-
       // update chekins
-      selectedPoint.checkins = point.data().checkins;
+      selectedPoint.checkins = point.data().checkins
+        ? point.data().checkins
+        : [];
       selectedPoint.checkins.push(currentCheckin);
 
       const newCheckins = {
@@ -54,10 +56,32 @@ const ChallengePointComponent = ({selectedPoint}) => {
 
       setCheckinsNumber();
       Alert.alert('Check-in realizado correctamente');
+      updateUserCheckins();
     } catch (error) {
       console.log('No se puedo marcar el chek-in ', error);
       Alert.alert('No se puedo marcar el chek-in');
     }
+  };
+
+  const updateUserCheckins = () => {
+    usersRef
+      .where('mail', '==', user.email)
+      .get()
+      .then((snapshot) => {
+        const userModel = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        console.log('VALUE ', userModel);
+
+        // update only if the id don't exist
+        usersRef.doc(userModel[0].id).update({
+          visitedChallengePointIds: firestore.FieldValue.arrayUnion(
+            selectedPoint.id,
+          ),
+        });
+      });
   };
 
   const HeaderComponent = () => {
