@@ -104,7 +104,6 @@ export default function RegistrationScreen({ navigation }) {
         .createUserWithEmailAndPassword(email, password)
         .catch((err) => {
           Alert.alert('Ha ocurrido un error!');
-          console.log(err);
         });
       if (register.user) {
         roles.onSnapshot(async (snapshot) => {
@@ -127,6 +126,7 @@ export default function RegistrationScreen({ navigation }) {
           );
 
           await users.add(newUser);
+          Alert.alert('Usuario registrado');
           navigation.navigate('LoginScreen');
         });
       }
