@@ -40,6 +40,7 @@ const MapComponent = ({mapPoints, zoom, center}) => {
       <View style={styles.mainView}>
         <MapboxGL.MapView style={styles.mapView}>
           <MapboxGL.Camera zoomLevel={zoom} centerCoordinate={center} />
+          <MapboxGL.UserLocation />
           {mapPoints
             ? mapPoints.map((mapPoint, index) => (
                 <MapboxGL.PointAnnotation
