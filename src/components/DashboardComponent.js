@@ -1,5 +1,7 @@
 import React from 'react';
 import { TouchableHighlight, StyleSheet, Text, View } from 'react-native';
+import {colors} from '../styles/theme';
+
 
 const DashboardComponent = ({
   setModalVisible,
@@ -34,7 +36,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     marginBottom: 0,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     borderRadius: 20,
     padding: 35,
     alignItems: 'center',
@@ -50,14 +52,14 @@ const styles = StyleSheet.create({
     height: '80%',
   },
   closeButton: {
-    backgroundColor: 'gray',
+    backgroundColor: colors.grey,
     borderRadius: 20,
     padding: 10,
     elevation: 2,
     width: '80%',
   },
   textStyle: {
-    color: 'white',
+    color: colors.white,
     fontWeight: 'bold',
     textAlign: 'center',
   },

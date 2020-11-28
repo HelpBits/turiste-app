@@ -2,6 +2,7 @@ import React, {useRef, useState, useEffect} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {colors} from '../styles/theme';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -16,6 +17,17 @@ const pointsRef = firestore().collection(
 const usersRef = firestore().collection(FirebaseCollectionEnum.MFUser);
 const challengesRef = firestore().collection(
   FirebaseCollectionEnum.MFChallenge,
+);
+const user = auth().currentUser;
+
+
+const pointsRef = firestore().collection(
+    FirebaseCollectionEnum.MFChallengePoint,
+);
+
+const usersRef = firestore().collection(FirebaseCollectionEnum.MFUser);
+const challengesRef = firestore().collection(
+    FirebaseCollectionEnum.MFChallenge,
 );
 const user = auth().currentUser;
 
@@ -148,6 +160,7 @@ const ChallengePointComponent = ({selectedPoint}) => {
           ) : (
             <Text>Has visitado este lugar {arrivesNumber} veces</Text>
           )}
+            <Text>{selectedPoint.description}</Text>
         </View>
         <TouchableOpacity onPress={markCheckin}>
           {arrivesNumber <= 0 ? (
@@ -155,14 +168,14 @@ const ChallengePointComponent = ({selectedPoint}) => {
               style={styles.summaryHeaderButton}
               name="checkbox-blank-circle-outline"
               size={40}
-              color="red"
+              color={colors.red}
             />
           ) : (
             <Icon
               style={styles.summaryHeaderButton}
               name="check-circle-outline"
               size={40}
-              color="black"
+              color={colors.green}
             />
           )}
         </TouchableOpacity>
@@ -193,21 +206,22 @@ const ChallengePointComponent = ({selectedPoint}) => {
         stickyHeaderIndices: [0],
       }}>
       <HeaderComponent />
-      <FeedScreen selectedChallengePointId={selectedPoint.id} />
+      <FeedScreen selectedChallengePoint={selectedPoint} />
     </Modalize>
   );
 };
 
 const styles = StyleSheet.create({
   summaryHeader: {
-    flexDirection: 'row',
-    flex: 1,
-    height: 200,
-    justifyContent: 'space-between',
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    padding: 15,
-    backgroundColor: 'green',
+      flexDirection: 'row',
+      flex: 1,
+      height: 120,
+      justifyContent: 'space-between',
+      borderTopLeftRadius: 15,
+      borderTopRightRadius: 15,
+      padding: 15,
+      backgroundColor: colors.white,
+
   },
   summaryHeaderTitle: {
     fontSize: 20,

@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {colors} from '../styles/theme';
+
 
 const ChallengePointSummaryComponent = ({ selectChallengePoint }) => {
   return (
@@ -16,7 +18,7 @@ const ChallengePointSummaryComponent = ({ selectChallengePoint }) => {
           style={styles.summaryHeaderButton}
           name="check-circle"
           size={35}
-          color="green"
+          color={colors.green}
         />
       </View>
       <Text style={styles.modalText}>{selectChallengePoint.desc}</Text>
@@ -31,7 +33,7 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'space-between',
     marginBottom: 10,
-    backgroundColor: 'red',
+    backgroundColor: colors.red,
   },
   summaryHeaderTitle: {
     fontSize: 20,

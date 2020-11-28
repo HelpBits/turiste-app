@@ -172,7 +172,7 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
           selectedTags
             .map((tagId) => tags.find((tag) => tag.id === tagId).name)
             .map((tag) => (
-              <View style={styles.tagChip}>
+              <View style={styles.tagChip} key={tag}>
                 <Icon name="tag" size={10} color="white" />
                 <Text style={styles.chipText}>{tag}</Text>
               </View>

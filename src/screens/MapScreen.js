@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Alert, Platform} from 'react-native';
+import {Alert, Platform, StyleSheet} from 'react-native';
 import {MAPBOX_ACCESSTOKEN} from '@env';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import firestore from '@react-native-firebase/firestore';
@@ -23,7 +23,7 @@ const MapScreen = () => {
 
     points.onSnapshot(async (snapshot) => {
       const newPoints = snapshot.docs.map((doc) => {
-        return {id: doc.id, ...doc.data()};
+        return { id: doc.id, ...doc.data() };
       });
       setMapPoints(newPoints);
     });

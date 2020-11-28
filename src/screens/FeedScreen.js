@@ -1,68 +1,92 @@
 //-- Developed by Carlos Delgado
-import React, {useEffect, useState} from 'react';
-import {Text, StyleSheet, ScrollView} from 'react-native';
-import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, ScrollView, Image, Alert } from 'react-native';
+import { Text, Button, Input } from 'react-native-ui-kitten';
+import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
+import Modal from 'react-native-modal';
 
 import firestore from '@react-native-firebase/firestore';
 
 import PostComponent from '../components/PostComponent';
+import AddPostScreen from './AddPostScreen';
 
 const postsRef = firestore().collection(FirebaseCollectionEnum.MFPost);
 
-const FeedScreen = ({selectedChallengePointId}) => {
-  const [posts, setPosts] = useState(null);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+const FeedScreen = ({ selectedChallengePoint }) => {
+    const [posts, setPosts] = useState(null);
+    const [newPostModalVisible, setNewPostModalVisible] = useState(false);
 
-  const fetchPosts = (id) => {
-    try {
-      postsRef.where('challengePointId', '==', id).onSnapshot(
-        async (snapshot) => {
-          const postList = snapshot.docs.map((doc) => ({
-            ...doc.data(),
-          }));
-          setPosts(postList);
-          setIsRefreshing(false);
-        },
-        (error) => console.log(error),
-      );
-    } catch (e) {
-      console.error(e);
-    }
-  };
+    const fetchPosts = (id) => {
+        try {
+            postsRef.where('challengePointId', '==', id).get()
+                .then(function (querySnapshot) {
+                    setPosts(querySnapshot.docs.map((doc) => { return { id: doc.id, ...doc.data() }}));
+                })
+        } catch (e) {
+            console.error(e);
+        }
+    };
 
-  useEffect(() => {
-    fetchPosts(selectedChallengePointId);
-  }, []);
+    useEffect(() => {
+        fetchPosts(selectedChallengePoint.id);
+    }, [
+        selectedChallengePoint
+    ]);
 
-  return (
-    <ScrollView style={styles.scrollView}>
-      <Text style={[styles.title]}>Random Text</Text>
-      <Text style={[styles.description]}>
-        Descripcion de este lugar, multilinea, usualmente tiene mas texto que
-        los demas campos.
-      </Text>
-      <Text style={[styles.description, {paddingBottom: 10}]}>
-        Has visitado este lugar n veces
-      </Text>
-      {posts && posts.map((post) => <PostComponent post={post} />)}
-    </ScrollView>
-  );
+    return (
+        <ScrollView style={styles.scrollView}>
+            <Modal
+                animationIn="slideInRight"
+                animationOut="slideOutRight"
+                backdropColor="white"
+                backdropOpacity={1}
+                isVisible={newPostModalVisible}>
+                <AddPostScreen
+                    setShowPostCreationModal={ setNewPostModalVisible }
+                    challengePoint={ selectedChallengePoint }
+                />
+            </Modal>
+            <Image style={styles.container}
+                source={{
+                    uri: selectedChallengePoint.photo,
+                }}
+            />
+            <Button
+                onPress={() => setNewPostModalVisible(true)}
+                style={{
+                    alignItems: 'center',
+                    padding: 10,
+                    margin: 30,
+                }}>
+                Agrega un nuevo post al feed
+              </Button>
+            {posts && posts.map((post) => <PostComponent key={ post.id } post={post} />)}
+        </ScrollView>
+    );
 };
 
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    paddingLeft: 10,
-    paddingTop: 10,
-    paddingBottom: 5,
-  },
-  description: {
-    fontSize: 14,
-    paddingLeft: 10,
-    paddingTop: 5,
-    paddingBottom: 5,
-  },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        paddingLeft: 10,
+        paddingTop: 10,
+        paddingBottom: 5,
+    },
+    description: {
+        fontSize: 14,
+        paddingLeft: 10,
+        paddingTop: 5,
+        paddingBottom: 5,
+    },
+    container: {
+        width: '100%',
+        height: 300,
+        marginBottom:20,
+    },
+    scrollView: {
+        marginBottom: 60,
+    }
 });
 
 export default FeedScreen;

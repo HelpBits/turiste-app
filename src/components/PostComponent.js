@@ -5,14 +5,7 @@ import {Avatar} from 'react-native-ui-kitten';
 const PostComponent = ({post}) => {
   return (
     <View style={styles.card}>
-      <Image
-        source={{
-          uri: post.photo
-            ? post.photo.postPhoto
-            : 'https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.pngall.com%2Fwp-content%2Fuploads%2F2016%2F05%2FNature-Free-Download-PNG-180x180.png&f=1&nofb=1',
-        }}
-        style={styles.cardImage}
-      />
+      <Image source={{uri: post.photo.uri}} style={styles.cardImage} />
       <View style={styles.cardHeader}>
         <TouchableOpacity>
           <Avatar
@@ -24,7 +17,7 @@ const PostComponent = ({post}) => {
             style={styles.cardAvatar}
           />
         </TouchableOpacity>
-        <Text category="p2">{post.review}</Text>
+        <Text style={styles.reviewText}>{post.review}</Text>
       </View>
     </View>
   );
@@ -35,12 +28,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   card: {
-    backgroundColor: 'red',
+    backgroundColor: 'white',
     marginBottom: 25,
   },
   cardImage: {
     width: '100%',
     height: 300,
+    marginTop: 20,
   },
   cardHeader: {
     padding: 10,
@@ -58,6 +52,9 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 0.25,
     borderColor: 'white',
+  },
+  reviewText: {
+    marginRight: 40,
   },
 });
 
