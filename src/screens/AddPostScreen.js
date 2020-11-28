@@ -16,7 +16,11 @@ class AddPost extends Component {
   setImageUrl = (reference) => {
     reference
       .getDownloadURL()
-      .then((res) => (this.state.image.uri = res))
+      .then((res) => {
+        console.log('res', res);
+        this.state.image.uri = res;
+        console.log('this.state.image.uri', this.state.image.uri);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -41,7 +45,7 @@ class AddPost extends Component {
       return;
     }
     try {
-      this.uploadImageToStorage(this.state.image.uri);
+      console.log('this.state.image.uri', this.state.image.uri);
 
       const post = {
         challengePointId: this.props.challengePoint.id,
@@ -72,7 +76,7 @@ class AddPost extends Component {
         console.log('User tapped custom button: ', response.customButton);
       } else {
         const source = {uri: response.uri};
-        console.log(source);
+        this.uploadImageToStorage(response.uri);
         this.setState({
           image: source,
         });
