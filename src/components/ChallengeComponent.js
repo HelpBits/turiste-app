@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    backgroundColor: 'gray',
+    backgroundColor: colors.background1,
     flexDirection: 'column',
     padding: 10,
     marginTop: 10,
@@ -47,10 +47,10 @@ const styles = StyleSheet.create({
   cardImage: {
     flex: 0.5,
     height: 200,
-    backgroundColor: 'black',
+    backgroundColor: colors.black,
   },
   summaryHeader: {
-    backgroundColor: 'gray',
+    backgroundColor: colors.grey,
     alignItems: 'flex-start',
   },
   challengeTitle: {

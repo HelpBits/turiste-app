@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
+import { colors } from '../styles/theme';
 
 const MultiselectComponent = ({
   tags,
@@ -24,15 +25,15 @@ const MultiselectComponent = ({
           searchInputPlaceholderText="Buscando..."
           onChangeInput={(text) => console.log(text)}
           altFontFamily="ProximaNova-Light"
-          tagRemoveIconColor="#CCC"
-          tagBorderColor="#CCC"
-          tagTextColor="#000"
-          selectedItemTextColor="#CCC"
-          selectedItemIconColor="#CCC"
+          tagRemoveIconColor={colors.grey}
+          tagBorderColor={colors.grey}
+          tagTextColor={colors.black}
+          selectedItemTextColor={colors.grey}
+          selectedItemIconColor={colors.grey}
           itemTextColor="red"
           displayKey="name"
-          searchInputStyle={{ color: '#CCC' }}
-          submitButtonColor="#CCC"
+          searchInputStyle={{ color: colors.grey }}
+          submitButtonColor={colors.grey}
           submitButtonText="Listo"
           submitButtonStyle={{ borderRadius: 5 }}
         />

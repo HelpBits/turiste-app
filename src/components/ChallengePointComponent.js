@@ -2,6 +2,7 @@ import React, {useRef, useState, useEffect} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {colors} from '../styles/theme';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -85,33 +86,32 @@ const ChallengePointComponent = ({selectedPoint}) => {
   const HeaderComponent = () => {
     return (
       <View style={styles.summaryHeader}>
-        <View>
-          <Text style={styles.summaryHeaderTitle}>{selectedPoint.name}</Text>
-          {arrivesNumber <= 0 ? (
-            <Text>Aún no lo has visitado</Text>
-          ) : (
-            <Text>Has visitado este lugar {arrivesNumber} veces</Text>
-          )}
-          <Text>{selectedPoint.description}</Text>
-        </View>
-        <TouchableOpacity onPress={markCheckin}>
-          {arrivesNumber <= 0 ? (
-            <Icon
-              style={styles.summaryHeaderButton}
-              name="checkbox-blank-circle-outline"
-              size={40}
-              color="red"
-            />
-          ) : (
-            <Icon
-              style={styles.summaryHeaderButton}
-              name="check-circle-outline"
-              size={40}
-              color="black"
-            />
-          )}
-        </TouchableOpacity>
-      </View>
+                <View>
+                    <Text style={styles.summaryHeaderTitle}>{selectedPoint.name}</Text>
+                    {arrivesNumber <= 0 ? (
+                        <Text>Aún no lo has visitado</Text>
+                    ) : (
+                            <Text>Has visitado este lugar {arrivesNumber} veces</Text>
+                        )}
+                    <Text>{selectedPoint.description}</Text>
+                </View>
+
+                {arrivesNumber <= 0 ? (
+                    <Icon
+                        style={styles.summaryHeaderButton}
+                        name="checkbox-blank-circle-outline"
+                        size={40}
+                        color={colors.red}
+                    />
+                ) : (
+                        <Icon
+                            style={styles.summaryHeaderButton}
+                            name="check-circle-outline"
+                            size={40}
+                            color={colors.green}
+                        />
+                    )}
+            </View>
     );
   };
 
@@ -141,14 +141,15 @@ const ChallengePointComponent = ({selectedPoint}) => {
 
 const styles = StyleSheet.create({
   summaryHeader: {
-    flexDirection: 'row',
-    flex: 1,
-    height: 120,
-    justifyContent: 'space-between',
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    padding: 15,
-    backgroundColor: 'white',
+      flexDirection: 'row',
+      flex: 1,
+      height: 120,
+      justifyContent: 'space-between',
+      borderTopLeftRadius: 15,
+      borderTopRightRadius: 15,
+      padding: 15,
+      backgroundColor: colors.white,
+
   },
   summaryHeaderTitle: {
     fontSize: 20,
