@@ -4,7 +4,7 @@ import {Button, Input, Layout} from 'react-native-ui-kitten';
 import ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 import uuid from 'react-native-uuid';
-import { withFirebaseHOC } from '../utils'; 
+import { withFirebaseHOC } from '../utils';
 
 class AddPost extends Component {
   state = {image: null, description: ''};
