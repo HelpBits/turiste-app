@@ -14,10 +14,14 @@ const pointsRef = firestore().collection(
 );
 
 const usersRef = firestore().collection(FirebaseCollectionEnum.MFUser);
+const challengesRef = firestore().collection(
+  FirebaseCollectionEnum.MFChallenge,
+);
 const user = auth().currentUser;
 
 const ChallengePointComponent = ({selectedPoint}) => {
   const [arrivesNumber, setArrivesNumber] = useState(0);
+  const [userModel, setUserModel] = useState(null);
   const modalizeRef = useRef(null);
 
   const handleClosed = () => {
@@ -31,25 +35,37 @@ const ChallengePointComponent = ({selectedPoint}) => {
   };
 
   const setCheckinsNumber = () => {
-    const checkinNumber = selectedPoint.checkins.filter(
-      (chekin) => chekin.userId === user.uid,
+    if (!user.uid) {
+      return;
+    }
+
+    if (!selectedPoint.checkIns) {
+      return;
+    }
+
+    const checkinNumber = selectedPoint.checkIns.filter(
+      (checkin) => checkin.userId === user.uid,
     ).length;
 
     setArrivesNumber(checkinNumber);
+    return checkinNumber;
   };
 
   const markCheckin = async () => {
     try {
+      if (!user.uid) {
+        return;
+      }
       const point = await pointsRef.doc(selectedPoint.id).get();
       const currentCheckin = new MFCheckin(user.uid, new Date());
       // update chekins
-      selectedPoint.checkins = point.data().checkins
-        ? point.data().checkins
+      selectedPoint.checkIns = point.data().checkIns
+        ? point.data().checkIns
         : [];
-      selectedPoint.checkins.push(currentCheckin);
+      selectedPoint.checkIns.push(currentCheckin);
 
       const newCheckins = {
-        checkins: selectedPoint.checkins,
+        checkIns: selectedPoint.checkIns,
       };
 
       await pointsRef.doc(selectedPoint.id).update(newCheckins);
@@ -68,21 +84,59 @@ const ChallengePointComponent = ({selectedPoint}) => {
       .where('mail', '==', user.email)
       .get()
       .then((snapshot) => {
-        const userModel = snapshot.docs.map((doc) => ({
+        const userModelTemp = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         }));
 
-        console.log('VALUE ', userModel);
+        if (!userModelTemp.visitedChallengePointIds) {
+          userModelTemp.visitedChallengePointIds = [];
+        }
+
+        userModelTemp.visitedChallengePointIds = [
+          ...userModelTemp.visitedChallengePointIds,
+          selectedPoint.id,
+        ];
+
+        setUserModel(userModelTemp);
 
         // update only if the id don't exist
-        usersRef.doc(userModel[0].id).update({
+        usersRef.doc(userModelTemp[0].id).update({
           visitedChallengePointIds: firestore.FieldValue.arrayUnion(
             selectedPoint.id,
           ),
         });
+
+        // only check for the first checkin
+        if (arrivesNumber !== 0) {
+          return;
+        }
+
+        // get all challenges that are related with the current point
+        selectedPoint.challengeIds.forEach(async (challengeId) => {
+          try {
+            const challengeRef = await challengesRef.doc(challengeId).get();
+            const challengeModel = challengeRef.data();
+
+            // check for points id
+            const completedChallenge = challengeModel.pointIds.every((value) =>
+              userModelTemp[0].visitedChallengePointIds.includes(value),
+            );
+
+            if (completedChallenge) {
+              Alert.alert(
+                'Felicidades completó el reto de ',
+                challengeModel.name,
+              );
+            }
+          } catch (e) {
+            console.log('Error validando retos', e);
+          }
+        });
       });
   };
+
+  const validateCompletedChallenges = (userModelTemp) => {};
 
   const HeaderComponent = () => {
     return (
@@ -120,6 +174,10 @@ const ChallengePointComponent = ({selectedPoint}) => {
     handleOpen();
     setCheckinsNumber();
   }, []);
+
+  useEffect(() => {
+    setCheckinsNumber();
+  }, [selectedPoint]);
 
   return (
     <Modalize

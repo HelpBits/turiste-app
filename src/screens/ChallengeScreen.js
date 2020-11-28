@@ -101,8 +101,8 @@ const ChallengeScreen = ({navigation}) => {
         challenge.points.forEach((point) => {
           let userCheckinsNumber = 0;
 
-          if (point.checkins) {
-            userCheckinsNumber = point.checkins.filter(
+          if (point.checkIns) {
+            userCheckinsNumber = point.checkIns.filter(
               (checkin) => checkin.userId === user.uid,
             ).length;
           }
