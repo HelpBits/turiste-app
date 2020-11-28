@@ -89,9 +89,9 @@ const ChallengeScreen = ({navigation}) => {
         };
       });
 
-      let tempAvalaibleChallenges = [];
-      let tempCompletedChallenges = [];
-      let tempInProgressChallenges = [];
+      let avalaibleChallenges = [];
+      let completedChallenges = [];
+      let inProgressChallenges = [];
 
       // filter challenges
       newChallenges.forEach(async (challenge) => {
@@ -111,19 +111,19 @@ const ChallengeScreen = ({navigation}) => {
         });
 
         if (visitedPoints === 0) {
-          tempAvalaibleChallenges.push(challenge);
+          avalaibleChallenges.push(challenge);
         } else if (visitedPoints === challenge.points.length) {
-          tempCompletedChallenges.push(challenge);
+          completedChallenges.push(challenge);
         } else {
-          tempInProgressChallenges.push(challenge);
+          inProgressChallenges.push(challenge);
         }
 
         setChallenges(newChallenges);
       });
 
-      setAvalaibleChallenges(tempAvalaibleChallenges);
-      setCompletedChallenges(tempCompletedChallenges);
-      setinProgressChallenges(tempInProgressChallenges);
+      setAvalaibleChallenges(avalaibleChallenges);
+      setCompletedChallenges(completedChallenges);
+      setinProgressChallenges(inProgressChallenges);
       setChallenges(newChallenges);
     });
   };
