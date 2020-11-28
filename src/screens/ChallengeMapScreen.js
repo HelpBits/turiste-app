@@ -8,14 +8,15 @@ import MapComponent from '../components/MapComponent';
 const pointsRef = firestore().collection(
   FirebaseCollectionEnum.MFChallengePoint,
 );
+
 const challengesRef = firestore().collection(
   FirebaseCollectionEnum.MFChallenge,
 );
-const ChallengeMapScreen = ({route, navigation}) => {
-  const {challengeId} = navigation.state.params;
+
+const ChallengeMapScreen = ({navigation}) => {
   const zoom = 6.3;
   const center = [-84.0795, 9.9328];
-
+  const {challengeId} = navigation.state.params;
   const [mapPoints, setMapPoints] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -59,7 +60,7 @@ const ChallengeMapScreen = ({route, navigation}) => {
     fetchChallengesPoints();
   }, []);
 
-  const noPointsRender = () => (
+  const NoPointsRender = () => (
     <View style={styles.noPointsContainer}>
       <Image
         style={styles.cardImage}
@@ -74,12 +75,13 @@ const ChallengeMapScreen = ({route, navigation}) => {
       )}
     </View>
   );
+
   return (
     <>
       {mapPoints ? (
         <MapComponent mapPoints={mapPoints} zoom={zoom} center={center} />
       ) : (
-        <View style={styles.container}>{noPointsRender()}</View>
+        <View style={styles.container}>{<NoPointsRender />}</View>
       )}
     </>
   );
