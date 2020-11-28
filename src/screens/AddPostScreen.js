@@ -3,6 +3,9 @@ import { Text, Image, View, ScrollView, StyleSheet, Alert  } from 'react-native'
 import { Button, Input, Layout } from 'react-native-ui-kitten';
 import ImagePicker from 'react-native-image-picker';
 import { withFirebaseHOC } from '../utils';
+import storage from '@react-native-firebase/storage';
+import uuid from 'react-native-uuid';
+
 
 class AddPost extends Component {
     state = { image: null, description: '' };
@@ -11,20 +14,40 @@ class AddPost extends Component {
         this.setState({ description });
     };
 
+    setImageUrl = (reference) => {
+        reference
+            .getDownloadURL()
+            .then((res) => this.state.image.uri=res)
+            .catch((err) => console.log(err));
+    };
+
+    uploadImageToStorage = (path) => {
+        let reference = storage().ref(`media/photos/posts/${uuid.v4()}`);
+        let task = reference.putFile(path);
+
+        task
+            .then(() => {
+                this.setImageUrl(reference);
+            })
+            .catch((e) => console.log('uploading image error => ', e));
+    }
+
     onSubmit = async () => {
-        if (this.state.image == null) {
+        if (this.state.image === null) {
             Alert.alert(
                 'Primero elige una imagen para el post.'
             )
             return;
         }
-        if (this.state.description == '') {
+        if (this.state.description === '') {
             Alert.alert(
                 'Escribe algo sobre tu visita al lugar.'
             )
             return;
         }
         try {
+            this.uploadImageToStorage(this.state.image.uri);
+
             const post = {
                 challengePointId: this.props.challengePoint.id,
                 photo: this.state.image.uri,
