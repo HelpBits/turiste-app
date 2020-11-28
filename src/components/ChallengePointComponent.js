@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {colors} from '../styles/theme';
 
 import FeedScreen from '../screens/FeedScreen';
 
@@ -37,14 +38,14 @@ const ChallengePointComponent = ({ selectedPoint }) => {
                         style={styles.summaryHeaderButton}
                         name="checkbox-blank-circle-outline"
                         size={40}
-                        color="red"
+                        color={colors.red}
                     />
                 ) : (
                         <Icon
                             style={styles.summaryHeaderButton}
                             name="check-circle-outline"
                             size={40}
-                            color="green"
+                            color={colors.green}
                         />
                     )}
             </View>
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
       borderTopLeftRadius: 15,
       borderTopRightRadius: 15,
       padding: 15,
-      backgroundColor: 'white',
+      backgroundColor: colors.white,
   },
   summaryHeaderTitle: {
       fontSize: 20,
