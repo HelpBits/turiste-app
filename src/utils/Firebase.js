@@ -1,17 +1,20 @@
 import firebase from '@react-native-firebase/app';
 import uuid from 'react-native-uuid';
-import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
+import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
+import auth from '@react-native-firebase/auth';
 
+const user = auth().currentUser;
 
 const Firebase = {
   uploadPost: (post) => {
     const id = uuid.v4();
     const uploadData = {
-      id: id,
-      postPhoto: post.photo,
-      postTitle: post.title,
-      postDescription: post.description,
-      likes: [],
+      challengePointId: post.challengePointId,
+      creationDate: firebase.firestore.FieldValue.serverTimestamp(), //get timestamp
+      likedByUsersId: [],
+      logEditorId: user.uid,
+      photo: {uri: post.photo},
+      review: post.description,
     };
     return firebase
       .firestore()
