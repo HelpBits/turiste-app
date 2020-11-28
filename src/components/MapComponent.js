@@ -31,7 +31,7 @@ const MapComponent = ({mapPoints, zoom, center}) => {
           Alert.alert('Modal has been closed.');
         }}>
         <DashboardComponent
-          modalVisible={true}
+          modalVisible={modalVisible}
           setModalVisible={setModalVisible}
           selectedPoint={selectedPoint}
           setSelectedPoint={setSelectedPoint}
