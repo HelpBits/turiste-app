@@ -1,12 +1,23 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { Modalize } from 'react-native-modalize';
+import React, {useRef, useState, useEffect} from 'react';
+import {StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
+import {Modalize} from 'react-native-modalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {colors} from '../styles/theme';
 
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import FeedScreen from '../screens/FeedScreen';
+import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
+import {MFCheckin} from '../firebase/collections/MFCheckin';
 
-const ChallengePointComponent = ({ selectedPoint }) => {
+const pointsRef = firestore().collection(
+  FirebaseCollectionEnum.MFChallengePoint,
+);
+
+const usersRef = firestore().collection(FirebaseCollectionEnum.MFUser);
+const user = auth().currentUser;
+
+const ChallengePointComponent = ({selectedPoint}) => {
   const [arrivesNumber, setArrivesNumber] = useState(0);
   const modalizeRef = useRef(null);
 
@@ -18,6 +29,58 @@ const ChallengePointComponent = ({ selectedPoint }) => {
     if (modalizeRef.current) {
       modalizeRef.current.open();
     }
+  };
+
+  const setCheckinsNumber = () => {
+    const checkinNumber = selectedPoint.checkins.filter(
+      (chekin) => chekin.userId === user.uid,
+    ).length;
+
+    setArrivesNumber(checkinNumber);
+  };
+
+  const markCheckin = async () => {
+    try {
+      const point = await pointsRef.doc(selectedPoint.id).get();
+      const currentCheckin = new MFCheckin(user.uid, new Date());
+      // update chekins
+      selectedPoint.checkins = point.data().checkins
+        ? point.data().checkins
+        : [];
+      selectedPoint.checkins.push(currentCheckin);
+
+      const newCheckins = {
+        checkins: selectedPoint.checkins,
+      };
+
+      await pointsRef.doc(selectedPoint.id).update(newCheckins);
+
+      setCheckinsNumber();
+      Alert.alert('Check-in realizado correctamente');
+      updateUserCheckins();
+    } catch (error) {
+      console.log('No se puedo marcar el chek-in ', error);
+      Alert.alert('No se puedo marcar el chek-in');
+    }
+  };
+
+  const updateUserCheckins = () => {
+    usersRef
+      .where('mail', '==', user.email)
+      .get()
+      .then((snapshot) => {
+        const userModel = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        // update only if the id don't exist
+        usersRef.doc(userModel[0].id).update({
+          visitedChallengePointIds: firestore.FieldValue.arrayUnion(
+            selectedPoint.id,
+          ),
+        });
+      });
   };
 
   const HeaderComponent = () => {
@@ -54,6 +117,7 @@ const ChallengePointComponent = ({ selectedPoint }) => {
 
   useEffect(() => {
     handleOpen();
+    setCheckinsNumber();
   }, []);
 
   return (
@@ -61,7 +125,7 @@ const ChallengePointComponent = ({ selectedPoint }) => {
       ref={modalizeRef}
       onClosed={handleClosed}
       alwaysOpen={200}
-      modalStyle={{ marginTop: '10%' }}
+      modalStyle={{marginTop: '10%'}}
       onOpen={() => console.log('OPEN')}
       onOpened={() => console.log('OPENED')}
       onPositionChange={(value) => console.log('position change', value)}
@@ -85,12 +149,13 @@ const styles = StyleSheet.create({
       borderTopRightRadius: 15,
       padding: 15,
       backgroundColor: colors.white,
+
   },
   summaryHeaderTitle: {
-      fontSize: 20,
+    fontSize: 20,
   },
   summaryHeaderButton: {
-      alignSelf: 'baseline',
+    alignSelf: 'baseline',
   },
 });
 
