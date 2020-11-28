@@ -36,7 +36,7 @@ const ChallengePointComponent = ({selectedPoint}) => {
   };
 
   const setCheckinsNumber = () => {
-    if (!user.uid) {
+    if (!user) {
       return;
     }
 
