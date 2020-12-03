@@ -149,7 +149,7 @@ const ChallengePointComponent = ({selectedPoint}) => {
           ) : (
             <Text>Has visitado este lugar {arrivesNumber} veces</Text>
           )}
-            <Text>{selectedPoint.description}</Text>
+          <Text>{selectedPoint.description}</Text>
         </View>
         <TouchableOpacity onPress={markCheckin}>
           {arrivesNumber <= 0 ? (
@@ -202,15 +202,14 @@ const ChallengePointComponent = ({selectedPoint}) => {
 
 const styles = StyleSheet.create({
   summaryHeader: {
-      flexDirection: 'row',
-      flex: 1,
-      height: 120,
-      justifyContent: 'space-between',
-      borderTopLeftRadius: 15,
-      borderTopRightRadius: 15,
-      padding: 15,
-      backgroundColor: colors.white,
-
+    flexDirection: 'row',
+    flex: 1,
+    height: 120,
+    justifyContent: 'space-between',
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    padding: 15,
+    backgroundColor: colors.white,
   },
   summaryHeaderTitle: {
     fontSize: 20,

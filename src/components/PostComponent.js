@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, TouchableOpacity, StyleSheet, Text, View} from 'react-native';
-import {Avatar} from 'react-native-ui-kitten';
+import {Avatar} from '@ui-kitten/components';
 
 const PostComponent = ({post}) => {
   return (

@@ -23,7 +23,7 @@ const MapScreen = () => {
 
     points.onSnapshot(async (snapshot) => {
       const newPoints = snapshot.docs.map((doc) => {
-        return { id: doc.id, ...doc.data() };
+        return {id: doc.id, ...doc.data()};
       });
       setMapPoints(newPoints);
     });
