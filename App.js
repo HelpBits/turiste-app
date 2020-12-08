@@ -1,11 +1,11 @@
 import 'react-native-gesture-handler';
-import React, { Fragment, useState, useEffect } from 'react';
-import { mapping, light as lightTheme } from '@eva-design/eva';
-import { ApplicationProvider } from 'react-native-ui-kitten';
+import React, {Fragment, useState, useEffect} from 'react';
+import {mapping, light as lightTheme} from '@eva-design/eva';
+import {ApplicationProvider} from '@ui-kitten/components';
 import TabNavigator from './src/navigation/TabNavigator';
 import AuthNavigator from './src/navigation/AuthNavigator';
 import auth from '@react-native-firebase/auth';
-import Firebase, { FirebaseProvider } from './src/utils'
+import Firebase, {FirebaseProvider} from './src/utils';
 
 const App = () => {
   const [user, setUser] = useState(null);

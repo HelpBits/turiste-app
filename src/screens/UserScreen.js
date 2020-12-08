@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
-import { globalStyleSheet } from '../styles/theme';
+import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
+import {globalStyleSheet} from '../styles/theme';
 
 import moment from 'moment';
 
@@ -46,7 +46,7 @@ const UserScreen = () => {
           <Text style={styles.fieldTextKey}>Fecha de Nacimiento: </Text>
           {moment(userInfo.birthdate).format('DD / MM / YYYY')}
         </Text>
-        <View style={{ marginVertical: 15 }} />
+        <View style={{marginVertical: 15}} />
         <Text style={styles.fieldTextAlt}>
           <Text style={styles.fieldTextKeyAlt}>Puntos Visitados: </Text>
           {userInfo.visitedChallengePointIds
@@ -68,11 +68,11 @@ const UserScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  mainView: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  fieldText: { fontSize: 15, fontWeight: 'bold', margin: 10 },
-  fieldTextAlt: { fontSize: 17, fontWeight: 'bold', margin: 10 },
-  fieldTextKey: { color: 'gray' },
-  fieldTextKeyAlt: { color: 'orange' },
+  mainView: {flex: 1, alignItems: 'center', justifyContent: 'center'},
+  fieldText: {fontSize: 15, fontWeight: 'bold', margin: 10},
+  fieldTextAlt: {fontSize: 17, fontWeight: 'bold', margin: 10},
+  fieldTextKey: {color: 'gray'},
+  fieldTextKeyAlt: {color: 'orange'},
   logOutButton: {
     backgroundColor: 'lightgray',
     paddingVertical: 8,

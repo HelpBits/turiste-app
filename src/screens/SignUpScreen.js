@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   Alert,
   Image,
@@ -8,15 +8,15 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { colors } from '../styles/theme';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {colors} from '../styles/theme';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
-import { RolesEnum } from '../constants/RoleEnum';
-import { FirebaseAuthErrorEnum } from '../constants/FirebaseAuthErrorEnum';
-import { MessagesConstants } from '../constants/MessagesConstants';
-import { MFUser } from '../firebase/collections/MFUser';
+import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
+import {RolesEnum} from '../constants/RoleEnum';
+import {FirebaseAuthErrorEnum} from '../constants/FirebaseAuthErrorEnum';
+import {MessagesConstants} from '../constants/MessagesConstants';
+import {MFUser} from '../firebase/collections/MFUser';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import validations from '../utils/validation';
 
@@ -37,7 +37,7 @@ const minDate = new Date(
 );
 const defaultDate = fiveYearsAgo;
 
-export default function RegistrationScreen({ navigation }) {
+export default function RegistrationScreen({navigation}) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -143,7 +143,7 @@ export default function RegistrationScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <KeyboardAwareScrollView
-        style={{ flex: 1, width: '100%' }}
+        style={{flex: 1, width: '100%'}}
         keyboardShouldPersistTaps="always">
         <Image style={styles.logo} source={require('../../assets/icon3.png')} />
         <TextInput
@@ -225,7 +225,7 @@ export default function RegistrationScreen({ navigation }) {
   );
 }
 
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
   container: {

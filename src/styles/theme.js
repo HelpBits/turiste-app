@@ -1,14 +1,14 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 export const colors = {
   primary: 'orange',
   secondary: 'red',
   background1: 'white',
-  background2: "grey",
+  background2: 'grey',
   black: 'black',
   grey: 'grey',
-  green:'green',
-  white: 'white'
+  green: 'green',
+  white: 'white',
 };
 
 export const globalStyleSheet = StyleSheet.create({
