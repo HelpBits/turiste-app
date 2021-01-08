@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   cardHeader: {
+    marginTop: 5,
     flex: 0.5,
   },
   cardImage: {

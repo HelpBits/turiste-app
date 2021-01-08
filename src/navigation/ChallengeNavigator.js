@@ -10,7 +10,7 @@ export const ChallengeNavigator = createAppContainer(
     Retos: {
       screen: ChallengeScreen,
       navigationOptions: {
-        headerTitle: 'Retos',
+        headerShown: false,
       },
     },
     ChallengeMap: {

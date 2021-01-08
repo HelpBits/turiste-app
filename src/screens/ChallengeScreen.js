@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -8,12 +8,13 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import {Picker, PickerIOS} from '@react-native-picker/picker';
-import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
+import { Picker, PickerIOS } from '@react-native-picker/picker';
+import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import ChallengeComponent from '../components/ChallengeComponent';
 import Modal from 'react-native-modal';
+import { colors } from '../styles/theme';
 
 const ChallengeStatesEnum = {
   InProgress: 'En progreso',
@@ -37,17 +38,85 @@ const challengesPointRef = firestore().collection(
   FirebaseCollectionEnum.MFChallengePoint,
 );
 
-const user = auth().currentUser;
-
-const ChallengeScreen = ({navigation}) => {
+const ChallengeScreen = ({ navigation }) => {
   const [challengeState, setChallengeState] = useState(ChallengeStatesEnum.All);
   const [filteredChallenges, setFilteredChallenges] = useState(null);
   const [challenges, setChallenges] = useState(null);
   const [completedChallenges, setCompletedChallenges] = useState(null);
   const [avalaibleChallenges, setAvalaibleChallenges] = useState(null);
   const [inProgressChallenges, setinProgressChallenges] = useState(null);
-
   const [pickerVisible, setPickerVisible] = useState(false);
+
+  const user = auth().currentUser;
+
+  useEffect(() => {
+    console.log('getting challenges');
+    challengesRef.onSnapshot(async (snapshot) => {
+      let newChallenges = snapshot.docs.map(
+        (doc) => {
+          return { id: doc.id, ...doc.data() };
+        },
+        (error) => {
+          console.log('Error recuperando datos: ', error);
+          Alert.alert('Error recuperando datos');
+        },
+      );
+
+      // map ids to complete object
+      newChallenges = newChallenges.map((challenge) => {
+        return {
+          ...challenge,
+          points: challenge.pointIds
+            ? challenge.pointIds.map(async (id) => {
+              const refPoint = await challengesPointRef.doc(id).get();
+              return refPoint.data();
+            })
+            : [],
+        };
+      });
+
+      let avalaibleTempChallenges = [];
+      let completedTempChallenges = [];
+      let inProgressTempChallenges = [];
+
+      // filter challenges
+      newChallenges.forEach(async (challenge) => {
+        challenge.points = await Promise.all(challenge.points);
+
+        let visitedPoints = 0;
+        challenge.points.forEach((point) => {
+          let userCheckinsNumber = 0;
+
+          if (point.checkIns) {
+            userCheckinsNumber = point.checkIns.filter(
+              (checkin) => checkin.userId === user.uid,
+            ).length;
+          }
+
+          visitedPoints += userCheckinsNumber > 0 ? 1 : 0;
+        });
+
+        if (visitedPoints === 0) {
+          avalaibleTempChallenges.push(challenge);
+        } else if (visitedPoints === challenge.points.length) {
+          completedTempChallenges.push(challenge);
+        } else {
+          inProgressTempChallenges.push(challenge);
+        }
+
+        setChallenges(newChallenges);
+      }, []);
+
+      setAvalaibleChallenges(avalaibleTempChallenges);
+      setCompletedChallenges(completedTempChallenges);
+      setinProgressChallenges(inProgressTempChallenges);
+      setChallenges(newChallenges);
+    });
+  }, []);
+
+  useEffect(() => {
+    setFilteredChallenges(challenges);
+  }, [challenges]);
 
   const handleChangeChallengeState = (newState) => {
     setChallengeState(newState);
@@ -69,7 +138,7 @@ const ChallengeScreen = ({navigation}) => {
     challengesRef.onSnapshot(async (snapshot) => {
       let newChallenges = snapshot.docs.map(
         (doc) => {
-          return {id: doc.id, ...doc.data()};
+          return { id: doc.id, ...doc.data() };
         },
         (error) => {
           console.log('Error recuperando datos: ', error);
@@ -83,16 +152,16 @@ const ChallengeScreen = ({navigation}) => {
           ...challenge,
           points: challenge.pointIds
             ? challenge.pointIds.map(async (id) => {
-                const refPoint = await challengesPointRef.doc(id).get();
-                return refPoint.data();
-              })
+              const refPoint = await challengesPointRef.doc(id).get();
+              return refPoint.data();
+            })
             : [],
         };
       });
 
-      let avalaibleChallenges = [];
-      let completedChallenges = [];
-      let inProgressChallenges = [];
+      let avalaibleTempChallenges = [];
+      let completedTempChallenges = [];
+      let inProgressTempChallenges = [];
 
       // filter challenges
       newChallenges.forEach(async (challenge) => {
@@ -112,30 +181,22 @@ const ChallengeScreen = ({navigation}) => {
         });
 
         if (visitedPoints === 0) {
-          avalaibleChallenges.push(challenge);
+          avalaibleTempChallenges.push(challenge);
         } else if (visitedPoints === challenge.points.length) {
-          completedChallenges.push(challenge);
+          completedTempChallenges.push(challenge);
         } else {
-          inProgressChallenges.push(challenge);
+          inProgressTempChallenges.push(challenge);
         }
 
         setChallenges(newChallenges);
       });
 
-      setAvalaibleChallenges(avalaibleChallenges);
-      setCompletedChallenges(completedChallenges);
-      setinProgressChallenges(inProgressChallenges);
+      setAvalaibleChallenges(avalaibleTempChallenges);
+      setCompletedChallenges(completedTempChallenges);
+      setinProgressChallenges(inProgressTempChallenges);
       setChallenges(newChallenges);
     });
   };
-
-  useEffect(() => {
-    fetchChallenges();
-  }, []);
-
-  useEffect(() => {
-    handleChangeChallengeState(challengeState);
-  }, [challenges]);
 
   const PickerComponent = () => {
     return Platform.OS !== 'ios' ? (
@@ -154,31 +215,32 @@ const ChallengeScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Modal
-        isVisible={pickerVisible}
-        backdropColor="#B4B3DB"
-        backdropOpacity={0.3}
-        animationIn="zoomInDown"
-        animationOut="zoomOutUp">
-        <View style={styles.pickerModal}>
-          <PickerIOS
-            selectedValue={challengeState}
-            style={styles.ChallengePickerState}
-            onValueChange={(itemValue, itemIndex) => {
-              handleChangeChallengeState(itemValue);
-            }}>
-            {challengeStates.map((state, index) => (
-              <PickerIOS.Item label={state} value={state} key={index} />
-            ))}
-          </PickerIOS>
-          <TouchableOpacity
-            style={styles.hideActionContainer}
-            onPress={() => setPickerVisible(false)}>
-            <Text>OCULTAR</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-      <PickerComponent />
+      {Platform.OS === 'ios' && (
+        <Modal
+          isVisible={pickerVisible}
+          backdropColor="#B4B3DB"
+          backdropOpacity={0.3}
+          animationIn="zoomInDown"
+          animationOut="zoomOutUp">
+          <View style={styles.pickerModal}>
+            <PickerIOS
+              selectedValue={challengeState}
+              style={styles.ChallengePickerState}
+              onValueChange={(itemValue, itemIndex) => {
+                handleChangeChallengeState(itemValue);
+              }}>
+              {challengeStates.map((state, index) => (
+                <PickerIOS.Item label={state} value={state} key={index} />
+              ))}
+            </PickerIOS>
+            <TouchableOpacity
+              style={styles.hideActionContainer}
+              onPress={() => setPickerVisible(false)}>
+              <Text>OCULTAR</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+      )}
       {Platform.OS === 'ios' && (
         <TouchableOpacity
           style={styles.openPicker}
@@ -186,6 +248,7 @@ const ChallengeScreen = ({navigation}) => {
           <Text>{challengeState}</Text>
         </TouchableOpacity>
       )}
+      <PickerComponent />
       <ScrollView style={styles.challenges}>
         {filteredChallenges &&
           filteredChallenges.map((challenge, index) => (
@@ -216,11 +279,15 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   ChallengePickerState: {
-    height: '20%',
+    height: 40,
     width: '100%',
+    borderBottomColor: colors.primary,
+    borderBottomWidth: 5,
+    backgroundColor: 'white',
   },
   challenges: {
     marginTop: 10,
+    width: '100%',
   },
   hideActionContainer: {
     width: '80%',
@@ -247,7 +314,7 @@ const styles = StyleSheet.create({
     width: '90%',
     borderRadius: 50,
   },
-  openPickerText: {color: 'red'},
+  openPickerText: { color: 'red' },
 });
 
 export default ChallengeScreen;

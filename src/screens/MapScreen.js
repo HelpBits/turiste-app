@@ -38,35 +38,4 @@ const MapScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  mainView: {
-    flex: 1,
-  },
-  mapView: {
-    flex: 1,
-  },
-  openButton: {
-    padding: 10,
-    elevation: 2,
-    height: '20%',
-    borderRadius: 10,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    backgroundColor: 'lightgray',
-    justifyContent: 'space-between',
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  closePointInfo: {
-    margin: 10,
-    padding: 10,
-    borderRadius: 20,
-    borderWidth: 0.7,
-    borderColor: 'black',
-  },
-});
-
 export default MapScreen;

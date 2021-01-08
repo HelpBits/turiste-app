@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View, Alert, Image} from 'react-native';
-import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Alert, Image } from 'react-native';
+import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import firestore from '@react-native-firebase/firestore';
 
 import MapComponent from '../components/MapComponent';
@@ -13,10 +13,10 @@ const challengesRef = firestore().collection(
   FirebaseCollectionEnum.MFChallenge,
 );
 
-const ChallengeMapScreen = ({navigation}) => {
+const ChallengeMapScreen = ({ navigation }) => {
   const zoom = 6.3;
   const center = [-84.0795, 9.9328];
-  const {challengeId} = navigation.state.params;
+  const { challengeId } = navigation.state.params;
   const [mapPoints, setMapPoints] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -38,9 +38,9 @@ const ChallengeMapScreen = ({navigation}) => {
     try {
       pointsPromises = challenge.pointIds
         ? challenge.pointIds.map(async (id) => {
-            const pointRef = await pointsRef.doc(id).get();
-            return {id: pointRef.id, ...pointRef.data()};
-          })
+          const pointRef = await pointsRef.doc(id).get();
+          return { id: pointRef.id, ...pointRef.data() };
+        })
         : null;
     } catch (e) {
       console.log('Error obteniendo puntos del reto', e);
@@ -71,8 +71,8 @@ const ChallengeMapScreen = ({navigation}) => {
       {isLoading ? (
         <Text style={styles.noPoinsText}>Cargando puntos del reto</Text>
       ) : (
-        <Text style={styles.noPoinsText}>No hay puntos para este reto</Text>
-      )}
+          <Text style={styles.noPoinsText}>No hay puntos para este reto</Text>
+        )}
     </View>
   );
 
@@ -81,8 +81,8 @@ const ChallengeMapScreen = ({navigation}) => {
       {mapPoints ? (
         <MapComponent mapPoints={mapPoints} zoom={zoom} center={center} />
       ) : (
-        <View style={styles.container}>{<NoPointsRender />}</View>
-      )}
+          <View style={styles.container}>{<NoPointsRender />}</View>
+        )}
     </>
   );
 };

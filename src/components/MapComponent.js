@@ -23,20 +23,6 @@ const MapComponent = ({mapPoints, zoom, center}) => {
   const [selectedPoint, setSelectedPoint] = useState(null);
   return (
     <>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}>
-        <DashboardComponent
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          selectedPoint={selectedPoint}
-          setSelectedPoint={setSelectedPoint}
-        />
-      </Modal>
       <View style={styles.mainView}>
         <MapboxGL.MapView style={styles.mapView}>
           <MapboxGL.Camera zoomLevel={zoom} centerCoordinate={center} />

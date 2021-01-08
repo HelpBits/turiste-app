@@ -1,14 +1,14 @@
-import React, {useRef, useState, useEffect} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
-import {Modalize} from 'react-native-modalize';
+import React, { useRef, useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { Modalize } from 'react-native-modalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {colors} from '../styles/theme';
+import { colors } from '../styles/theme';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import FeedScreen from '../screens/FeedScreen';
-import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
-import {MFCheckin} from '../firebase/collections/MFCheckin';
+import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
+import { MFCheckin } from '../firebase/collections/MFCheckin';
 
 const pointsRef = firestore().collection(
   FirebaseCollectionEnum.MFChallengePoint,
@@ -18,12 +18,82 @@ const usersRef = firestore().collection(FirebaseCollectionEnum.MFUser);
 const challengesRef = firestore().collection(
   FirebaseCollectionEnum.MFChallenge,
 );
-const user = auth().currentUser;
 
-const ChallengePointComponent = ({selectedPoint}) => {
-  const [arrivesNumber, setArrivesNumber] = useState(0);
+const ChallengePointComponent = ({ selectedPoint }) => {
   const [userModel, setUserModel] = useState(null);
+  const [arrivesNumber, setArrivesNumber] = useState(0);
+
   const modalizeRef = useRef(null);
+
+  useEffect(() => {
+    console.log('RUNNING 1');
+    const user = auth().currentUser;
+
+    // get user data
+    const unsubscribe = usersRef
+      .where('mail', '==', user.email)
+      .onSnapshot((snapshot) => {
+        const userData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setUserModel(userData[0]);
+      });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    console.log('RUNNING 2');
+    handleOpen();
+    setCheckinsNumber();
+  }, [selectedPoint]);
+
+  useEffect(() => {
+    console.log('RUNNING 4');
+    console.log('USER MODEL', userModel);
+
+    if (!selectedPoint || !selectedPoint.challengeIds || !userModel) {
+      return;
+    }
+
+    // create a dictionary
+    const completedChallengesMap = {};
+    userModel.completedChallengePointIds &&
+      userModel.completedChallengePointIds.forEach(
+        (value) => (completedChallengesMap[value] = true),
+      );
+
+    // get all challenges that are related with the current point
+    selectedPoint.challengeIds.forEach(async (challengeId) => {
+      // If is already completed, ignore
+      if (completedChallengesMap[challengeId]) {
+        return;
+      }
+
+      try {
+        const challengeRef = await challengesRef.doc(challengeId).get();
+        const challengeModel = challengeRef.data();
+
+        // check for points id
+        const completedChallenge = challengeModel.pointIds.every((value) =>
+          userModel.visitedChallengePointIds.includes(value),
+        );
+
+        if (completedChallenge && !completedChallengesMap[challengeId]) {
+          Alert.alert('Felicidades completó el reto de ', challengeModel.name);
+          usersRef.doc(userModel.id).update({
+            completedChallengePointIds: firestore.FieldValue.arrayUnion(
+              challengeId,
+            ),
+          });
+        }
+      } catch (e) {
+        console.log('Error validando retos', e);
+      }
+    });
+  }, [userModel]);
 
   const handleClosed = () => {
     console.log('closed');
@@ -36,29 +106,26 @@ const ChallengePointComponent = ({selectedPoint}) => {
   };
 
   const setCheckinsNumber = () => {
-    if (!user.uid) {
-      return;
-    }
-
-    if (!selectedPoint.checkIns) {
+    if (!userModel || !userModel.id || !selectedPoint.checkIns) {
       return;
     }
 
     const checkinNumber = selectedPoint.checkIns.filter(
-      (checkin) => checkin.userId === user.uid,
+      (checkin) => checkin.userId === userModel.id,
     ).length;
 
     setArrivesNumber(checkinNumber);
-    return checkinNumber;
   };
 
   const markCheckin = async () => {
+    if (!userModel) {
+      return;
+    }
+
     try {
-      if (!user.uid) {
-        return;
-      }
       const point = await pointsRef.doc(selectedPoint.id).get();
-      const currentCheckin = new MFCheckin(user.uid, new Date());
+      const currentCheckin = new MFCheckin(userModel.id, new Date());
+
       // update chekins
       selectedPoint.checkIns = point.data().checkIns
         ? point.data().checkIns
@@ -72,84 +139,40 @@ const ChallengePointComponent = ({selectedPoint}) => {
       await pointsRef.doc(selectedPoint.id).update(newCheckins);
 
       setCheckinsNumber();
-      Alert.alert('Check-in realizado correctamente');
       updateUserCheckins();
+      Alert.alert('Check-in realizado correctamente');
     } catch (error) {
       console.log('No se puedo marcar el chek-in ', error);
       Alert.alert('No se puedo marcar el chek-in');
     }
   };
 
-  const updateUserCheckins = () => {
-    usersRef
-      .where('mail', '==', user.email)
-      .get()
-      .then((snapshot) => {
-        const userModelTemp = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        if (!userModelTemp.visitedChallengePointIds) {
-          userModelTemp.visitedChallengePointIds = [];
-        }
-
-        userModelTemp.visitedChallengePointIds = [
-          ...userModelTemp.visitedChallengePointIds,
+  const updateUserCheckins = async () => {
+    // update only if the id don't exist
+    try {
+      usersRef.doc(userModel.id).update({
+        visitedChallengePointIds: firestore.FieldValue.arrayUnion(
           selectedPoint.id,
-        ];
-
-        setUserModel(userModelTemp);
-
-        // update only if the id don't exist
-        usersRef.doc(userModelTemp[0].id).update({
-          visitedChallengePointIds: firestore.FieldValue.arrayUnion(
-            selectedPoint.id,
-          ),
-        });
-
-        // only check for the first checkin
-        if (arrivesNumber !== 0) {
-          return;
-        }
-
-        // get all challenges that are related with the current point
-        selectedPoint.challengeIds.forEach(async (challengeId) => {
-          try {
-            const challengeRef = await challengesRef.doc(challengeId).get();
-            const challengeModel = challengeRef.data();
-
-            // check for points id
-            const completedChallenge = challengeModel.pointIds.every((value) =>
-              userModelTemp[0].visitedChallengePointIds.includes(value),
-            );
-
-            if (completedChallenge) {
-              Alert.alert(
-                'Felicidades completó el reto de ',
-                challengeModel.name,
-              );
-            }
-          } catch (e) {
-            console.log('Error validando retos', e);
-          }
-        });
+        ),
       });
+    } catch (error) {
+      console.error('Error updatings user checkins', error);
+    }
   };
-
-  const validateCompletedChallenges = (userModelTemp) => {};
 
   const HeaderComponent = () => {
     return (
       <View style={styles.summaryHeader}>
-        <View>
+        <View style={styles.headerContainer}>
           <Text style={styles.summaryHeaderTitle}>{selectedPoint.name}</Text>
           {arrivesNumber <= 0 ? (
             <Text>Aún no lo has visitado</Text>
           ) : (
-            <Text>Has visitado este lugar {arrivesNumber} veces</Text>
-          )}
-          <Text>{selectedPoint.description}</Text>
+              <Text>Has visitado este lugar {arrivesNumber} veces</Text>
+            )}
+          <Text style={styles.summaryHeaderDescription}>
+            {selectedPoint.description}
+          </Text>
         </View>
         <TouchableOpacity onPress={markCheckin}>
           {arrivesNumber <= 0 ? (
@@ -160,38 +183,29 @@ const ChallengePointComponent = ({selectedPoint}) => {
               color={colors.red}
             />
           ) : (
-            <Icon
-              style={styles.summaryHeaderButton}
-              name="check-circle-outline"
-              size={40}
-              color={colors.green}
-            />
-          )}
+              <Icon
+                style={styles.summaryHeaderButton}
+                name="check-circle-outline"
+                size={40}
+                color={colors.green}
+              />
+            )}
         </TouchableOpacity>
       </View>
     );
   };
 
-  useEffect(() => {
-    handleOpen();
-    setCheckinsNumber();
-  }, []);
-
-  useEffect(() => {
-    setCheckinsNumber();
-  }, [selectedPoint]);
-
   return (
     <Modalize
       ref={modalizeRef}
       onClosed={handleClosed}
-      alwaysOpen={200}
-      modalStyle={{marginTop: '10%'}}
+      alwaysOpen={170}
+      modalStyle={{ marginTop: '10%' }}
       onOpen={() => console.log('OPEN')}
       onOpened={() => console.log('OPENED')}
       onPositionChange={(value) => console.log('position change', value)}
       scrollViewProps={{
-        showsVerticalScrollIndicator: false,
+        showsVerticalScrollIndicator: true,
         stickyHeaderIndices: [0],
       }}>
       <HeaderComponent />
@@ -201,10 +215,13 @@ const ChallengePointComponent = ({selectedPoint}) => {
 };
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    maxWidth: '90%',
+  },
   summaryHeader: {
     flexDirection: 'row',
     flex: 1,
-    height: 120,
+    minHeight: 30,
     justifyContent: 'space-between',
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
@@ -216,6 +233,9 @@ const styles = StyleSheet.create({
   },
   summaryHeaderButton: {
     alignSelf: 'baseline',
+  },
+  summaryHeaderDescription: {
+    marginTop: 10,
   },
 });
 
