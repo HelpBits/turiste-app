@@ -1,5 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+  Dimensions,
+} from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors } from '../styles/theme';
@@ -19,11 +26,12 @@ const challengesRef = firestore().collection(
   FirebaseCollectionEnum.MFChallenge,
 );
 
-const ChallengePointComponent = ({ selectedPoint }) => {
+const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
   const [userModel, setUserModel] = useState(null);
   const [arrivesNumber, setArrivesNumber] = useState(0);
 
   const modalizeRef = useRef(null);
+  const modalSize = hasHeader ? 195 : 139;
 
   useEffect(() => {
     console.log('RUNNING 1');
@@ -47,14 +55,30 @@ const ChallengePointComponent = ({ selectedPoint }) => {
   useEffect(() => {
     console.log('RUNNING 2');
     handleOpen();
-    setCheckinsNumber();
-  }, [selectedPoint]);
+    if (!userModel || !userModel.id || !selectedPoint.checkIns) {
+      return;
+    }
+
+    const checkinNumber = selectedPoint.checkIns.filter(
+      (checkin) => checkin.userId === userModel.id,
+    ).length;
+
+    setArrivesNumber(checkinNumber);
+  }, [selectedPoint, userModel]);
 
   useEffect(() => {
     console.log('RUNNING 4');
-    console.log('USER MODEL', userModel);
+    console.log('USER MODEL', userModel, '\n', selectedPoint);
 
-    if (!selectedPoint || !selectedPoint.challengeIds || !userModel) {
+    // if (!selectedPoint || !selectedPoint.challengeIds || !userModel) {
+    //   return;
+    // }
+    if (!selectedPoint || !userModel) {
+      return;
+    }
+
+    if (!selectedPoint.challengeIds) {
+      console.error('missing property challenge point', selectedPoint.id);
       return;
     }
 
@@ -67,7 +91,8 @@ const ChallengePointComponent = ({ selectedPoint }) => {
 
     // get all challenges that are related with the current point
     selectedPoint.challengeIds.forEach(async (challengeId) => {
-      // If is already completed, ignore
+      console.log('COMPARING 1');
+      // Ignore if is already completed
       if (completedChallengesMap[challengeId]) {
         return;
       }
@@ -79,6 +104,15 @@ const ChallengePointComponent = ({ selectedPoint }) => {
         // check for points id
         const completedChallenge = challengeModel.pointIds.every((value) =>
           userModel.visitedChallengePointIds.includes(value),
+        );
+
+        console.log(
+          'COMPARING ',
+          challengeModel.pointIds,
+          '--->',
+          userModel.visitedChallengePointIds,
+          '--->',
+          completedChallenge,
         );
 
         if (completedChallenge && !completedChallengesMap[challengeId]) {
@@ -93,7 +127,7 @@ const ChallengePointComponent = ({ selectedPoint }) => {
         console.log('Error validando retos', e);
       }
     });
-  }, [userModel]);
+  }, [userModel, selectedPoint]);
 
   const handleClosed = () => {
     console.log('closed');
@@ -103,18 +137,6 @@ const ChallengePointComponent = ({ selectedPoint }) => {
     if (modalizeRef.current) {
       modalizeRef.current.open();
     }
-  };
-
-  const setCheckinsNumber = () => {
-    if (!userModel || !userModel.id || !selectedPoint.checkIns) {
-      return;
-    }
-
-    const checkinNumber = selectedPoint.checkIns.filter(
-      (checkin) => checkin.userId === userModel.id,
-    ).length;
-
-    setArrivesNumber(checkinNumber);
   };
 
   const markCheckin = async () => {
@@ -138,7 +160,6 @@ const ChallengePointComponent = ({ selectedPoint }) => {
 
       await pointsRef.doc(selectedPoint.id).update(newCheckins);
 
-      setCheckinsNumber();
       updateUserCheckins();
       Alert.alert('Check-in realizado correctamente');
     } catch (error) {
@@ -199,7 +220,7 @@ const ChallengePointComponent = ({ selectedPoint }) => {
     <Modalize
       ref={modalizeRef}
       onClosed={handleClosed}
-      alwaysOpen={170}
+      alwaysOpen={modalSize}
       modalStyle={{ marginTop: '10%' }}
       onOpen={() => console.log('OPEN')}
       onOpened={() => console.log('OPENED')}

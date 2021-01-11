@@ -18,7 +18,7 @@ import { colors } from '../styles/theme';
 
 const ChallengeStatesEnum = {
   InProgress: 'En progreso',
-  Completed: 'Completado',
+  Completed: 'Completados',
   Available: 'No inicados',
   All: 'Todos',
 };
@@ -38,19 +38,45 @@ const challengesPointRef = firestore().collection(
   FirebaseCollectionEnum.MFChallengePoint,
 );
 
+const usersRef = firestore().collection(FirebaseCollectionEnum.MFUser);
+
+const existChallenge = (challengeId, arr) =>
+  arr.filter((val) => (val.id = challengeId)).length > 0;
+
 const ChallengeScreen = ({ navigation }) => {
   const [challengeState, setChallengeState] = useState(ChallengeStatesEnum.All);
-  const [filteredChallenges, setFilteredChallenges] = useState(null);
-  const [challenges, setChallenges] = useState(null);
-  const [completedChallenges, setCompletedChallenges] = useState(null);
-  const [avalaibleChallenges, setAvalaibleChallenges] = useState(null);
-  const [inProgressChallenges, setinProgressChallenges] = useState(null);
+  const [filteredChallenges, setFilteredChallenges] = useState([]);
+  const [challenges, setChallenges] = useState([]);
+  const [completedChallenges, setCompletedChallenges] = useState([]);
+  const [avalaibleChallenges, setAvalaibleChallenges] = useState([]);
+  const [inProgressChallenges, setinProgressChallenges] = useState([]);
   const [pickerVisible, setPickerVisible] = useState(false);
+  const [userModel, setUserModel] = useState(false);
 
-  const user = auth().currentUser;
+  useEffect(() => {
+    console.log('RUNNING 1');
+    const user = auth().currentUser;
+
+    // get user data
+    const unsubscribe = usersRef
+      .where('mail', '==', user.email)
+      .onSnapshot((snapshot) => {
+        const userData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setUserModel(userData[0]);
+      });
+
+    return unsubscribe;
+  }, []);
 
   useEffect(() => {
     console.log('getting challenges');
+    if (!userModel) {
+      return;
+    }
     challengesRef.onSnapshot(async (snapshot) => {
       let newChallenges = snapshot.docs.map(
         (doc) => {
@@ -80,7 +106,7 @@ const ChallengeScreen = ({ navigation }) => {
       let inProgressTempChallenges = [];
 
       // filter challenges
-      newChallenges.forEach(async (challenge) => {
+      await newChallenges.forEach(async (challenge) => {
         challenge.points = await Promise.all(challenge.points);
 
         let visitedPoints = 0;
@@ -89,30 +115,42 @@ const ChallengeScreen = ({ navigation }) => {
 
           if (point.checkIns) {
             userCheckinsNumber = point.checkIns.filter(
-              (checkin) => checkin.userId === user.uid,
+              (checkin) => checkin.userId === userModel.id,
             ).length;
           }
 
           visitedPoints += userCheckinsNumber > 0 ? 1 : 0;
         });
 
+        console.log(
+          'VISITED POINTS IN ',
+          challenge.name,
+          '-->',
+          visitedPoints,
+          '==',
+          challenge.points.length,
+        );
         if (visitedPoints === 0) {
-          avalaibleTempChallenges.push(challenge);
+          if (!existChallenge(challenge.id, [...avalaibleTempChallenges])) {
+            avalaibleTempChallenges.push(challenge);
+          }
         } else if (visitedPoints === challenge.points.length) {
-          completedTempChallenges.push(challenge);
+          if (!existChallenge(challenge.id, [...completedTempChallenges])) {
+            completedTempChallenges.push(challenge);
+            setCompletedChallenges([...completedTempChallenges]);
+          }
         } else {
-          inProgressTempChallenges.push(challenge);
+          if (!existChallenge(challenge.id, [...inProgressTempChallenges])) {
+            inProgressTempChallenges.push(challenge);
+            setinProgressChallenges([...inProgressTempChallenges]);
+          }
         }
+      });
 
-        setChallenges(newChallenges);
-      }, []);
-
-      setAvalaibleChallenges(avalaibleTempChallenges);
-      setCompletedChallenges(completedTempChallenges);
-      setinProgressChallenges(inProgressTempChallenges);
-      setChallenges(newChallenges);
+      console.log('RUNNING XXX1 XXX');
+      setChallenges([...newChallenges]);
     });
-  }, []);
+  }, [userModel]);
 
   useEffect(() => {
     setFilteredChallenges(challenges);
