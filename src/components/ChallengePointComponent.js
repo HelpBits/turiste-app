@@ -34,7 +34,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
   const modalSize = hasHeader ? 195 : 139;
 
   useEffect(() => {
-    console.log('RUNNING 1');
     const user = auth().currentUser;
 
     // get user data
@@ -53,7 +52,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
   }, []);
 
   useEffect(() => {
-    console.log('RUNNING 2');
     handleOpen();
     if (!userModel || !userModel.id || !selectedPoint.checkIns) {
       return;
@@ -67,9 +65,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
   }, [selectedPoint, userModel]);
 
   useEffect(() => {
-    console.log('RUNNING 4');
-    console.log('USER MODEL', userModel, '\n', selectedPoint);
-
     // if (!selectedPoint || !selectedPoint.challengeIds || !userModel) {
     //   return;
     // }
@@ -91,7 +86,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
 
     // get all challenges that are related with the current point
     selectedPoint.challengeIds.forEach(async (challengeId) => {
-      console.log('COMPARING 1');
       // Ignore if is already completed
       if (completedChallengesMap[challengeId]) {
         return;
@@ -106,15 +100,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
           userModel.visitedChallengePointIds.includes(value),
         );
 
-        console.log(
-          'COMPARING ',
-          challengeModel.pointIds,
-          '--->',
-          userModel.visitedChallengePointIds,
-          '--->',
-          completedChallenge,
-        );
-
         if (completedChallenge && !completedChallengesMap[challengeId]) {
           Alert.alert('Felicidades completó el reto de ', challengeModel.name);
           usersRef.doc(userModel.id).update({
@@ -124,14 +109,10 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
           });
         }
       } catch (e) {
-        console.log('Error validando retos', e);
+        console.error('Error validando retos', e);
       }
     });
   }, [userModel, selectedPoint]);
-
-  const handleClosed = () => {
-    console.log('closed');
-  };
 
   const handleOpen = () => {
     if (modalizeRef.current) {
@@ -163,7 +144,7 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
       updateUserCheckins();
       Alert.alert('Check-in realizado correctamente');
     } catch (error) {
-      console.log('No se puedo marcar el chek-in ', error);
+      console.error('No se puedo marcar el chek-in ', error);
       Alert.alert('No se puedo marcar el chek-in');
     }
   };
@@ -219,11 +200,8 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
   return (
     <Modalize
       ref={modalizeRef}
-      onClosed={handleClosed}
       alwaysOpen={modalSize}
       modalStyle={{ marginTop: '10%' }}
-      onOpen={() => console.log('OPEN')}
-      onOpened={() => console.log('OPENED')}
       onPositionChange={(value) => console.log('position change', value)}
       scrollViewProps={{
         showsVerticalScrollIndicator: true,

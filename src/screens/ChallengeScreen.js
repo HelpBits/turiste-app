@@ -54,7 +54,6 @@ const ChallengeScreen = ({ navigation }) => {
   const [userModel, setUserModel] = useState(false);
 
   useEffect(() => {
-    console.log('RUNNING 1');
     const user = auth().currentUser;
 
     // get user data
@@ -73,7 +72,6 @@ const ChallengeScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    console.log('getting challenges');
     if (!userModel) {
       return;
     }
@@ -83,7 +81,7 @@ const ChallengeScreen = ({ navigation }) => {
           return { id: doc.id, ...doc.data() };
         },
         (error) => {
-          console.log('Error recuperando datos: ', error);
+          console.error('Error recuperando datos: ', error);
           Alert.alert('Error recuperando datos');
         },
       );
@@ -122,14 +120,6 @@ const ChallengeScreen = ({ navigation }) => {
           visitedPoints += userCheckinsNumber > 0 ? 1 : 0;
         });
 
-        console.log(
-          'VISITED POINTS IN ',
-          challenge.name,
-          '-->',
-          visitedPoints,
-          '==',
-          challenge.points.length,
-        );
         if (visitedPoints === 0) {
           if (!existChallenge(challenge.id, [...avalaibleTempChallenges])) {
             avalaibleTempChallenges.push(challenge);
@@ -147,7 +137,6 @@ const ChallengeScreen = ({ navigation }) => {
         }
       });
 
-      console.log('RUNNING XXX1 XXX');
       setChallenges([...newChallenges]);
     });
   }, [userModel]);
@@ -179,7 +168,7 @@ const ChallengeScreen = ({ navigation }) => {
           return { id: doc.id, ...doc.data() };
         },
         (error) => {
-          console.log('Error recuperando datos: ', error);
+          console.error('Error recuperando datos: ', error);
           Alert.alert('Error recuperando datos');
         },
       );
