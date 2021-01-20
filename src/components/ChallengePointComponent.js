@@ -65,9 +65,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
   }, [selectedPoint, userModel]);
 
   useEffect(() => {
-    // if (!selectedPoint || !selectedPoint.challengeIds || !userModel) {
-    //   return;
-    // }
     if (!selectedPoint || !userModel) {
       return;
     }
@@ -109,7 +106,7 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
           });
         }
       } catch (e) {
-        console.error('Error validando retos', e);
+        console.error('Error validatin challenges', e);
       }
     });
   }, [userModel, selectedPoint]);
