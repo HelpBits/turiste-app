@@ -106,7 +106,7 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
           });
         }
       } catch (e) {
-        console.error('Error validatin challenges', e);
+        console.error('Error validating challenges', e);
       }
     });
   }, [userModel, selectedPoint]);
