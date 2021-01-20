@@ -29,7 +29,7 @@ const ChallengeMapScreen = ({ navigation }) => {
       const challengeRef = await challengesRef.doc(challengeId).get();
       challenge = challengeRef.data();
     } catch (e) {
-      console.log('Error obteniendo información del reto', e);
+      console.error('Error obteniendo información del reto', e);
       Alert.alert('Error obteniendo información del reto');
       return;
     }
@@ -43,7 +43,7 @@ const ChallengeMapScreen = ({ navigation }) => {
         })
         : null;
     } catch (e) {
-      console.log('Error obteniendo puntos del reto', e);
+      console.erorr('Error obteniendo puntos del reto', e);
       Alert.alert('Error obteniendo puntos del reto');
       return;
     }
