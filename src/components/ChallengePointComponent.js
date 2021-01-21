@@ -1,16 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Alert,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors } from '../styles/theme';
-
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import FeedScreen from '../screens/FeedScreen';
