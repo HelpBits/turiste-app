@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, Alert, Modal, Platform} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Alert, Modal, Platform } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import DashboardComponent from '../components/DashboardComponent';
 import ChallengePointComponent from '../components/ChallengePointComponent';
@@ -9,7 +9,7 @@ MapboxGL.setAccessToken(
   'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA',
 );
 
-const MapComponent = ({mapPoints, zoom, center}) => {
+const MapComponent = ({ mapPoints, zoom, center, hasHeader }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
@@ -23,42 +23,31 @@ const MapComponent = ({mapPoints, zoom, center}) => {
   const [selectedPoint, setSelectedPoint] = useState(null);
   return (
     <>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}>
-        <DashboardComponent
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          selectedPoint={selectedPoint}
-          setSelectedPoint={setSelectedPoint}
-        />
-      </Modal>
       <View style={styles.mainView}>
         <MapboxGL.MapView style={styles.mapView}>
           <MapboxGL.Camera zoomLevel={zoom} centerCoordinate={center} />
           <MapboxGL.UserLocation />
           {mapPoints
             ? mapPoints.map((mapPoint, index) => (
-                <MapboxGL.PointAnnotation
-                  coordinate={[
-                    mapPoint.geometry.latitude,
-                    mapPoint.geometry.longitude,
-                  ]}
-                  id={mapPoint.id}
-                  key={mapPoint.id}
-                  onSelected={() => setSelectedPoint(mapPoint)}>
-                  <Icon name="map-marker-alt" size={20} color="red" />
-                </MapboxGL.PointAnnotation>
-              ))
+              <MapboxGL.PointAnnotation
+                coordinate={[
+                  mapPoint.geometry.latitude,
+                  mapPoint.geometry.longitude,
+                ]}
+                id={mapPoint.id}
+                key={mapPoint.id}
+                onSelected={() => setSelectedPoint(mapPoint)}>
+                <Icon name="map-marker-alt" size={25} color={'red'} />
+              </MapboxGL.PointAnnotation>
+            ))
             : null}
         </MapboxGL.MapView>
       </View>
       {selectedPoint && (
-        <ChallengePointComponent selectedPoint={selectedPoint} />
+        <ChallengePointComponent
+          selectedPoint={selectedPoint}
+          hasHeader={hasHeader}
+        />
       )}
     </>
   );

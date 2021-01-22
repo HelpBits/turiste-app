@@ -1,8 +1,8 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
-import {colors} from '../styles/theme';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { colors } from '../styles/theme';
 
-const ChallengeComponent = ({navigation, challenge}) => {
+const ChallengeComponent = ({ navigation, challenge }) => {
   return (
     <View style={styles.card}>
       <Image
@@ -20,7 +20,10 @@ const ChallengeComponent = ({navigation, challenge}) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            navigation.navigate('ChallengeMap', {challengeId: challenge.id});
+            navigation.navigate('ChallengeMap', {
+              challengeId: challenge.id,
+              title: challenge.name,
+            });
           }}>
           <Text style={styles.buttonTitle}>Ver en mapa</Text>
         </TouchableOpacity>
@@ -42,6 +45,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   cardHeader: {
+    marginTop: 5,
     flex: 0.5,
   },
   cardImage: {
