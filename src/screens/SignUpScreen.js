@@ -106,6 +106,7 @@ export default function RegistrationScreen({ navigation }) {
         .catch(() => {
           Alert.alert('Ha ocurrido un error!');
         });
+
       if (register.user) {
         roles.onSnapshot(async (snapshot) => {
           const rolesCollection = snapshot.docs.map((doc) => ({
@@ -126,8 +127,9 @@ export default function RegistrationScreen({ navigation }) {
             [],
           );
 
-          await users.add(newUser);
+          await users.doc(register.user.uid).set(newUser);
           Alert.alert('Usuario registrado');
+          console.log('Usuario registrado', register.user.uid);
           navigation.navigate('LoginScreen');
         });
       }
