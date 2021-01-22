@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {
-  TouchableOpacity,
-  StyleSheet,
   Text,
   View,
-  TextInput,
   Alert,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
 } from 'react-native';
 import {globalStyleSheet} from '../styles/theme';
 import firestore from '@react-native-firebase/firestore';
@@ -16,7 +16,7 @@ import MultiselectComponent from '../components/MultiSelectComponent';
 import {MFChallengePoint} from '../firebase/collections/MFChallengePoint';
 import Modal from 'react-native-modal';
 import uuid from 'react-native-uuid';
-import ImagePicker from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 
 const NewPointComponent = ({setShowPointCreationModal}) => {
@@ -38,18 +38,17 @@ const NewPointComponent = ({setShowPointCreationModal}) => {
     reference
       .getDownloadURL()
       .then((res) => setPhoto(res))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log('error on setImageUrl method', err));
   };
 
   const uploadImageToStorage = (path) => {
-    let reference = storage().ref(`media/photos/${uuid.v4()}`);
-    let task = reference.putFile(path);
-
+    const reference = storage().ref(`media/photos/${uuid.v4()}`);
+    const task = reference.putFile(path);
     task
-      .then((res) => {
+      .then(() => {
         setImageUrl(reference);
       })
-      .catch((e) => console.log('uploading image error => ', e));
+      .catch((error) => console.log('error uploading image:', error));
   };
 
   useEffect(() => {
@@ -61,10 +60,11 @@ const NewPointComponent = ({setShowPointCreationModal}) => {
       );
     });
     setSelectedTags([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const selectPhotoFromLibrary = () => {
-    ImagePicker.launchImageLibrary(
+    launchImageLibrary(
       {
         mediaType: 'photo',
         includeBase64: false,
@@ -90,16 +90,32 @@ const NewPointComponent = ({setShowPointCreationModal}) => {
   };
 
   const addNewPoint = () => {
+    const checkIns = [];
+    const popularity = 0;
+    const creationDate = new Date();
     const labels = selectedTags.map((tagId) =>
       tags.find((tag) => tag.id === tagId),
     );
-    const popularity = 0;
-    const checkIns = [];
+    if (!name) {
+      Alert.alert('Ingrese un nombre para el nuevo punto');
+      return;
+    }
+    if (!description) {
+      Alert.alert('Ingrese una descripción para el nuevo punto');
+      return;
+    }
+    if (!photo) {
+      Alert.alert('Agregue una foto para el nuevo punto');
+      return;
+    }
+    if (!newPointCoordinates) {
+      Alert.alert('Seleccione un punto en el mapa');
+      return;
+    }
     const geometry = {
       latitude: newPointCoordinates[0],
       longitude: newPointCoordinates[1],
     };
-    const creationDate = new Date();
     const newPoint = new MFChallengePoint(
       name,
       description,
@@ -149,6 +165,12 @@ const NewPointComponent = ({setShowPointCreationModal}) => {
         />
       </Modal>
       <Text style={globalStyleSheet.title}>Información del Nuevo Punto</Text>
+      <TouchableOpacity
+        style={styles.selectPointTouchable}
+        onPress={() => setShowSelectPointModal(true)}>
+        <Text>Seleccionar Punto</Text>
+        <Icon name="map" color="red" style={{marginLeft: 5}} />
+      </TouchableOpacity>
       <TextInput
         style={styles.inputStyle}
         onChangeText={setName}
@@ -183,12 +205,6 @@ const NewPointComponent = ({setShowPointCreationModal}) => {
         onPress={selectPhotoFromLibrary}>
         <Text>Agregar Foto</Text>
         <Icon name="image" style={{marginLeft: 5}} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.addPointTouchable}
-        onPress={() => setShowSelectPointModal(true)}>
-        <Text>Seleccionar Punto</Text>
-        <Icon name="map" style={{marginLeft: 5}} />
       </TouchableOpacity>
       <View style={styles.actionButtons}>
         <TouchableOpacity
@@ -239,7 +255,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    borderColor: 'red',
+    borderWidth: 0.3,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    margin: 5,
+  },
+  selectPointTouchable: {
+    backgroundColor: 'white',
+    width: '85%',
+    height: '8%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    borderColor: 'green',
     borderWidth: 0.3,
     borderRadius: 10,
     marginHorizontal: 10,
