@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Alert, Modal, Platform } from 'react-native';
+import { View, StyleSheet, Alert, Platform } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
-import DashboardComponent from '../components/DashboardComponent';
 import ChallengePointComponent from '../components/ChallengePointComponent';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -10,8 +9,6 @@ MapboxGL.setAccessToken(
 );
 
 const MapComponent = ({ mapPoints, zoom, center, hasHeader }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-
   useEffect(() => {
     if (Platform.OS !== 'ios') {
       MapboxGL.requestAndroidLocationPermissions()
@@ -29,17 +26,17 @@ const MapComponent = ({ mapPoints, zoom, center, hasHeader }) => {
           <MapboxGL.UserLocation />
           {mapPoints
             ? mapPoints.map((mapPoint, index) => (
-              <MapboxGL.PointAnnotation
-                coordinate={[
-                  mapPoint.geometry.latitude,
-                  mapPoint.geometry.longitude,
-                ]}
-                id={mapPoint.id}
-                key={mapPoint.id}
-                onSelected={() => setSelectedPoint(mapPoint)}>
-                <Icon name="map-marker-alt" size={25} color={'red'} />
-              </MapboxGL.PointAnnotation>
-            ))
+                <MapboxGL.PointAnnotation
+                  coordinate={[
+                    mapPoint.geometry.latitude,
+                    mapPoint.geometry.longitude,
+                  ]}
+                  id={mapPoint.id}
+                  key={mapPoint.id}
+                  onSelected={() => setSelectedPoint(mapPoint)}>
+                  <Icon name="map-marker-alt" size={25} color={'red'} />
+                </MapboxGL.PointAnnotation>
+              ))
             : null}
         </MapboxGL.MapView>
       </View>

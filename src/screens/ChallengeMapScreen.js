@@ -38,9 +38,9 @@ const ChallengeMapScreen = ({ navigation }) => {
     try {
       pointsPromises = challenge.pointIds
         ? challenge.pointIds.map(async (id) => {
-          const pointRef = await pointsRef.doc(id).get();
-          return { id: pointRef.id, ...pointRef.data() };
-        })
+            const pointRef = await pointsRef.doc(id).get();
+            return { id: pointRef.id, ...pointRef.data() };
+          })
         : null;
     } catch (e) {
       console.log('Error obteniendo puntos del reto', e);
@@ -58,6 +58,7 @@ const ChallengeMapScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchChallengesPoints();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const NoPointsRender = () => (
@@ -71,8 +72,8 @@ const ChallengeMapScreen = ({ navigation }) => {
       {isLoading ? (
         <Text style={styles.noPoinsText}>Cargando puntos del reto</Text>
       ) : (
-          <Text style={styles.noPoinsText}>No hay puntos para este reto</Text>
-        )}
+        <Text style={styles.noPoinsText}>No hay puntos para este reto</Text>
+      )}
     </View>
   );
 
@@ -86,8 +87,8 @@ const ChallengeMapScreen = ({ navigation }) => {
           hasHeader={true}
         />
       ) : (
-          <View style={styles.container}>{<NoPointsRender />}</View>
-        )}
+        <View style={styles.container}>{<NoPointsRender />}</View>
+      )}
     </>
   );
 };

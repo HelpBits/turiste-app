@@ -159,8 +159,8 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
           {arrivesNumber <= 0 ? (
             <Text>Aún no lo has visitado</Text>
           ) : (
-              <Text>Has visitado este lugar {arrivesNumber} veces</Text>
-            )}
+            <Text>Has visitado este lugar {arrivesNumber} veces</Text>
+          )}
           <Text style={styles.summaryHeaderDescription}>
             {selectedPoint.description}
           </Text>
@@ -174,13 +174,13 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
               color={colors.red}
             />
           ) : (
-              <Icon
-                style={styles.summaryHeaderButton}
-                name="check-circle-outline"
-                size={40}
-                color={colors.green}
-              />
-            )}
+            <Icon
+              style={styles.summaryHeaderButton}
+              name="check-circle-outline"
+              size={40}
+              color={colors.green}
+            />
+          )}
         </TouchableOpacity>
       </View>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
-import {Text, View, Image, StyleSheet} from 'react-native';
-import {globalStyleSheet} from '../styles/theme';
+import { Text, View, Image, StyleSheet } from 'react-native';
+import { globalStyleSheet } from '../styles/theme';
 
 const HelpScreen = () => {
   const developersEmails = [
@@ -25,9 +25,9 @@ const HelpScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  mainView: {flex: 1, alignItems: 'center', justifyContent: 'center'},
-  subTitle: {fontWeight: 'bold', marginVertical: 15},
-  emailText: {margin: 10},
-  logo: {marginTop: 30},
+  mainView: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  subTitle: { fontWeight: 'bold', marginVertical: 15 },
+  emailText: { margin: 10 },
+  logo: { marginTop: 30 },
 });
 export default HelpScreen;
