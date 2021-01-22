@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
-import {colors} from '../styles/theme';
+import { colors } from '../styles/theme';
 
 const MultiselectComponent = ({
   tags,
@@ -32,10 +32,10 @@ const MultiselectComponent = ({
           selectedItemIconColor={colors.grey}
           itemTextColor="red"
           displayKey="name"
-          searchInputStyle={{color: colors.grey}}
+          searchInputStyle={{ color: colors.grey }}
           submitButtonColor={colors.grey}
           submitButtonText="Listo"
-          submitButtonStyle={{borderRadius: 5}}
+          submitButtonStyle={{ borderRadius: 5 }}
         />
       </View>
       <View>

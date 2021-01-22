@@ -48,7 +48,7 @@ const ChallengeScreen = ({ navigation }) => {
   const [filteredChallenges, setFilteredChallenges] = useState([]);
   const [challenges, setChallenges] = useState([]);
   const [completedChallenges, setCompletedChallenges] = useState([]);
-  const [avalaibleChallenges, setAvalaibleChallenges] = useState([]);
+  const [avalaibleChallenges] = useState([]);
   const [inProgressChallenges, setinProgressChallenges] = useState([]);
   const [pickerVisible, setPickerVisible] = useState(false);
   const [userModel, setUserModel] = useState(false);
@@ -92,9 +92,9 @@ const ChallengeScreen = ({ navigation }) => {
           ...challenge,
           points: challenge.pointIds
             ? challenge.pointIds.map(async (id) => {
-              const refPoint = await challengesPointRef.doc(id).get();
-              return refPoint.data();
-            })
+                const refPoint = await challengesPointRef.doc(id).get();
+                return refPoint.data();
+              })
             : [],
         };
       });
@@ -159,70 +159,6 @@ const ChallengeScreen = ({ navigation }) => {
     if (newState === ChallengeStatesEnum.All) {
       setFilteredChallenges(challenges);
     }
-  };
-
-  const fetchChallenges = () => {
-    challengesRef.onSnapshot(async (snapshot) => {
-      let newChallenges = snapshot.docs.map(
-        (doc) => {
-          return { id: doc.id, ...doc.data() };
-        },
-        (error) => {
-          console.error('Error recuperando datos: ', error);
-          Alert.alert('Error recuperando datos');
-        },
-      );
-
-      // map ids to complete object
-      newChallenges = newChallenges.map((challenge) => {
-        return {
-          ...challenge,
-          points: challenge.pointIds
-            ? challenge.pointIds.map(async (id) => {
-              const refPoint = await challengesPointRef.doc(id).get();
-              return refPoint.data();
-            })
-            : [],
-        };
-      });
-
-      let avalaibleTempChallenges = [];
-      let completedTempChallenges = [];
-      let inProgressTempChallenges = [];
-
-      // filter challenges
-      newChallenges.forEach(async (challenge) => {
-        challenge.points = await Promise.all(challenge.points);
-
-        let visitedPoints = 0;
-        challenge.points.forEach((point) => {
-          let userCheckinsNumber = 0;
-
-          if (point.checkIns) {
-            userCheckinsNumber = point.checkIns.filter(
-              (checkin) => checkin.userId === user.uid,
-            ).length;
-          }
-
-          visitedPoints += userCheckinsNumber > 0 ? 1 : 0;
-        });
-
-        if (visitedPoints === 0) {
-          avalaibleTempChallenges.push(challenge);
-        } else if (visitedPoints === challenge.points.length) {
-          completedTempChallenges.push(challenge);
-        } else {
-          inProgressTempChallenges.push(challenge);
-        }
-
-        setChallenges(newChallenges);
-      });
-
-      setAvalaibleChallenges(avalaibleTempChallenges);
-      setCompletedChallenges(completedTempChallenges);
-      setinProgressChallenges(inProgressTempChallenges);
-      setChallenges(newChallenges);
-    });
   };
 
   const PickerComponent = () => {

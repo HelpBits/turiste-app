@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -7,19 +7,19 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import {globalStyleSheet} from '../styles/theme';
+import { globalStyleSheet } from '../styles/theme';
 import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
+import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import SelectNewPointComponent from '../components/SelectNewPointComponent';
 import MultiselectComponent from '../components/MultiSelectComponent';
-import {MFChallengePoint} from '../firebase/collections/MFChallengePoint';
+import { MFChallengePoint } from '../firebase/collections/MFChallengePoint';
 import Modal from 'react-native-modal';
 import uuid from 'react-native-uuid';
-import {launchImageLibrary} from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 
-const NewPointComponent = ({setShowPointCreationModal}) => {
+const NewPointComponent = ({ setShowPointCreationModal }) => {
   const [name, setName] = useState('');
   const [tags, setTags] = useState([]);
   const [photo, setPhoto] = useState(null);
@@ -55,7 +55,7 @@ const NewPointComponent = ({setShowPointCreationModal}) => {
     tagModel.onSnapshot(async (snapshot) => {
       setTags(
         snapshot.docs.map((doc) => {
-          return {id: doc.id, ...doc.data()};
+          return { id: doc.id, ...doc.data() };
         }),
       );
     });
@@ -169,7 +169,7 @@ const NewPointComponent = ({setShowPointCreationModal}) => {
         style={styles.selectPointTouchable}
         onPress={() => setShowSelectPointModal(true)}>
         <Text>Seleccionar Punto</Text>
-        <Icon name="map" color="red" style={{marginLeft: 5}} />
+        <Icon name="map" color="red" style={{ marginLeft: 5 }} />
       </TouchableOpacity>
       <TextInput
         style={styles.inputStyle}
@@ -187,7 +187,7 @@ const NewPointComponent = ({setShowPointCreationModal}) => {
         style={styles.addPointTouchable}
         onPress={() => setShowSelectTagsModal(true)}>
         <Text>Etiquetas</Text>
-        <Icon name="tag" style={{marginLeft: 5}} />
+        <Icon name="tag" style={{ marginLeft: 5 }} />
       </TouchableOpacity>
       <View style={styles.tagsContainer}>
         {selectedTags &&
@@ -204,7 +204,7 @@ const NewPointComponent = ({setShowPointCreationModal}) => {
         style={styles.addPointTouchable}
         onPress={selectPhotoFromLibrary}>
         <Text>Agregar Foto</Text>
-        <Icon name="image" style={{marginLeft: 5}} />
+        <Icon name="image" style={{ marginLeft: 5 }} />
       </TouchableOpacity>
       <View style={styles.actionButtons}>
         <TouchableOpacity
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  tagsContainer: {flexDirection: 'row', flexWrap: 'wrap', width: '75%'},
+  tagsContainer: { flexDirection: 'row', flexWrap: 'wrap', width: '75%' },
   tagChip: {
     borderRadius: 10,
     backgroundColor: 'gray',
@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
     padding: 3,
     flexDirection: 'row',
   },
-  chipText: {color: 'white', marginLeft: 1},
+  chipText: { color: 'white', marginLeft: 1 },
 });
 
 export default NewPointComponent;

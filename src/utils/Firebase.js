@@ -1,6 +1,6 @@
 import firebase from '@react-native-firebase/app';
 import uuid from 'react-native-uuid';
-import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
+import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import auth from '@react-native-firebase/auth';
 
 const user = auth().currentUser;
@@ -13,7 +13,7 @@ const Firebase = {
       creationDate: firebase.firestore.FieldValue.serverTimestamp(), //get timestamp
       likedByUsersId: [],
       logEditorId: user.uid,
-      photo: {uri: post.photo},
+      photo: { uri: post.photo },
       review: post.description,
     };
     return firebase

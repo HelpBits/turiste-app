@@ -74,6 +74,7 @@ const PostComponent = ({ post }) => {
     });
 
     return unsubscribe;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -138,13 +139,13 @@ const PostComponent = ({ post }) => {
                   color="red"
                 />
               ) : (
-                  <Icon
-                    style={styles.buttonIcon}
-                    name="heart-o"
-                    size={30}
-                    color="red"
-                  />
-                )}
+                <Icon
+                  style={styles.buttonIcon}
+                  name="heart-o"
+                  size={30}
+                  color="red"
+                />
+              )}
             </TouchableOpacity>
           </View>
           <Text> {likesNumber} likes</Text>

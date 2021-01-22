@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {TouchableOpacity, StyleSheet, Text, View, Alert} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { TouchableOpacity, StyleSheet, Text, View, Alert } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
-import {MAPBOX_ACCESSTOKEN} from '@env';
+import { MAPBOX_ACCESSTOKEN } from '@env';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Geolocation from '@react-native-community/geolocation';
 
@@ -30,10 +30,11 @@ const SelectNewPointComponent = ({
       },
     );
     setNewPointCoordinates(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onPressMap = (e) => {
-    const {geometry} = e;
+    const { geometry } = e;
     setNewPointCoordinates(geometry.coordinates);
   };
 
@@ -52,7 +53,7 @@ const SelectNewPointComponent = ({
   return (
     <View style={styles.mainView}>
       <View style={styles.mapContainer}>
-        <MapboxGL.MapView style={{flex: 1}} onPress={onPressMap}>
+        <MapboxGL.MapView style={{ flex: 1 }} onPress={onPressMap}>
           <MapboxGL.Camera zoomLevel={12} centerCoordinate={center} />
           {newPointCoordinates && (
             <MapboxGL.PointAnnotation

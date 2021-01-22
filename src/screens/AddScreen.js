@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import NewPointComponent from '../components/NewPointComponent';
-import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
-import {globalStyleSheet} from '../styles/theme';
+import { globalStyleSheet } from '../styles/theme';
 
 const AddScreen = () => {
   const [newPointModalVisible, setNewPointModalVisible] = useState(false);
@@ -33,7 +33,7 @@ const AddScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  mainView: {flex: 1, alignItems: 'center', justifyContent: 'center'},
+  mainView: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   touchable: {
     margin: 10,
     padding: 10,

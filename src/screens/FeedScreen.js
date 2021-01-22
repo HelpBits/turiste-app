@@ -1,8 +1,8 @@
 //-- Developed by Carlos Delgado
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, ScrollView, Image} from 'react-native';
-import {Text, Button, Input} from '@ui-kitten/components';
-import {FirebaseCollectionEnum} from '../constants/FirebaseCollections';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, ScrollView, Image } from 'react-native';
+import { Button } from '@ui-kitten/components';
+import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import Modal from 'react-native-modal';
 
 import firestore from '@react-native-firebase/firestore';
@@ -12,7 +12,7 @@ import AddPostScreen from './AddPostScreen';
 
 const postsRef = firestore().collection(FirebaseCollectionEnum.MFPost);
 
-const FeedScreen = ({selectedChallengePoint}) => {
+const FeedScreen = ({ selectedChallengePoint }) => {
   const [posts, setPosts] = useState(null);
   const [newPostModalVisible, setNewPostModalVisible] = useState(false);
 
@@ -24,7 +24,7 @@ const FeedScreen = ({selectedChallengePoint}) => {
         .then(function (querySnapshot) {
           setPosts(
             querySnapshot.docs.map((doc) => {
-              return {id: doc.id, ...doc.data()};
+              return { id: doc.id, ...doc.data() };
             }),
           );
         });

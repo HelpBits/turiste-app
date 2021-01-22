@@ -1,16 +1,16 @@
-import React, {Component} from 'react';
-import {Text, Image, View, ScrollView, StyleSheet, Alert} from 'react-native';
-import {Button, Input, Layout} from '@ui-kitten/components';
+import React, { Component } from 'react';
+import { Text, Image, View, ScrollView, StyleSheet, Alert } from 'react-native';
+import { Button, Input, Layout } from '@ui-kitten/components';
 import ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 import uuid from 'react-native-uuid';
-import {withFirebaseHOC} from '../utils';
+import { withFirebaseHOC } from '../utils';
 
 class AddPost extends Component {
-  state = {image: null, description: ''};
+  state = { image: null, description: '' };
 
   onChangeDescription = (description) => {
-    this.setState({description});
+    this.setState({ description });
   };
 
   setImageUrl = (reference) => {
@@ -75,7 +75,7 @@ class AddPost extends Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        const source = {uri: response.uri};
+        const source = { uri: response.uri };
         this.uploadImageToStorage(response.uri);
         this.setState({
           image: source,
@@ -86,7 +86,7 @@ class AddPost extends Component {
 
   render() {
     return (
-      <ScrollView style={{flex: 1, marginTop: 60}}>
+      <ScrollView style={{ flex: 1, marginTop: 60 }}>
         <Text
           style={{
             fontSize: 20,
@@ -99,7 +99,7 @@ class AddPost extends Component {
           {this.state.image ? (
             <Image
               source={this.state.image}
-              style={{width: '100%', height: 300}}
+              style={{ width: '100%', height: 300 }}
             />
           ) : (
             <Button
@@ -115,7 +115,7 @@ class AddPost extends Component {
             </Button>
           )}
         </View>
-        <View style={{marginTop: 20, alignItems: 'center'}}>
+        <View style={{ marginTop: 20, alignItems: 'center' }}>
           <Input
             multiline={true}
             placeholder="Escribe algo sobre tu visita..."
