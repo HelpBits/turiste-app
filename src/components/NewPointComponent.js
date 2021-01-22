@@ -38,7 +38,7 @@ const NewPointComponent = ({setShowPointCreationModal}) => {
     reference
       .getDownloadURL()
       .then((res) => setPhoto(res))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log('error on setImageUrl method', err));
   };
 
   const uploadImageToStorage = (path) => {
@@ -165,6 +165,12 @@ const NewPointComponent = ({setShowPointCreationModal}) => {
         />
       </Modal>
       <Text style={globalStyleSheet.title}>Información del Nuevo Punto</Text>
+      <TouchableOpacity
+        style={styles.selectPointTouchable}
+        onPress={() => setShowSelectPointModal(true)}>
+        <Text>Seleccionar Punto</Text>
+        <Icon name="map" color="red" style={{marginLeft: 5}} />
+      </TouchableOpacity>
       <TextInput
         style={styles.inputStyle}
         onChangeText={setName}
@@ -199,12 +205,6 @@ const NewPointComponent = ({setShowPointCreationModal}) => {
         onPress={selectPhotoFromLibrary}>
         <Text>Agregar Foto</Text>
         <Icon name="image" style={{marginLeft: 5}} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.addPointTouchable}
-        onPress={() => setShowSelectPointModal(true)}>
-        <Text>Seleccionar Punto</Text>
-        <Icon name="map" style={{marginLeft: 5}} />
       </TouchableOpacity>
       <View style={styles.actionButtons}>
         <TouchableOpacity
@@ -255,7 +255,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    borderColor: 'red',
+    borderWidth: 0.3,
+    borderRadius: 10,
+    marginHorizontal: 10,
+    margin: 5,
+  },
+  selectPointTouchable: {
+    backgroundColor: 'white',
+    width: '85%',
+    height: '8%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    borderColor: 'green',
     borderWidth: 0.3,
     borderRadius: 10,
     marginHorizontal: 10,
