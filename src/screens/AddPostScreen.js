@@ -3,7 +3,6 @@ import { Text, Image, View, ScrollView, StyleSheet, Alert } from 'react-native';
 import { Button, Input, Layout } from '@ui-kitten/components';
 import { launchImageLibrary } from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
-import uuid from 'react-native-uuid';
 import { withFirebaseHOC } from '../utils';
 
 class AddPost extends Component {
@@ -17,15 +16,15 @@ class AddPost extends Component {
     reference
       .getDownloadURL()
       .then((res) => {
-        console.log('res', res);
         this.state.image.uri = res;
-        console.log('this.state.image.uri', this.state.image.uri);
       })
       .catch((err) => console.log(err));
   };
 
   uploadImageToStorage = (path) => {
-    let reference = storage().ref(`media/photos/posts/${uuid.v4()}`);
+    let reference = storage().ref(
+      `media/photos/posts/${Math.floor(Date.now())}`,
+    );
     let task = reference.putFile(path);
 
     task

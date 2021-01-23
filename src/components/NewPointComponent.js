@@ -15,7 +15,6 @@ import SelectNewPointComponent from '../components/SelectNewPointComponent';
 import MultiselectComponent from '../components/MultiSelectComponent';
 import { MFChallengePoint } from '../firebase/collections/MFChallengePoint';
 import Modal from 'react-native-modal';
-import uuid from 'react-native-uuid';
 import { launchImageLibrary } from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 
@@ -42,7 +41,9 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
   };
 
   const uploadImageToStorage = (path) => {
-    const reference = storage().ref(`media/photos/${uuid.v4()}`);
+    const reference = storage().ref(
+      `media/photos/${Math.floor(Math.random() * 100000000 + 1)}`,
+    );
     const task = reference.putFile(path);
     task
       .then(() => {
