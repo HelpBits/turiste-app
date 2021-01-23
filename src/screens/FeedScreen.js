@@ -17,8 +17,6 @@ const FeedScreen = ({ selectedChallengePoint }) => {
   const [newPostModalVisible, setNewPostModalVisible] = useState(false);
 
   useEffect(() => {
-    setPosts([]);
-
     const unsubscribe = postsRef
       .where('challengePointId', '==', selectedChallengePoint.id)
       .onSnapshot((snapshot) => {
@@ -40,7 +38,6 @@ const FeedScreen = ({ selectedChallengePoint }) => {
           return 0;
         });
 
-        console.log('NEW POST', postList.length);
         setPosts(postList);
       });
 
