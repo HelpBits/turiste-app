@@ -8,6 +8,7 @@ import firestore from '@react-native-firebase/firestore';
 import FeedScreen from '../screens/FeedScreen';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import { MFCheckin } from '../firebase/collections/MFCheckin';
+import Toast from 'react-native-toast-message';
 
 const pointsRef = firestore().collection(
   FirebaseCollectionEnum.MFChallengePoint,
@@ -131,7 +132,12 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
       await pointsRef.doc(selectedPoint.id).update(newCheckins);
 
       updateUserCheckins();
-      Alert.alert('Check-in realizado correctamente');
+      Toast.show({
+        text1: 'Exito',
+        text2: 'Check-in realizado correctamente',
+        position: 'bottom',
+      });
+      // Alert.alert('Check-in realizado correctamente');
     } catch (error) {
       console.error('No se puedo marcar el chek-in ', error);
       Alert.alert('No se puedo marcar el chek-in');
