@@ -35,8 +35,6 @@ const PostComponent = ({ post }) => {
           ...doc.data(),
         }));
 
-        console.log('USER DATA ', userData);
-
         setUserModel(userData[0]);
       });
 
