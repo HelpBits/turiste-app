@@ -13,8 +13,16 @@ const SelectNewPointComponent = ({
   setShowSelectPointModal,
 }) => {
   const [center, setCenter] = useState([-84.0795, 9.9328]);
+  const [currentPoint, setCurrentPoint] = useState(null);
 
   useEffect(() => {
+    setCurrentPoint(newPointCoordinates);
+
+    if (newPointCoordinates) {
+      setCenter([...newPointCoordinates]);
+      return;
+    }
+
     Geolocation.getCurrentPosition(
       (position) => {
         setCenter([position.coords.longitude, position.coords.latitude]);
@@ -29,17 +37,35 @@ const SelectNewPointComponent = ({
         maximumAge: 1000,
       },
     );
-    setNewPointCoordinates(null);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onPressMap = (e) => {
     const { geometry } = e;
-    setNewPointCoordinates(geometry.coordinates);
+
+    setCurrentPoint(null);
+
+    setTimeout(() => {
+      setCurrentPoint(geometry.coordinates);
+    }, 10);
+
+    //setNewPointCoordinates(geometry.coordinates);
+  };
+
+  const cleanSelectedPoint = () => {
+    setCurrentPoint(null);
+    setNewPointCoordinates(null);
+    setShowSelectPointModal(false);
   };
 
   const addNewPoint = () => {
-    newPointCoordinates
+    setNewPointCoordinates(currentPoint);
+    if (currentPoint) {
+      setCurrentPoint(null);
+    }
+
+    currentPoint
       ? setShowSelectPointModal(false)
       : Alert.alert('Necesita elegir un punto');
   };
@@ -55,20 +81,16 @@ const SelectNewPointComponent = ({
       <View style={styles.mapContainer}>
         <MapboxGL.MapView style={{ flex: 1 }} onPress={onPressMap}>
           <MapboxGL.Camera zoomLevel={12} centerCoordinate={center} />
-          {newPointCoordinates && (
-            <MapboxGL.PointAnnotation
-              coordinate={newPointCoordinates}
-              id="newPoint">
-              <NewPointAnnotationContent coordinate={newPointCoordinates} />
+          {currentPoint && (
+            <MapboxGL.PointAnnotation coordinate={currentPoint} id="newPoint">
+              <NewPointAnnotationContent coordinate={currentPoint} />
             </MapboxGL.PointAnnotation>
           )}
           <MapboxGL.UserLocation />
         </MapboxGL.MapView>
       </View>
       <View style={styles.actionButtons}>
-        <TouchableOpacity
-          onPress={() => setShowSelectPointModal(false)}
-          style={styles.hideModal}>
+        <TouchableOpacity onPress={cleanSelectedPoint} style={styles.hideModal}>
           <Text>OCULTAR</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={addNewPoint} style={styles.hideModal}>
