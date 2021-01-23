@@ -2,6 +2,7 @@ import firebase from '@react-native-firebase/app';
 import uuid from 'react-native-uuid';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 const user = auth().currentUser;
 
@@ -35,6 +36,15 @@ const Firebase = {
       .catch(function (error) {
         console.log('Error getting documents: ', error);
       });
+  },
+  getCollection: (collectionName) => {
+    return firestore().collection(collectionName);
+  },
+  getDocumentById: (collectionName, documentId) => {
+    return firestore().collection(collectionName).doc(documentId);
+  },
+  getCollectionFilterBy: (collectionName, query) => {
+    return firestore().collection(collectionName).where(query);
   },
 };
 

@@ -83,7 +83,7 @@ const PostComponent = ({ post }) => {
     }
 
     const myLikes = postModel.likedByUsersId.filter(
-      (userId) => (userId = userModel.id),
+      (userId) => userId === userModel.id,
     );
 
     setLikedByMe(myLikes.length > 0);
@@ -139,13 +139,13 @@ const PostComponent = ({ post }) => {
                   color="red"
                 />
               ) : (
-                <Icon
-                  style={styles.buttonIcon}
-                  name="heart-o"
-                  size={30}
-                  color="red"
-                />
-              )}
+                  <Icon
+                    style={styles.buttonIcon}
+                    name="heart-o"
+                    size={30}
+                    color="red"
+                  />
+                )}
             </TouchableOpacity>
           </View>
           <Text> {likesNumber} likes</Text>
