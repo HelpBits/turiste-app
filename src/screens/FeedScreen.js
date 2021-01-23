@@ -16,33 +16,28 @@ const FeedScreen = ({ selectedChallengePoint }) => {
   const [posts, setPosts] = useState(null);
   const [newPostModalVisible, setNewPostModalVisible] = useState(false);
 
-  const fetchPosts = (id) => {
-    try {
-      const unsubscribe = postsRef
-        .where('challengePointId', '==', id)
-        .orderBy('creationDate', 'desc')
-        .onSnapshot((snapshot) => {
-          if (!snapshot) {
-            return;
-          }
-
-          const postList = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-
-          setPosts(postList);
-        });
-
-      return unsubscribe;
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   useEffect(() => {
-    fetchPosts(selectedChallengePoint.id);
-  }, [selectedChallengePoint]);
+    // setPosts([]);
+    const unsubscribe = postsRef
+      .where('challengePointId', '==', selectedChallengePoint.id)
+      .orderBy('creationDate', 'desc')
+      .onSnapshot((snapshot) => {
+        if (!snapshot) {
+          console.log('CLEARING', selectedChallengePoint.id);
+          return;
+        }
+
+        const postList = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        console.log('NEW POST', postList.length);
+        setPosts(postList);
+      });
+
+    return unsubscribe;
+  }, [selectedChallengePoint, newPostModalVisible]);
 
   return (
     <ScrollView style={styles.scrollView}>
