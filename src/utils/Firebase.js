@@ -3,10 +3,9 @@ import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
-const user = auth().currentUser;
-
 const Firebase = {
   uploadPost: (post) => {
+    const user = auth().currentUser;
     const uploadData = {
       challengePointId: post.challengePointId,
       creationDate: firebase.firestore.FieldValue.serverTimestamp(), //get timestamp
@@ -18,7 +17,7 @@ const Firebase = {
     return firebase
       .firestore()
       .collection(FirebaseCollectionEnum.MFPost)
-      .set(uploadData);
+      .add(uploadData);
   },
   getPosts: (id) => {
     return firebase

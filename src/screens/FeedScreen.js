@@ -18,16 +18,23 @@ const FeedScreen = ({ selectedChallengePoint }) => {
 
   const fetchPosts = (id) => {
     try {
-      postsRef
+      const unsubscribe = postsRef
         .where('challengePointId', '==', id)
-        .get()
-        .then(function (querySnapshot) {
-          setPosts(
-            querySnapshot.docs.map((doc) => {
-              return { id: doc.id, ...doc.data() };
-            }),
-          );
+        .orderBy('creationDate', 'desc')
+        .onSnapshot((snapshot) => {
+          if (!snapshot) {
+            return;
+          }
+
+          const postList = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+
+          setPosts(postList);
         });
+
+      return unsubscribe;
     } catch (e) {
       console.error(e);
     }

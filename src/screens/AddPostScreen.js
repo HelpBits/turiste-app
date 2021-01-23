@@ -44,21 +44,25 @@ class AddPost extends Component {
       return;
     }
     try {
-      console.log('this.state.image.uri', this.state.image.uri);
-
       const post = {
         challengePointId: this.props.challengePoint.id,
         photo: this.state.image.uri,
         description: this.state.description,
       };
-      this.props.firebase.uploadPost(post);
+
+      await this.props.firebase.uploadPost(post);
+
+      Alert.alert('Post subido correctamente');
 
       this.setState({
         image: null,
         description: '',
       });
+
+      this.props.setShowPostCreationModal(false);
     } catch (e) {
-      console.error(e);
+      Alert.alert('Ha ocurrido un error al subir el post');
+      console.error('ERROR UPLOADING POST', e);
     }
   };
 
