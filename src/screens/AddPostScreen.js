@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, Image, View, ScrollView, StyleSheet, Alert } from 'react-native';
 import { Button, Input, Layout } from '@ui-kitten/components';
-import ImagePicker from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 import uuid from 'react-native-uuid';
 import { withFirebaseHOC } from '../utils';
@@ -67,7 +67,7 @@ class AddPost extends Component {
     const options = {
       noData: true,
     };
-    ImagePicker.launchImageLibrary(options, (response) => {
+    launchImageLibrary(options, (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
       } else if (response.error) {
@@ -102,18 +102,18 @@ class AddPost extends Component {
               style={{ width: '100%', height: 300 }}
             />
           ) : (
-            <Button
-              appearance="outline"
-              status="primary"
-              onPress={this.selectImage}
-              style={{
-                alignItems: 'center',
-                padding: 10,
-                margin: 20,
-              }}>
-              + Agrega una imagen
-            </Button>
-          )}
+              <Button
+                appearance="outline"
+                status="primary"
+                onPress={this.selectImage}
+                style={{
+                  alignItems: 'center',
+                  padding: 10,
+                  margin: 20,
+                }}>
+                + Agrega una imagen
+              </Button>
+            )}
         </View>
         <View style={{ marginTop: 20, alignItems: 'center' }}>
           <Input
