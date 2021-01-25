@@ -135,7 +135,9 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
       Toast.show({
         text1: 'Exito',
         text2: 'Check-in realizado correctamente',
-        position: 'bottom',
+        position: 'top',
+        visibilityTime: 2000,
+        topOffset: 50,
       });
       // Alert.alert('Check-in realizado correctamente');
     } catch (error) {
