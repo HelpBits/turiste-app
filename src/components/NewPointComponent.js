@@ -19,8 +19,9 @@ import storage from '@react-native-firebase/storage';
 
 import { showMessage } from '../utils/showMessage';
 import { MessageTypeEnum } from '../constants/MessageTypeEnum';
+import { colors } from '../styles/theme';
 
-const NewPointComponent = ({ setShowPointCreationModal }) => {
+const NewPointComponent = ({ navigation }) => {
   const [name, setName] = useState('');
   const [tags, setTags] = useState([]);
   const [photo, setPhoto] = useState(null);
@@ -142,7 +143,7 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
       .add(newPoint)
       .then(() => {
         showMessage('Punto Creado', MessageTypeEnum.Success);
-        setShowPointCreationModal(false);
+        navigation.goBack();
       })
       .catch(() => {
         showMessage('Error al crear el punto', MessageTypeEnum.Error);
@@ -155,7 +156,6 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
         testID={'modal'}
         isVisible={showSelectPointModal}
         backdropColor="#B4B3DB"
-        backdropOpacity={0.3}
         animationIn="zoomInDown"
         animationOut="zoomOutUp"
         animationInTiming={1000}
@@ -176,7 +176,6 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
           setShowSelectTagsModal={setShowSelectTagsModal}
         />
       </Modal>
-      <Text style={globalStyleSheet.title}>Información del Nuevo Punto</Text>
       <TouchableOpacity
         style={styles.selectPointTouchable}
         onPress={() => setShowSelectPointModal(true)}>
@@ -219,13 +218,8 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
         <Icon name="image" style={{ marginLeft: 5 }} />
       </TouchableOpacity>
       <View style={styles.actionButtons}>
-        <TouchableOpacity
-          style={styles.touchable}
-          onPress={() => setShowPointCreationModal(false)}>
-          <Text>Cancelar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.touchable} onPress={addNewPoint}>
-          <Text>Agregar</Text>
+        <TouchableOpacity style={styles.button} onPress={addNewPoint}>
+          <Text style={styles.buttonTitle}>Agregar</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -235,7 +229,7 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
 const styles = StyleSheet.create({
   mainView: {
     flex: 1,
-    marginBottom: 20,
+    padding: 10,
     justifyContent: 'center',
     backgroundColor: 'white',
     alignItems: 'center',
@@ -244,7 +238,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    width: '85%',
+    width: '100%',
     padding: 5,
     margin: 5,
     borderRadius: 10,
@@ -262,7 +256,7 @@ const styles = StyleSheet.create({
   },
   addPointTouchable: {
     backgroundColor: 'white',
-    width: '85%',
+    width: '100%',
     height: 35,
     alignItems: 'center',
     justifyContent: 'center',
@@ -274,7 +268,7 @@ const styles = StyleSheet.create({
   },
   selectPointTouchable: {
     backgroundColor: 'white',
-    width: '85%',
+    width: '100%',
     height: '8%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -299,6 +293,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   chipText: { color: 'white', marginLeft: 1 },
+  button: {
+    backgroundColor: colors.primary,
+    marginTop: 20,
+    height: 48,
+    width: '100%',
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default NewPointComponent;

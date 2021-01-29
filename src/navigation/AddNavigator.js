@@ -14,7 +14,7 @@ export const AddNavigator = createAppContainer(
     AddChallengePoint: {
       screen: NewPointComponent,
       navigationOptions: {
-        headerShown: false,
+        title: 'Agregar punto',
       },
     },
   }),

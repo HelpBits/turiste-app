@@ -1,32 +1,17 @@
-import React, { useState } from 'react';
-import NewPointComponent from '../components/NewPointComponent';
+import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import Modal from 'react-native-modal';
 import { globalStyleSheet } from '../styles/theme';
 
-const AddScreen = () => {
-  const [newPointModalVisible, setNewPointModalVisible] = useState(false);
-
+const AddScreen = ({ navigation }) => {
   return (
     <View style={styles.mainView}>
-      <Modal
-        animationIn="slideInRight"
-        animationOut="slideOutRight"
-        backdropColor="white"
-        backdropOpacity={1}
-        isVisible={newPointModalVisible}>
-        <NewPointComponent
-          setShowPointCreationModal={setNewPointModalVisible}
-        />
-      </Modal>
       <Text style={globalStyleSheet.title}>AGREGAR</Text>
       <TouchableOpacity
         style={styles.touchable}
-        onPress={() => setNewPointModalVisible(true)}>
+        onPress={() => {
+          navigation.navigate('AddChallengePoint');
+        }}>
         <Text style={styles.touchableText}>Agregar Punto</Text>
-      </TouchableOpacity>
-      <TouchableOpacity disabled style={styles.touchable}>
-        <Text style={styles.touchableText}>Agregar Reto</Text>
       </TouchableOpacity>
     </View>
   );

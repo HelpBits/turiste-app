@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import { globalStyleSheet } from '../styles/theme';
+import { colors } from '../styles/theme';
 
 import moment from 'moment';
 
@@ -33,35 +34,43 @@ const UserScreen = () => {
 
   return (
     <View style={styles.mainView}>
-      <Text style={globalStyleSheet.title}>Datos de Usuario</Text>
       <View>
-        <Text style={styles.fieldText}>
-          <Text style={styles.fieldTextKey}>Usuario: </Text>
-          {userInfo.username}
-        </Text>
-        <Text style={styles.fieldText}>
-          <Text style={styles.fieldTextKey}>Correo: </Text>
-          {userInfo.mail}
-        </Text>
-        <Text style={styles.fieldText}>
-          <Text style={styles.fieldTextKey}>Fecha de Nacimiento: </Text>
-          {moment(userInfo.birthdate).format('DD / MM / YYYY')}
-        </Text>
-        <View style={{ marginVertical: 15 }} />
-        <Text style={styles.fieldTextAlt}>
-          <Text style={styles.fieldTextKeyAlt}>Puntos Visitados: </Text>
-          {userInfo.visitedChallengePointIds
-            ? userInfo.visitedChallengePointIds.length
-            : 0}
-        </Text>
-        <Text style={styles.fieldTextAlt}>
-          <Text style={styles.fieldTextKeyAlt}>Desafíos Completados: </Text>
-          {userInfo.completedChallengePointIds
-            ? userInfo.completedChallengePointIds.length
-            : 0}
-        </Text>
+        <Text style={globalStyleSheet.title}>Datos de Usuario</Text>
+        <View style={styles.userIconContainer}>
+          <Image
+            style={styles.logo}
+            source={require('../../assets/tourism-icon.png')}
+          />
+        </View>
+        <View>
+          <Text style={styles.fieldText}>
+            <Text style={styles.fieldTextKey}>Usuario: </Text>
+            {userInfo.username}
+          </Text>
+          <Text style={styles.fieldText}>
+            <Text style={styles.fieldTextKey}>Correo: </Text>
+            {userInfo.mail}
+          </Text>
+          <Text style={styles.fieldText}>
+            <Text style={styles.fieldTextKey}>Fecha de Nacimiento: </Text>
+            {moment(userInfo.birthdate).format('DD / MM / YYYY')}
+          </Text>
+          <Text style={styles.fieldText}>
+            <Text style={styles.fieldTextKey}>Puntos Visitados: </Text>
+            {userInfo.visitedChallengePointIds
+              ? userInfo.visitedChallengePointIds.length
+              : 0}
+          </Text>
+          <Text style={styles.fieldText}>
+            <Text style={styles.fieldTextKey}>Desafíos Completados: </Text>
+            {userInfo.completedChallengePointIds
+              ? userInfo.completedChallengePointIds.length
+              : 0}
+          </Text>
+        </View>
       </View>
-      <TouchableOpacity onPress={logOut} style={styles.logOutButton}>
+
+      <TouchableOpacity onPress={logOut} style={styles.button}>
         <Text>Cerrar Sesión</Text>
       </TouchableOpacity>
     </View>
@@ -69,19 +78,34 @@ const UserScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  mainView: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  fieldText: { fontSize: 15, fontWeight: 'bold', margin: 10 },
-  fieldTextAlt: { fontSize: 17, fontWeight: 'bold', margin: 10 },
-  fieldTextKey: { color: 'gray' },
+  mainView: {
+    flex: 1,
+    padding: 10,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+  },
+  fieldText: { fontSize: 15, width: '100%' },
+  fieldTextAlt: { fontSize: 17, margin: 10 },
+  fieldTextKey: { color: 'black' },
   fieldTextKeyAlt: { color: 'orange' },
-  logOutButton: {
-    backgroundColor: 'lightgray',
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    margin: 10,
-    marginVertical: 30,
-    borderRadius: 10,
-    borderWidth: 0.3,
+  userIconContainer: {
+    height: '45%',
+    color: 'gray',
+  },
+  button: {
+    backgroundColor: colors.primary,
+    marginTop: 20,
+    height: 48,
+    width: '100%',
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logo: {
+    flex: 1,
+    height: 120,
+    width: 200,
+    alignSelf: 'center',
   },
 });
 
