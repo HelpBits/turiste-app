@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
-  Alert,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { colors } from '../styles/theme';
@@ -15,6 +14,9 @@ import validations from '../utils/validation';
 
 import { FirebaseAuthErrorEnum } from '../constants/FirebaseAuthErrorEnum';
 import { MessagesConstants } from '../constants/MessagesConstants';
+
+import { showMessage } from '../utils/showMessage';
+import { MessageTypeEnum } from '../constants/MessageTypeEnum';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -31,17 +33,17 @@ export default function LoginScreen({ navigation }) {
 
   const onLoginPress = async () => {
     if (!email) {
-      Alert.alert('Correo es requerido.');
+      showMessage('Correo es requerido.', MessageTypeEnum.Error);
       return;
     }
 
     if (!validations.validateEmail(email)) {
-      Alert.alert('Formato de correo incorrecto');
+      showMessage('Formato de correo incorrecto', MessageTypeEnum.Error);
       return;
     }
 
     if (!password) {
-      Alert.alert('Contraseña es requerida');
+      showMessage('Contraseña es requerida', MessageTypeEnum.Error);
       return;
     }
 
@@ -49,19 +51,19 @@ export default function LoginScreen({ navigation }) {
       await auth().signInWithEmailAndPassword(email, password);
     } catch (e) {
       if (e.code === FirebaseAuthErrorEnum.InUse) {
-        Alert.alert(MessagesConstants.EmailInUse);
+        showMessage(MessagesConstants.EmailInUse, MessageTypeEnum.Error);
       }
 
       if (e.code === FirebaseAuthErrorEnum.InvalidEmail) {
-        Alert.alert(MessagesConstants.EmailInvalid);
+        showMessage(MessagesConstants.EmailInvalid, MessageTypeEnum.Error);
       }
 
       if (e.code === FirebaseAuthErrorEnum.UserNotFound) {
-        Alert.alert(MessagesConstants.EmailNotFound);
+        showMessage(MessagesConstants.EmailNotFound, MessageTypeEnum.Error);
       }
 
       if (e.code === FirebaseAuthErrorEnum.WrongPassword) {
-        Alert.alert(MessagesConstants.WrongPassword);
+        showMessage(MessagesConstants.WrongPassword, MessageTypeEnum.Error);
       }
     }
   };

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import firestore from '@react-native-firebase/firestore';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import MapComponent from '../components/MapComponent';
+
+import { showMessage } from '../utils/showMessage';
+import { MessageTypeEnum } from '../constants/MessageTypeEnum';
 
 const points = firestore().collection(FirebaseCollectionEnum.MFChallengePoint);
 
@@ -17,7 +20,12 @@ const MapScreen = () => {
     if (Platform.OS !== 'ios') {
       MapboxGL.requestAndroidLocationPermissions()
         .then((res) => console.log(res))
-        .catch(() => Alert.alert('Error obteniendo permisos de ubicacion'));
+        .catch(() =>
+          showMessage(
+            'Error obteniendo permisos de ubicacion',
+            MessageTypeEnum.Error,
+          ),
+        );
     }
 
     points.onSnapshot(async (snapshot) => {

@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-  View,
-  Alert,
-} from 'react-native';
+import { Image, TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import { Avatar } from '@ui-kitten/components';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
+
+import { showMessage } from '../utils/showMessage';
+import { MessageTypeEnum } from '../constants/MessageTypeEnum';
 
 const postRef = firestore().collection(FirebaseCollectionEnum.MFPost);
 const usersRef = firestore().collection(FirebaseCollectionEnum.MFUser);
@@ -97,16 +93,16 @@ const PostComponent = ({ post }) => {
           likedByUsersId: firestore.FieldValue.arrayRemove(userModel.id),
         });
 
-        Alert.alert('Se ha eliminado el like');
+        showMessage('Se ha eliminado el like', MessageTypeEnum.Success);
       } else {
         postRef.doc(post.id).update({
           likedByUsersId: firestore.FieldValue.arrayUnion(userModel.id),
         });
 
-        Alert.alert('Se ha registrado el like');
+        showMessage('Se ha registrado el like', MessageTypeEnum.Success);
       }
     } catch (error) {
-      Alert.alert('No se ha podido registrar el like');
+      showMessage('No se ha podido registrar el like', MessageTypeEnum.Error);
       console.error('Error updating user post likes', error);
     }
   };

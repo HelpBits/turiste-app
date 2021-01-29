@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
-  Alert,
   StyleSheet,
   TextInput,
   TouchableOpacity,
@@ -17,6 +16,9 @@ import { MFChallengePoint } from '../firebase/collections/MFChallengePoint';
 import Modal from 'react-native-modal';
 import { launchImageLibrary } from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
+
+import { showMessage } from '../utils/showMessage';
+import { MessageTypeEnum } from '../constants/MessageTypeEnum';
 
 const NewPointComponent = ({ setShowPointCreationModal }) => {
   const [name, setName] = useState('');
@@ -98,19 +100,28 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
       tags.find((tag) => tag.id === tagId),
     );
     if (!name) {
-      Alert.alert('Ingrese un nombre para el nuevo punto');
+      showMessage(
+        'Ingrese un nombre para el nuevo punto',
+        MessageTypeEnum.Error,
+      );
       return;
     }
     if (!description) {
-      Alert.alert('Ingrese una descripción para el nuevo punto');
+      showMessage(
+        'Ingrese una descripción para el nuevo punto',
+        MessageTypeEnum.Error,
+      );
       return;
     }
     if (!photo) {
-      Alert.alert('Agregue una foto para el nuevo punto');
+      showMessage(
+        'Agregue una foto para el nuevo punto',
+        MessageTypeEnum.Error,
+      );
       return;
     }
     if (!newPointCoordinates) {
-      Alert.alert('Seleccione un punto en el mapa');
+      showMessage('Seleccione un punto en el mapa', MessageTypeEnum.Error);
       return;
     }
     const geometry = {
@@ -130,11 +141,11 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
     points
       .add(newPoint)
       .then(() => {
-        Alert.alert('Punto Creado');
+        showMessage('Punto Creado', MessageTypeEnum.Success);
         setShowPointCreationModal(false);
       })
       .catch(() => {
-        Alert.alert('Error al crear el punto');
+        showMessage('Error al crear el punto', MessageTypeEnum.Error);
       });
   };
 

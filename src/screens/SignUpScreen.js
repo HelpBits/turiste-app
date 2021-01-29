@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Alert,
   Image,
   Text,
   TextInput,
@@ -20,6 +19,9 @@ import { MessagesConstants } from '../constants/MessagesConstants';
 import { MFUser } from '../firebase/collections/MFUser';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import validations from '../utils/validation';
+
+import { showMessage } from '../utils/showMessage';
+import { MessageTypeEnum } from '../constants/MessageTypeEnum';
 
 const users = firestore().collection(FirebaseCollectionEnum.MFUser);
 const roles = firestore().collection(FirebaseCollectionEnum.MFRole);

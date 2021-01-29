@@ -3,7 +3,7 @@ import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import UserScreen from '../screens/UserScreen';
 import MapScreen from '../screens/MapScreen';
-import AddScreen from '../screens/AddScreen';
+import { AddNavigator } from '../navigation/AddNavigator';
 import { ChallengeNavigator } from '../navigation/ChallengeNavigator';
 import HelpScreen from '../screens/HelpScreen';
 
@@ -27,7 +27,7 @@ const TabNavigator = createBottomTabNavigator({
     },
   },
   Agregar: {
-    screen: AddScreen,
+    screen: AddNavigator,
     navigationOptions: {
       tabBarIcon: ({ focused }) => (
         <Icon name="plus" size={20} color={focused ? '#111' : '#939393'} />

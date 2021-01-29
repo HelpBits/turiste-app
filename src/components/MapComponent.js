@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Alert, Platform } from 'react-native';
+import { View, StyleSheet, Platform } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import ChallengePointComponent from '../components/ChallengePointComponent';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+
+import { showMessage } from '../utils/showMessage';
+import { MessageTypeEnum } from '../constants/MessageTypeEnum';
 
 MapboxGL.setAccessToken(
   'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA',
@@ -13,7 +16,12 @@ const MapComponent = ({ mapPoints, zoom, center, hasHeader }) => {
     if (Platform.OS !== 'ios') {
       MapboxGL.requestAndroidLocationPermissions()
         .then((res) => console.log(res))
-        .catch(() => Alert.alert('Error obteniendo permisos de ubicacion'));
+        .catch(() =>
+          showMessage(
+            'Error obteniendo permisos de ubicacion',
+            MessageTypeEnum.Error,
+          ),
+        );
     }
   }, []);
 
@@ -26,17 +34,17 @@ const MapComponent = ({ mapPoints, zoom, center, hasHeader }) => {
           <MapboxGL.UserLocation />
           {mapPoints
             ? mapPoints.map((mapPoint, index) => (
-                <MapboxGL.PointAnnotation
-                  coordinate={[
-                    mapPoint.geometry.latitude,
-                    mapPoint.geometry.longitude,
-                  ]}
-                  id={mapPoint.id}
-                  key={mapPoint.id}
-                  onSelected={() => setSelectedPoint(mapPoint)}>
-                  <Icon name="map-marker-alt" size={25} color={'red'} />
-                </MapboxGL.PointAnnotation>
-              ))
+              <MapboxGL.PointAnnotation
+                coordinate={[
+                  mapPoint.geometry.latitude,
+                  mapPoint.geometry.longitude,
+                ]}
+                id={mapPoint.id}
+                key={mapPoint.id}
+                onSelected={() => setSelectedPoint(mapPoint)}>
+                <Icon name="map-marker-alt" size={25} color={'red'} />
+              </MapboxGL.PointAnnotation>
+            ))
             : null}
         </MapboxGL.MapView>
       </View>

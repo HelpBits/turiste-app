@@ -4,7 +4,6 @@ import {
   TouchableOpacity,
   Text,
   View,
-  Alert,
   ScrollView,
   Platform,
 } from 'react-native';
@@ -15,6 +14,9 @@ import auth from '@react-native-firebase/auth';
 import ChallengeComponent from '../components/ChallengeComponent';
 import Modal from 'react-native-modal';
 import { colors } from '../styles/theme';
+
+import { showMessage } from '../utils/showMessage';
+import { MessageTypeEnum } from '../constants/MessageTypeEnum';
 
 const ChallengeStatesEnum = {
   InProgress: 'En progreso',
@@ -82,7 +84,7 @@ const ChallengeScreen = ({ navigation }) => {
         },
         (error) => {
           console.error('Error recuperando datos: ', error);
-          Alert.alert('Error recuperando datos');
+          showMessage('Error recuperando datos', MessageTypeEnum.Error);
         },
       );
 
@@ -92,9 +94,9 @@ const ChallengeScreen = ({ navigation }) => {
           ...challenge,
           points: challenge.pointIds
             ? challenge.pointIds.map(async (id) => {
-                const refPoint = await challengesPointRef.doc(id).get();
-                return refPoint.data();
-              })
+              const refPoint = await challengesPointRef.doc(id).get();
+              return refPoint.data();
+            })
             : [],
         };
       });

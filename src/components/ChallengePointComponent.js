@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { colors } from '../styles/theme';
@@ -8,7 +8,8 @@ import firestore from '@react-native-firebase/firestore';
 import FeedScreen from '../screens/FeedScreen';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import { MFCheckin } from '../firebase/collections/MFCheckin';
-import Toast from 'react-native-toast-message';
+import { showMessage } from '../utils/showMessage';
+import { MessageTypeEnum } from '../constants/MessageTypeEnum';
 
 const pointsRef = firestore().collection(
   FirebaseCollectionEnum.MFChallengePoint,
@@ -91,7 +92,10 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
         );
 
         if (completedChallenge && !completedChallengesMap[challengeId]) {
-          Alert.alert('Felicidades completó el reto de ', challengeModel.name);
+          showMessage(
+            `Felicidades completó el reto de ${challengeModel.name}`,
+            MessageTypeEnum.Info,
+          );
           usersRef.doc(userModel.id).update({
             completedChallengePointIds: firestore.FieldValue.arrayUnion(
               challengeId,
@@ -132,17 +136,10 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
       await pointsRef.doc(selectedPoint.id).update(newCheckins);
 
       updateUserCheckins();
-      Toast.show({
-        text1: 'Exito',
-        text2: 'Check-in realizado correctamente',
-        position: 'top',
-        visibilityTime: 2000,
-        topOffset: 50,
-      });
-      // Alert.alert('Check-in realizado correctamente');
+      showMessage('Check-in realizado correctamente', MessageTypeEnum.Success);
     } catch (error) {
       console.error('No se puedo marcar el chek-in ', error);
-      Alert.alert('No se puedo marcar el chek-in');
+      showMessage('No se puedo marcar el chek-in', MessageTypeEnum.Error);
     }
   };
 

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View, Alert } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import { MAPBOX_ACCESSTOKEN } from '@env';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Geolocation from '@react-native-community/geolocation';
+
+import { showMessage } from '../utils/showMessage';
+import { MessageTypeEnum } from '../constants/MessageTypeEnum';
 
 MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
 
@@ -28,8 +31,8 @@ const SelectNewPointComponent = ({
         setCenter([position.coords.longitude, position.coords.latitude]);
       },
       (error) => {
-        console.log(error);
-        Alert.alert('No podimos encontrar tu ubicacion');
+        console.error('Error getting user location', error);
+        showMessage('No pudimos encontrar tu ubicacion', MessageTypeEnum.Error);
       },
       {
         enableHighAccuracy: true,
@@ -67,7 +70,7 @@ const SelectNewPointComponent = ({
 
     currentPoint
       ? setShowSelectPointModal(false)
-      : Alert.alert('Necesita elegir un punto');
+      : showMessage('Necesita elegir un punto', MessageTypeEnum.Error);
   };
 
   const NewPointAnnotationContent = () => (

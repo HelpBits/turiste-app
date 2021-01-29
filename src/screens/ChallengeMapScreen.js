@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Alert, Image } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import firestore from '@react-native-firebase/firestore';
 
 import MapComponent from '../components/MapComponent';
+import { showMessage } from '../utils/showMessage';
+import { MessageTypeEnum } from '../constants/MessageTypeEnum';
 
 const pointsRef = firestore().collection(
   FirebaseCollectionEnum.MFChallengePoint,
@@ -29,8 +31,11 @@ const ChallengeMapScreen = ({ navigation }) => {
       const challengeRef = await challengesRef.doc(challengeId).get();
       challenge = challengeRef.data();
     } catch (e) {
-      console.log('Error obteniendo información del reto', e);
-      Alert.alert('Error obteniendo información del reto');
+      console.error('Error obteniendo información del reto', e);
+      showMessage(
+        'Error obteniendo información del reto',
+        MessageTypeEnum.Error,
+      );
       return;
     }
 
@@ -38,13 +43,13 @@ const ChallengeMapScreen = ({ navigation }) => {
     try {
       pointsPromises = challenge.pointIds
         ? challenge.pointIds.map(async (id) => {
-            const pointRef = await pointsRef.doc(id).get();
-            return { id: pointRef.id, ...pointRef.data() };
-          })
+          const pointRef = await pointsRef.doc(id).get();
+          return { id: pointRef.id, ...pointRef.data() };
+        })
         : null;
     } catch (e) {
-      console.log('Error obteniendo puntos del reto', e);
-      Alert.alert('Error obteniendo puntos del reto');
+      console.error('Error obteniendo puntos del reto', e);
+      showMessage('Error obteniendo puntos del reto', MessageTypeEnum.Error);
       return;
     }
 
@@ -72,8 +77,8 @@ const ChallengeMapScreen = ({ navigation }) => {
       {isLoading ? (
         <Text style={styles.noPoinsText}>Cargando puntos del reto</Text>
       ) : (
-        <Text style={styles.noPoinsText}>No hay puntos para este reto</Text>
-      )}
+          <Text style={styles.noPoinsText}>No hay puntos para este reto</Text>
+        )}
     </View>
   );
 
@@ -87,8 +92,8 @@ const ChallengeMapScreen = ({ navigation }) => {
           hasHeader={true}
         />
       ) : (
-        <View style={styles.container}>{<NoPointsRender />}</View>
-      )}
+          <View style={styles.container}>{<NoPointsRender />}</View>
+        )}
     </>
   );
 };

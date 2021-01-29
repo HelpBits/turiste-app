@@ -36,6 +36,7 @@ const AddPost = ({ firebase, challengePoint, setShowPostCreationModal }) => {
       Alert.alert('Primero elige una imagen para el post.');
       return;
     }
+
     if (description === '') {
       Alert.alert('Escribe algo sobre tu visita al lugar.');
       return;
@@ -48,15 +49,16 @@ const AddPost = ({ firebase, challengePoint, setShowPostCreationModal }) => {
       };
 
       await firebase.uploadPost(post);
-
-      Alert.alert('Post subido correctamente');
-
+      showMessage('Post subido correctamente', MessageTypeEnum.Success);
       setImage(null);
       setDescription('');
 
       setShowPostCreationModal(false);
     } catch (e) {
-      Alert.alert('Ha ocurrido un error al subir el post');
+      showMessage(
+        'Ha ocurrido un error al subir el post',
+        MessageTypeEnum.Error,
+      );
       console.error('ERROR UPLOADING POST', e);
     }
   };
