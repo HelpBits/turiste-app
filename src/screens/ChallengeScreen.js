@@ -231,6 +231,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     margin: 10,
+    marginTop: 50,
   },
   cardHeader: {
     flex: 1,
