@@ -33,47 +33,49 @@ const UserScreen = () => {
   }, []);
 
   return (
-    <View style={styles.mainView}>
-      <View>
-        <Text style={globalStyleSheet.title}>Datos de Usuario</Text>
-        <View style={styles.userIconContainer}>
-          <Image
-            style={styles.logo}
-            source={require('../../assets/tourism-icon.png')}
-          />
-        </View>
+    <>
+      <View style={styles.mainView}>
         <View>
-          <Text style={styles.fieldText}>
-            <Text style={styles.fieldTextKey}>Usuario: </Text>
-            {userInfo.username}
-          </Text>
-          <Text style={styles.fieldText}>
-            <Text style={styles.fieldTextKey}>Correo: </Text>
-            {userInfo.mail}
-          </Text>
-          <Text style={styles.fieldText}>
-            <Text style={styles.fieldTextKey}>Fecha de Nacimiento: </Text>
-            {moment(userInfo.birthdate).format('DD / MM / YYYY')}
-          </Text>
-          <Text style={styles.fieldText}>
-            <Text style={styles.fieldTextKey}>Puntos Visitados: </Text>
-            {userInfo.visitedChallengePointIds
-              ? userInfo.visitedChallengePointIds.length
-              : 0}
-          </Text>
-          <Text style={styles.fieldText}>
-            <Text style={styles.fieldTextKey}>Desafíos Completados: </Text>
-            {userInfo.completedChallengePointIds
-              ? userInfo.completedChallengePointIds.length
-              : 0}
-          </Text>
+          <Text style={globalStyleSheet.title}>Datos de Usuario</Text>
+          <View style={styles.userIconContainer}>
+            <Image
+              style={styles.logo}
+              source={require('../../assets/tourism-icon.png')}
+            />
+          </View>
+          <View>
+            <Text style={styles.fieldText}>
+              <Text style={styles.fieldTextKey}>Usuario: </Text>
+              {userInfo.username}
+            </Text>
+            <Text style={styles.fieldText}>
+              <Text style={styles.fieldTextKey}>Correo: </Text>
+              {userInfo.mail}
+            </Text>
+            <Text style={styles.fieldText}>
+              <Text style={styles.fieldTextKey}>Fecha de Nacimiento: </Text>
+              {moment(userInfo.birthdate).format('DD / MM / YYYY')}
+            </Text>
+            <Text style={styles.fieldText}>
+              <Text style={styles.fieldTextKey}>Puntos Visitados: </Text>
+              {userInfo.visitedChallengePointIds
+                ? userInfo.visitedChallengePointIds.length
+                : 0}
+            </Text>
+            <Text style={styles.fieldText}>
+              <Text style={styles.fieldTextKey}>Desafíos Completados: </Text>
+              {userInfo.completedChallengePointIds
+                ? userInfo.completedChallengePointIds.length
+                : 0}
+            </Text>
+          </View>
         </View>
-      </View>
 
-      <TouchableOpacity onPress={logOut} style={styles.button}>
-        <Text>Cerrar Sesión</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity onPress={logOut} style={styles.button}>
+          <Text>Cerrar Sesión</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 };
 

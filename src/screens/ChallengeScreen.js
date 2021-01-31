@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
   Text,
   View,
+  Alert,
   ScrollView,
   Platform,
+  SafeAreaView,
+  Button,
+  TextComponent,
 } from 'react-native';
 import { Picker, PickerIOS } from '@react-native-picker/picker';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
@@ -15,8 +19,7 @@ import ChallengeComponent from '../components/ChallengeComponent';
 import Modal from 'react-native-modal';
 import { colors } from '../styles/theme';
 
-import { showMessage } from '../utils/showMessage';
-import { MessageTypeEnum } from '../constants/MessageTypeEnum';
+import ReactNativePickerModule from 'react-native-picker-module';
 
 const ChallengeStatesEnum = {
   InProgress: 'En progreso',
@@ -54,6 +57,7 @@ const ChallengeScreen = ({ navigation }) => {
   const [inProgressChallenges, setinProgressChallenges] = useState([]);
   const [pickerVisible, setPickerVisible] = useState(false);
   const [userModel, setUserModel] = useState(false);
+  const pickerRef = useRef();
 
   useEffect(() => {
     const user = auth().currentUser;
@@ -84,7 +88,7 @@ const ChallengeScreen = ({ navigation }) => {
         },
         (error) => {
           console.error('Error recuperando datos: ', error);
-          showMessage('Error recuperando datos', MessageTypeEnum.Error);
+          Alert.alert('Error recuperando datos');
         },
       );
 
@@ -94,9 +98,9 @@ const ChallengeScreen = ({ navigation }) => {
           ...challenge,
           points: challenge.pointIds
             ? challenge.pointIds.map(async (id) => {
-              const refPoint = await challengesPointRef.doc(id).get();
-              return refPoint.data();
-            })
+                const refPoint = await challengesPointRef.doc(id).get();
+                return refPoint.data();
+              })
             : [],
         };
       });
@@ -164,65 +168,67 @@ const ChallengeScreen = ({ navigation }) => {
   };
 
   const PickerComponent = () => {
-    return Platform.OS !== 'ios' ? (
-      <Picker
-        selectedValue={challengeState}
-        style={styles.ChallengePickerState}
-        onValueChange={(itemValue, itemIndex) => {
-          handleChangeChallengeState(itemValue);
-        }}>
-        {challengeStates.map((state, index) => (
-          <Picker.Item label={state} value={state} key={index} />
-        ))}
-      </Picker>
-    ) : null;
+    return (
+      <>
+        <SafeAreaView>
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              alignContent: 'flex-start',
+            }}>
+            <Text style={{ fontSize: 18 }}>Filtro:</Text>
+            <Button
+              title={challengeState}
+              onPress={() => pickerRef.current.show()}
+            />
+          </TouchableOpacity>
+        </SafeAreaView>
+        <ReactNativePickerModule
+          pickerRef={pickerRef}
+          value={challengeState}
+          title={'Seleccionar estado retos'}
+          items={challengeStates}
+          titleStyle={{ color: 'white' }}
+          itemStyle={{ color: 'white' }}
+          selectedColor="#FC0"
+          confirmButtonEnabledTextStyle={{ color: 'white' }}
+          confirmButtonDisabledTextStyle={{ color: 'grey' }}
+          cancelButtonTextStyle={{ color: 'white' }}
+          cancelButton="Cancelar"
+          confirmButton="Confirmar"
+          confirmButtonStyle={{
+            backgroundColor: 'rgba(0,0,0,1)',
+          }}
+          cancelButtonStyle={{
+            backgroundColor: 'rgba(0,0,0,1)',
+          }}
+          contentContainerStyle={{
+            backgroundColor: 'rgba(0,0,0,1)',
+          }}
+          onValueChange={(value) => {
+            handleChangeChallengeState(value);
+          }}
+        />
+      </>
+    );
   };
 
   return (
     <View style={styles.container}>
-      {Platform.OS === 'ios' && (
-        <Modal
-          isVisible={pickerVisible}
-          backdropColor="#B4B3DB"
-          backdropOpacity={0.3}
-          animationIn="zoomInDown"
-          animationOut="zoomOutUp">
-          <View style={styles.pickerModal}>
-            <PickerIOS
-              selectedValue={challengeState}
-              style={styles.ChallengePickerState}
-              onValueChange={(itemValue, itemIndex) => {
-                handleChangeChallengeState(itemValue);
-              }}>
-              {challengeStates.map((state, index) => (
-                <PickerIOS.Item label={state} value={state} key={index} />
-              ))}
-            </PickerIOS>
-            <TouchableOpacity
-              style={styles.hideActionContainer}
-              onPress={() => setPickerVisible(false)}>
-              <Text>OCULTAR</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
-      )}
-      {Platform.OS === 'ios' && (
-        <TouchableOpacity
-          style={styles.openPicker}
-          onPress={() => setPickerVisible(true)}>
-          <Text>{challengeState}</Text>
-        </TouchableOpacity>
-      )}
       <PickerComponent />
       <ScrollView style={styles.challenges}>
-        {filteredChallenges &&
+        {filteredChallenges && filteredChallenges.length > 0 ? (
           filteredChallenges.map((challenge, index) => (
             <ChallengeComponent
               navigation={navigation}
               challenge={challenge}
               key={index}
             />
-          ))}
+          ))
+        ) : (
+          <Text style={styles.noChallenges}>No hay retos</Text>
+        )}
       </ScrollView>
     </View>
   );
@@ -280,6 +286,11 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   openPickerText: { color: 'red' },
+  noChallenges: {
+    fontSize: 20,
+    alignSelf: 'center',
+    marginTop: '50%',
+  },
 });
 
 export default ChallengeScreen;
