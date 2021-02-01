@@ -57,7 +57,7 @@ const ChallengeScreen = ({ navigation }) => {
   const [inProgressChallenges, setinProgressChallenges] = useState([]);
   const [pickerVisible, setPickerVisible] = useState(false);
   const [userModel, setUserModel] = useState(false);
-  const pickerRef = useRef();
+  let pickerRef = useRef();
 
   useEffect(() => {
     const user = auth().currentUser;
@@ -98,9 +98,9 @@ const ChallengeScreen = ({ navigation }) => {
           ...challenge,
           points: challenge.pointIds
             ? challenge.pointIds.map(async (id) => {
-                const refPoint = await challengesPointRef.doc(id).get();
-                return refPoint.data();
-              })
+              const refPoint = await challengesPointRef.doc(id).get();
+              return refPoint.data();
+            })
             : [],
         };
       });
@@ -171,41 +171,27 @@ const ChallengeScreen = ({ navigation }) => {
     return (
       <>
         <SafeAreaView>
-          <TouchableOpacity
+          <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              alignContent: 'flex-start',
             }}>
-            <Text style={{ fontSize: 18 }}>Filtro:</Text>
-            <Button
-              title={challengeState}
-              onPress={() => pickerRef.current.show()}
-            />
-          </TouchableOpacity>
+            <Text style={{ fontSize: 18 }}>Filtro: </Text>
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              type="outline"
+              onPress={() => pickerRef.current.show()}>
+              <Text style={styles.buttonText}>{challengeState}</Text>
+            </TouchableOpacity>
+          </View>
         </SafeAreaView>
         <ReactNativePickerModule
           pickerRef={pickerRef}
           value={challengeState}
           title={'Seleccionar estado retos'}
           items={challengeStates}
-          titleStyle={{ color: 'white' }}
-          itemStyle={{ color: 'white' }}
-          selectedColor="#FC0"
-          confirmButtonEnabledTextStyle={{ color: 'white' }}
-          confirmButtonDisabledTextStyle={{ color: 'grey' }}
-          cancelButtonTextStyle={{ color: 'white' }}
           cancelButton="Cancelar"
           confirmButton="Confirmar"
-          confirmButtonStyle={{
-            backgroundColor: 'rgba(0,0,0,1)',
-          }}
-          cancelButtonStyle={{
-            backgroundColor: 'rgba(0,0,0,1)',
-          }}
-          contentContainerStyle={{
-            backgroundColor: 'rgba(0,0,0,1)',
-          }}
           onValueChange={(value) => {
             handleChangeChallengeState(value);
           }}
@@ -227,8 +213,8 @@ const ChallengeScreen = ({ navigation }) => {
             />
           ))
         ) : (
-          <Text style={styles.noChallenges}>No hay retos</Text>
-        )}
+            <Text style={styles.noChallenges}>No hay retos</Text>
+          )}
       </ScrollView>
     </View>
   );
@@ -290,6 +276,22 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: 'center',
     marginTop: '50%',
+  },
+  buttonPicker: {
+    borderColor: colors.primary,
+    color: 'white',
+    backgroundColor: 'white',
+  },
+  buttonContainer: {
+    borderBottomWidth: 1,
+    borderBottomColor: colors.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: colors.primary,
+    alignSelf: 'center',
   },
 });
 
