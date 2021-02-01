@@ -1,11 +1,12 @@
 import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { globalStyleSheet } from '../styles/theme';
+import { color } from 'react-native-reanimated';
+import { colors, globalStyleSheet } from '../styles/theme';
 
 const AddScreen = ({ navigation }) => {
   return (
     <View style={styles.mainView}>
-      <Text style={globalStyleSheet.title}>AGREGAR</Text>
+      <Text style={globalStyleSheet.title}>Agregar</Text>
       <TouchableOpacity
         style={styles.touchable}
         onPress={() => {
@@ -24,8 +25,7 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: '22%',
     justifyContent: 'center',
-    borderColor: 'orange',
-    backgroundColor: 'lightgray',
+    backgroundColor: colors.primary,
     borderWidth: 0.5,
     borderRadius: 10,
   },

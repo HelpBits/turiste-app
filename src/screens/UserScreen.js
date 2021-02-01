@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  Platform,
+} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import { globalStyleSheet } from '../styles/theme';
@@ -34,6 +41,7 @@ const UserScreen = () => {
 
   return (
     <>
+      {Platform.OS === 'ios' ? <View style={{ marginTop: 30 }}></View> : null}
       <View style={styles.mainView}>
         <View>
           <Text style={globalStyleSheet.title}>Datos de Usuario</Text>
@@ -86,7 +94,12 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
-  fieldText: { fontSize: 15, width: '100%' },
+  fieldText: {
+    fontSize: 15,
+    width: '100%',
+    paddingTop: 10,
+    fontWeight: 'bold',
+  },
   fieldTextAlt: { fontSize: 17, margin: 10 },
   fieldTextKey: { color: 'black' },
   fieldTextKeyAlt: { color: 'orange' },

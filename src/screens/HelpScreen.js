@@ -11,7 +11,6 @@ const HelpScreen = () => {
   ];
   return (
     <View style={styles.mainView}>
-      <Text style={globalStyleSheet.title}>AYUDA</Text>
       <Text style={styles.subTitle}>Desarrolladores</Text>
       {developersEmails.map((email) => (
         <Text key={email} style={styles.emailText}>
