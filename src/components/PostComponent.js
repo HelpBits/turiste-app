@@ -18,6 +18,7 @@ const PostComponent = ({ post }) => {
   const [postModel, setPostModel] = useState(null);
   const [likedByMe, setLikedByMe] = useState(false);
   const [userModel, setUserModel] = useState(null);
+  const [imageLoading, setImageLoading] = useState(false);
 
   useEffect(() => {
     const user = auth().currentUser;
@@ -107,6 +108,11 @@ const PostComponent = ({ post }) => {
     }
   };
 
+  function imageLoadingError() {
+    setImageLoading(true);
+    console.log('ERROR', postModel);
+  }
+
   return (
     <View style={styles.card}>
       <View style={styles.cardHeader}>
@@ -123,7 +129,14 @@ const PostComponent = ({ post }) => {
         <Text> {creatorUsername} </Text>
       </View>
       <View style={styles.cardBody}>
-        <Image source={{ uri: post.photo.uri }} style={styles.cardImage} />
+        <Image
+          url=""
+          defaultSource={require('../../assets/no-image.jpg')}
+          loadingIndicatorSource={require('../../assets/no-image.jpg')}
+          source={{ uri: post.photo.uri }}
+          onError={imageLoadingError}
+          style={styles.cardImage}
+        />
         <View style={styles.cardActions}>
           <View style={styles.cardBottons}>
             <TouchableOpacity onPress={likePost}>
@@ -135,13 +148,13 @@ const PostComponent = ({ post }) => {
                   color="red"
                 />
               ) : (
-                  <Icon
-                    style={styles.buttonIcon}
-                    name="heart-o"
-                    size={30}
-                    color="red"
-                  />
-                )}
+                <Icon
+                  style={styles.buttonIcon}
+                  name="heart-o"
+                  size={30}
+                  color="red"
+                />
+              )}
             </TouchableOpacity>
           </View>
           <Text> {likesNumber} likes</Text>

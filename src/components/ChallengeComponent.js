@@ -3,14 +3,17 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { colors } from '../styles/theme';
 
 const ChallengeComponent = ({ navigation, challenge }) => {
+  console.log('CHALLENGE', challenge);
+
   return (
     <View style={styles.card}>
       <Image
         style={styles.cardImage}
         source={{
-          uri: challenge.photo
-            ? challenge.photo.url
-            : 'https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.pngall.com%2Fwp-content%2Fuploads%2F2016%2F05%2FNature-Free-Download-PNG-180x180.png&f=1&nofb=1',
+          uri:
+            challenge.photo && challenge.photo.url !== ''
+              ? challenge.photo.url
+              : require('../../assets/no-image.jpg'),
         }}
       />
       <View style={styles.cardHeader}>

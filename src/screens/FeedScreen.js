@@ -59,8 +59,11 @@ const FeedScreen = ({ selectedChallengePoint }) => {
       </Modal>
       <Image
         style={styles.container}
+        onError={(e) => console.log}
         source={{
-          uri: selectedChallengePoint.photo,
+          uri: selectedChallengePoint.photo
+            ? selectedChallengePoint.photo
+            : require('../../assets/no-image.jpg'),
         }}
       />
       <Button
