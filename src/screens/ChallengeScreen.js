@@ -53,6 +53,8 @@ const ChallengeScreen = ({ navigation }) => {
   const [pickerVisible, setPickerVisible] = useState(false);
   const [userModel, setUserModel] = useState(false);
 
+  console.log('challenges');
+
   useEffect(() => {
     const user = auth().currentUser;
 
