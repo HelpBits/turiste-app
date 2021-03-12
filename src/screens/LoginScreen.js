@@ -19,6 +19,7 @@ import { MessagesConstants } from '../constants/MessagesConstants';
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [disable, setDisable] = useState(true);
 
   const onFooterLinkPress = () => {
     navigation.navigate('SignUpScreen');
@@ -29,7 +30,16 @@ export default function LoginScreen({ navigation }) {
     setPassword('');
   }, []);
 
+  useEffect(() => {
+    setDisable(!email || !password);
+  }, [email, password]);
+
   const onLoginPress = async () => {
+    if (!email && !password) {
+      Alert.alert('Todos los campos son requeridos');
+      return;
+    }
+
     if (!email) {
       Alert.alert('Correo es requerido.');
       return;
@@ -63,6 +73,10 @@ export default function LoginScreen({ navigation }) {
       if (e.code === FirebaseAuthErrorEnum.WrongPassword) {
         Alert.alert(MessagesConstants.WrongPassword);
       }
+
+      if (e.code === FirebaseAuthErrorEnum.TooManyRequests) {
+        Alert.alert(MessagesConstants.TooManyRequest);
+      }
     }
   };
 
@@ -93,7 +107,10 @@ export default function LoginScreen({ navigation }) {
           underlineColorAndroid="transparent"
           autoCapitalize="none"
         />
-        <TouchableOpacity style={styles.button} onPress={onLoginPress}>
+        <TouchableOpacity
+          style={disable ? styles.disabledButton : styles.button}
+          disabled={disable}
+          onPress={onLoginPress}>
           <Text style={styles.buttonTitle}>Iniciar sesión</Text>
         </TouchableOpacity>
         <View style={styles.footerView}>
@@ -135,6 +152,16 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: colors.primary,
+    marginLeft: 30,
+    marginRight: 30,
+    marginTop: 20,
+    height: 48,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  disabledButton: {
+    backgroundColor: colors.grey,
     marginLeft: 30,
     marginRight: 30,
     marginTop: 20,

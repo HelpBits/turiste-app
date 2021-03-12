@@ -3,4 +3,5 @@ export const FirebaseAuthErrorEnum = {
   InvalidEmail: 'auth/invalid-email',
   UserNotFound: 'auth/user-not-found',
   WrongPassword: 'auth/wrong-password',
+  TooManyRequests: 'auth/too-many-requests',
 };
