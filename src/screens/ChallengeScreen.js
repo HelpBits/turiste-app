@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   StyleSheet,
   TouchableOpacity,
@@ -41,19 +41,21 @@ const challengesPointRef = firestore().collection(
 const usersRef = firestore().collection(FirebaseCollectionEnum.MFUser);
 
 const existChallenge = (challengeId, arr) =>
-  arr.filter((val) => (val.id = challengeId)).length > 0;
+  arr.filter((val) => val.id === challengeId).length > 0;
 
 const ChallengeScreen = ({ navigation }) => {
   const [challengeState, setChallengeState] = useState(ChallengeStatesEnum.All);
   const [filteredChallenges, setFilteredChallenges] = useState([]);
   const [challenges, setChallenges] = useState([]);
   const [completedChallenges, setCompletedChallenges] = useState([]);
-  const [avalaibleChallenges] = useState([]);
+  const [avalaibleChallenges, setAvailableChallenges] = useState([]);
   const [inProgressChallenges, setinProgressChallenges] = useState([]);
   const [pickerVisible, setPickerVisible] = useState(false);
   const [userModel, setUserModel] = useState(false);
 
-  console.log('challenges');
+  useEffect(() => {
+    setChallengeState(ChallengeStatesEnum.All);
+  }, []);
 
   useEffect(() => {
     const user = auth().currentUser;
@@ -125,6 +127,7 @@ const ChallengeScreen = ({ navigation }) => {
         if (visitedPoints === 0) {
           if (!existChallenge(challenge.id, [...avalaibleTempChallenges])) {
             avalaibleTempChallenges.push(challenge);
+            setAvailableChallenges([...avalaibleTempChallenges]);
           }
         } else if (visitedPoints === challenge.points.length) {
           if (!existChallenge(challenge.id, [...completedTempChallenges])) {
@@ -140,28 +143,37 @@ const ChallengeScreen = ({ navigation }) => {
       });
 
       setChallenges([...newChallenges]);
+      handleChangeChallengeState(ChallengeStatesEnum.All);
     });
-  }, [userModel]);
+  }, [handleChangeChallengeState, userModel]);
 
   useEffect(() => {
     setFilteredChallenges(challenges);
   }, [challenges]);
 
-  const handleChangeChallengeState = (newState) => {
-    setChallengeState(newState);
-    if (newState === ChallengeStatesEnum.Available) {
-      setFilteredChallenges(avalaibleChallenges);
-    }
-    if (newState === ChallengeStatesEnum.InProgress) {
-      setFilteredChallenges(inProgressChallenges);
-    }
-    if (newState === ChallengeStatesEnum.Completed) {
-      setFilteredChallenges(completedChallenges);
-    }
-    if (newState === ChallengeStatesEnum.All) {
-      setFilteredChallenges(challenges);
-    }
-  };
+  const handleChangeChallengeState = useCallback(
+    (newState) => {
+      setChallengeState(newState);
+      if (newState === ChallengeStatesEnum.Available) {
+        setFilteredChallenges(avalaibleChallenges);
+      }
+      if (newState === ChallengeStatesEnum.InProgress) {
+        setFilteredChallenges(inProgressChallenges);
+      }
+      if (newState === ChallengeStatesEnum.Completed) {
+        setFilteredChallenges(completedChallenges);
+      }
+      if (newState === ChallengeStatesEnum.All) {
+        setFilteredChallenges(challenges);
+      }
+    },
+    [
+      avalaibleChallenges,
+      challenges,
+      completedChallenges,
+      inProgressChallenges,
+    ],
+  );
 
   const PickerComponent = () => {
     return Platform.OS !== 'ios' ? (

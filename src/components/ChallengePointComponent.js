@@ -44,6 +44,10 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
   }, []);
 
   useEffect(() => {
+    setArrivesNumber(0);
+  }, [selectedPoint]);
+
+  useEffect(() => {
     handleOpen();
     if (!userModel || !userModel.id || !selectedPoint.checkIns) {
       return;
