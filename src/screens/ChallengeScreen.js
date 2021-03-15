@@ -51,7 +51,7 @@ const ChallengeScreen = ({ navigation }) => {
   const [avalaibleChallenges, setAvailableChallenges] = useState([]);
   const [inProgressChallenges, setinProgressChallenges] = useState([]);
   const [pickerVisible, setPickerVisible] = useState(false);
-  const [userModel, setUserModel] = useState(false);
+  const [userModel, setUserModel] = useState(null);
 
   useEffect(() => {
     setChallengeState(ChallengeStatesEnum.All);
@@ -76,6 +76,7 @@ const ChallengeScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
+    console.log('trying to get challenges', userModel);
     if (!userModel) {
       return;
     }
@@ -107,47 +108,51 @@ const ChallengeScreen = ({ navigation }) => {
       let completedTempChallenges = [];
       let inProgressTempChallenges = [];
 
-      // filter challenges
-      await newChallenges.forEach(async (challenge) => {
-        challenge.points = await Promise.all(challenge.points);
-
-        let visitedPoints = 0;
-        challenge.points.forEach((point) => {
-          let userCheckinsNumber = 0;
-
-          if (point.checkIns) {
-            userCheckinsNumber = point.checkIns.filter(
-              (checkin) => checkin.userId === userModel.id,
-            ).length;
-          }
-
-          visitedPoints += userCheckinsNumber > 0 ? 1 : 0;
-        });
-
-        if (visitedPoints === 0) {
-          if (!existChallenge(challenge.id, [...avalaibleTempChallenges])) {
-            avalaibleTempChallenges.push(challenge);
-            setAvailableChallenges([...avalaibleTempChallenges]);
-          }
-        } else if (visitedPoints === challenge.points.length) {
-          if (!existChallenge(challenge.id, [...completedTempChallenges])) {
-            completedTempChallenges.push(challenge);
-            setCompletedChallenges([...completedTempChallenges]);
-          }
-        } else {
-          if (!existChallenge(challenge.id, [...inProgressTempChallenges])) {
-            inProgressTempChallenges.push(challenge);
-            setinProgressChallenges([...inProgressTempChallenges]);
-          }
-        }
-      });
-
       setChallenges([...newChallenges]);
-      handleChangeChallengeState(ChallengeStatesEnum.All);
+
+      // filter challenges
+      await Promise.all(
+        newChallenges.map(async (challenge) => {
+          challenge.points = await Promise.all(challenge.points);
+
+          let visitedPoints = 0;
+          challenge.points.forEach((point) => {
+            let userCheckinsNumber = 0;
+
+            if (point.checkIns) {
+              userCheckinsNumber = point.checkIns.filter(
+                (checkin) => checkin.userId === userModel.id,
+              ).length;
+            }
+
+            visitedPoints += userCheckinsNumber > 0 ? 1 : 0;
+          });
+
+          if (visitedPoints === 0) {
+            if (!existChallenge(challenge.id, [...avalaibleTempChallenges])) {
+              avalaibleTempChallenges.push(challenge);
+              setAvailableChallenges([...avalaibleTempChallenges]);
+            }
+          } else if (visitedPoints === challenge.points.length) {
+            if (!existChallenge(challenge.id, [...completedTempChallenges])) {
+              completedTempChallenges.push(challenge);
+              setCompletedChallenges([...completedTempChallenges]);
+            }
+          } else {
+            if (!existChallenge(challenge.id, [...inProgressTempChallenges])) {
+              inProgressTempChallenges.push(challenge);
+              setinProgressChallenges([...inProgressTempChallenges]);
+            }
+          }
+        }),
+      );
+
+      setChallengeState(ChallengeStatesEnum.All);
     });
   }, [handleChangeChallengeState, userModel]);
 
   useEffect(() => {
+    console.log('challenges has changed', challenges.length);
     setFilteredChallenges(challenges);
   }, [challenges]);
 
