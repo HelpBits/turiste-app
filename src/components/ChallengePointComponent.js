@@ -217,7 +217,7 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    maxWidth: '90%',
+    width: '90%',
   },
   summaryHeader: {
     flexDirection: 'row',
