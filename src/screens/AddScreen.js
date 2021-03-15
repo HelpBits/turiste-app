@@ -25,9 +25,6 @@ const AddScreen = () => {
         onPress={() => setNewPointModalVisible(true)}>
         <Text style={styles.touchableText}>Agregar Punto</Text>
       </TouchableOpacity>
-      <TouchableOpacity disabled style={styles.touchable}>
-        <Text style={styles.touchableText}>Agregar Reto</Text>
-      </TouchableOpacity>
     </View>
   );
 };
