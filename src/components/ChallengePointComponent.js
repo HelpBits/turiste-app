@@ -18,12 +18,19 @@ const challengesRef = firestore().collection(
   FirebaseCollectionEnum.MFChallenge,
 );
 
-const ChallengePointComponent = ({ selectedPoint, hasHeader }) => {
+const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
   const [userModel, setUserModel] = useState(null);
   const [arrivesNumber, setArrivesNumber] = useState(0);
+  const [modalSize, setModalSize] = useState(-1);
 
   const modalizeRef = useRef(null);
-  const modalSize = hasHeader ? 195 : 139;
+
+  useEffect(() => {
+    if (hasHeader === undefined) {
+      return;
+    }
+    setModalSize(hasHeader ? 230 : 139);
+  }, [hasHeader]);
 
   useEffect(() => {
     const user = auth().currentUser;

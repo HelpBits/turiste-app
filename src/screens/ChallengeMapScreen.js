@@ -84,7 +84,7 @@ const ChallengeMapScreen = ({ navigation }) => {
           mapPoints={mapPoints}
           zoom={zoom}
           center={center}
-          hasHeader={true}
+          hasHeader
         />
       ) : (
         <View style={styles.container}>{<NoPointsRender />}</View>
