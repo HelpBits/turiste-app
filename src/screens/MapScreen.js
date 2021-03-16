@@ -8,9 +8,6 @@ import MapComponent from '../components/MapComponent';
 const points = firestore().collection(FirebaseCollectionEnum.MFChallengePoint);
 
 const MapScreen = () => {
-  const zoom = 6.3;
-  const center = [-84.0795, 9.9328];
-
   const [mapPoints, setMapPoints] = useState(null);
 
   useEffect(() => {
@@ -28,13 +25,7 @@ const MapScreen = () => {
     });
   }, []);
 
-  return (
-    <>
-      {mapPoints && (
-        <MapComponent mapPoints={mapPoints} zoom={zoom} center={center} />
-      )}
-    </>
-  );
+  return <>{mapPoints && <MapComponent mapPoints={mapPoints} />}</>;
 };
 
 export default MapScreen;

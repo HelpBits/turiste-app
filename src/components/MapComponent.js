@@ -8,7 +8,10 @@ MapboxGL.setAccessToken(
   'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA',
 );
 
-const MapComponent = ({ mapPoints, zoom, center, hasHeader }) => {
+const MapComponent = ({ mapPoints, hasHeader }) => {
+  const [zoom, setZoom] = useState(6.3);
+  const [center, changeCenter] = useState([-84.0795, 9.9328]);
+  const [selectedPoint, setSelectedPoint] = useState(null);
   useEffect(() => {
     if (Platform.OS !== 'ios') {
       MapboxGL.requestAndroidLocationPermissions()
@@ -17,7 +20,11 @@ const MapComponent = ({ mapPoints, zoom, center, hasHeader }) => {
     }
   }, []);
 
-  const [selectedPoint, setSelectedPoint] = useState(null);
+  const zoomAndSelectPoint = (mapPoint) => {
+    changeCenter([mapPoint.geometry.latitude, mapPoint.geometry.longitude]);
+    setZoom(12);
+    setSelectedPoint(mapPoint);
+  };
   return (
     <>
       <View style={styles.mainView}>
@@ -33,7 +40,7 @@ const MapComponent = ({ mapPoints, zoom, center, hasHeader }) => {
                   ]}
                   id={mapPoint.id}
                   key={mapPoint.id}
-                  onSelected={() => setSelectedPoint(mapPoint)}>
+                  onSelected={() => zoomAndSelectPoint(mapPoint)}>
                   <Icon name="map-marker-alt" size={25} color={'red'} />
                 </MapboxGL.PointAnnotation>
               ))
