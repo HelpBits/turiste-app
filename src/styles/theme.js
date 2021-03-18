@@ -9,6 +9,7 @@ export const colors = {
   grey: 'grey',
   green: 'green',
   white: 'white',
+  red: 'red',
 };
 
 export const globalStyleSheet = StyleSheet.create({
