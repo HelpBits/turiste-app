@@ -31,12 +31,11 @@ const MapComponent = ({ mapPoints, hasHeader }) => {
     setZoom(DEFAULT_ZOOM);
     setSelectedPoint(null);
   };
+
   return (
     <>
       <View style={styles.mainView}>
-        <MapboxGL.MapView
-          style={styles.mapView}
-          onPress={() => setSelectedPoint(null)}>
+        <MapboxGL.MapView style={styles.mapView} onPress={onSelectedPointClose}>
           <MapboxGL.Camera zoomLevel={zoom} centerCoordinate={center} />
           <MapboxGL.UserLocation />
           {mapPoints
@@ -57,7 +56,6 @@ const MapComponent = ({ mapPoints, hasHeader }) => {
       </View>
       {selectedPoint && (
         <ChallengePointComponent
-          onClose={onSelectedPointClose}
           selectedPoint={selectedPoint}
           hasHeader={hasHeader}
         />

@@ -18,11 +18,7 @@ const challengesRef = firestore().collection(
   FirebaseCollectionEnum.MFChallenge,
 );
 
-const ChallengePointComponent = ({
-  selectedPoint,
-  hasHeader = false,
-  onClose,
-}) => {
+const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
   const [userModel, setUserModel] = useState(null);
   const [arrivesNumber, setArrivesNumber] = useState(0);
   const [modalSize, setModalSize] = useState(-1);
