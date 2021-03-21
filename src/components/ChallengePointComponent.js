@@ -18,7 +18,11 @@ const challengesRef = firestore().collection(
   FirebaseCollectionEnum.MFChallenge,
 );
 
-const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
+const ChallengePointComponent = ({
+  selectedPoint,
+  hasHeader = false,
+  onClose,
+}) => {
   const [userModel, setUserModel] = useState(null);
   const [arrivesNumber, setArrivesNumber] = useState(0);
   const [modalSize, setModalSize] = useState(-1);
@@ -118,6 +122,12 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
     if (modalizeRef.current) {
       modalizeRef.current.open();
     }
+  };
+
+  const closeModal = () => {
+    modalizeRef.current.close();
+
+    onClose && onClose();
   };
 
   const markCheckin = async () => {
