@@ -76,10 +76,10 @@ const ChallengeScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    console.log('trying to get challenges', userModel);
     if (!userModel) {
       return;
     }
+
     challengesRef.onSnapshot(async (snapshot) => {
       let newChallenges = snapshot.docs.map(
         (doc) => {

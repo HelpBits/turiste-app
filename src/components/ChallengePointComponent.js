@@ -8,6 +8,7 @@ import firestore from '@react-native-firebase/firestore';
 import FeedScreen from '../screens/FeedScreen';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import { MFCheckin } from '../firebase/collections/MFCheckin';
+import { Platform } from 'react-native';
 
 const pointsRef = firestore().collection(
   FirebaseCollectionEnum.MFChallengePoint,
@@ -29,7 +30,12 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
     if (hasHeader === undefined) {
       return;
     }
-    setModalSize(hasHeader ? 166 : 110);
+
+    if (Platform.OS === 'ios') {
+      setModalSize(hasHeader ? 230 : 139);
+    } else {
+      setModalSize(hasHeader ? 166 : 110);
+    }
   }, [hasHeader]);
 
   useEffect(() => {
