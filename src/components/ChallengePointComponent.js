@@ -29,7 +29,7 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
     if (hasHeader === undefined) {
       return;
     }
-    setModalSize(hasHeader ? 230 : 139);
+    setModalSize(hasHeader ? 166 : 110);
   }, [hasHeader]);
 
   useEffect(() => {

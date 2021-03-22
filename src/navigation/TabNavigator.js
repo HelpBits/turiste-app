@@ -46,7 +46,7 @@ const TabNavigator = createBottomTabNavigator({
     screen: HelpScreen,
     navigationOptions: {
       tabBarIcon: ({ focused }) => (
-        <Icon name="home" size={20} color={focused ? '#111' : '#939393'} />
+        <Icon name="help" size={20} color={focused ? '#111' : '#939393'} />
       ),
     },
   },
