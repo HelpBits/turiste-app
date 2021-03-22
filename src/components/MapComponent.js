@@ -8,8 +8,9 @@ MapboxGL.setAccessToken(
   'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA',
 );
 
+const DEFAULT_ZOOM = 6.3;
 const MapComponent = ({ mapPoints, hasHeader }) => {
-  const [zoom, setZoom] = useState(6.3);
+  const [zoom, setZoom] = useState(DEFAULT_ZOOM);
   const [center, changeCenter] = useState([-84.0795, 9.9328]);
   const [selectedPoint, setSelectedPoint] = useState(null);
   useEffect(() => {
@@ -22,13 +23,19 @@ const MapComponent = ({ mapPoints, hasHeader }) => {
 
   const zoomAndSelectPoint = (mapPoint) => {
     changeCenter([mapPoint.geometry.latitude, mapPoint.geometry.longitude]);
-    setZoom(12);
+    setZoom(8);
     setSelectedPoint(mapPoint);
   };
+
+  const onSelectedPointClose = () => {
+    setZoom(DEFAULT_ZOOM);
+    setSelectedPoint(null);
+  };
+
   return (
     <>
       <View style={styles.mainView}>
-        <MapboxGL.MapView style={styles.mapView}>
+        <MapboxGL.MapView style={styles.mapView} onPress={onSelectedPointClose}>
           <MapboxGL.Camera zoomLevel={zoom} centerCoordinate={center} />
           <MapboxGL.UserLocation />
           {mapPoints

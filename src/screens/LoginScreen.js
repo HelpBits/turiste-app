@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Image,
   Text,
@@ -16,42 +16,78 @@ import validations from '../utils/validation';
 import { FirebaseAuthErrorEnum } from '../constants/FirebaseAuthErrorEnum';
 import { MessagesConstants } from '../constants/MessagesConstants';
 
+const ErrorEnum = {
+  MAIL: 0,
+  PASSWORD: 1,
+};
+
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [disable, setDisable] = useState(true);
+  const [canCreate, setCanCreate] = useState(false);
+
+  const [errorMessages, setErrorMessages] = useState(['', '']);
+  const [dirtyInputs, setDirtyInputs] = useState([false, false]);
+
+  const setErrorAtIndex = useCallback((errorMessage, index) => {
+    let errorsTemp = [...errorMessages];
+    errorsTemp[index] = errorMessage;
+
+    setErrorMessages([...errorsTemp]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const setDirtyAtIndex = (index, value) => {
+    let dirtyInputsTemp = [...dirtyInputs];
+    dirtyInputsTemp[index] = value;
+    setDirtyInputs([...dirtyInputsTemp]);
+  };
+
+  useEffect(() => {
+    const noError = errorMessages.reduce((a, e) => a && e === '', true);
+    const isDirty = dirtyInputs.reduce((a, e) => a && e, true);
+
+    console.log(noError && isDirty, errorMessages, dirtyInputs);
+    setCanCreate(noError && isDirty);
+  }, [dirtyInputs, errorMessages]);
+
+  const handleEmailState = (value) => {
+    setEmail(value.trim());
+    setDirtyAtIndex(ErrorEnum.MAIL, value.length !== 0);
+
+    let message = '';
+    if (!value || value.length === 0) {
+      message = 'Email es requerido';
+    } else if (!validations.validateEmail(email)) {
+      message = 'Formato de correo incorrecto';
+    }
+
+    setErrorAtIndex(message, ErrorEnum.MAIL);
+  };
+
+  const handlePasswordState = (value) => {
+    setPassword(value);
+    setDirtyAtIndex(ErrorEnum.PASSWORD, value.length !== 0);
+
+    let message = '';
+    if (!value) {
+      message = 'Contraseña es requerida';
+    } else if (value.length < 6) {
+      message = 'Contraseña debe tener al menos 6 caracteres';
+    } else if (value.length > 15) {
+      message = 'Contraseña debe tener máximo 15 caracteres';
+    }
+
+    setErrorAtIndex(message, ErrorEnum.PASSWORD);
+  };
 
   const onFooterLinkPress = () => {
     navigation.navigate('SignUpScreen');
   };
 
-  useEffect(() => {
-    setEmail('');
-    setPassword('');
-  }, []);
-
-  useEffect(() => {
-    setDisable(!email || !password);
-  }, [email, password]);
-
   const onLoginPress = async () => {
     if (!email && !password) {
       Alert.alert('Todos los campos son requeridos');
-      return;
-    }
-
-    if (!email) {
-      Alert.alert('Correo es requerido.');
-      return;
-    }
-
-    if (!validations.validateEmail(email)) {
-      Alert.alert('Formato de correo incorrecto');
-      return;
-    }
-
-    if (!password) {
-      Alert.alert('Contraseña es requerida');
       return;
     }
 
@@ -86,30 +122,47 @@ export default function LoginScreen({ navigation }) {
         style={{ flex: 1, width: '100%' }}
         keyboardShouldPersistTaps="always">
         <Image style={styles.logo} source={require('../../assets/icon3.png')} />
-        <TextInput
-          style={styles.input}
-          placeholder="Correo"
-          placeholderTextColor="#aaaaaa"
-          onChangeText={setEmail}
-          value={email}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-          returnKeyType="next"
-          keyboardType="email-address"
-        />
-        <TextInput
-          style={styles.input}
-          placeholderTextColor="#aaaaaa"
-          secureTextEntry
-          placeholder="Contraseña"
-          onChangeText={setPassword}
-          value={password}
-          underlineColorAndroid="transparent"
-          autoCapitalize="none"
-        />
+
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Correo"
+            placeholderTextColor="#aaaaaa"
+            onChangeText={handleEmailState}
+            value={email}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+            returnKeyType="next"
+            keyboardType="email-address"
+          />
+          {errorMessages[ErrorEnum.MAIL] !== '' && (
+            <Text style={styles.errorText}>
+              {errorMessages[ErrorEnum.MAIL]}
+            </Text>
+          )}
+        </View>
+
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholderTextColor="#aaaaaa"
+            secureTextEntry
+            placeholder="Contraseña"
+            onChangeText={handlePasswordState}
+            value={password}
+            underlineColorAndroid="transparent"
+            autoCapitalize="none"
+          />
+          {errorMessages[ErrorEnum.PASSWORD] !== '' && (
+            <Text style={styles.errorText}>
+              {errorMessages[ErrorEnum.PASSWORD]}
+            </Text>
+          )}
+        </View>
+
         <TouchableOpacity
-          style={disable ? styles.disabledButton : styles.button}
-          disabled={disable}
+          style={canCreate ? styles.button : styles.disabledButton}
+          disabled={!canCreate}
           onPress={onLoginPress}>
           <Text style={styles.buttonTitle}>Iniciar sesión</Text>
         </TouchableOpacity>
@@ -139,16 +192,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     margin: 30,
   },
-  input: {
-    height: 48,
-    borderRadius: 5,
-    overflow: 'hidden',
-    backgroundColor: 'white',
+  inputContainer: {
     marginTop: 10,
     marginBottom: 10,
     marginLeft: 30,
     marginRight: 30,
+  },
+  input: {
+    height: 48,
+    overflow: 'hidden',
+    backgroundColor: 'white',
     paddingLeft: 16,
+  },
+  errorText: {
+    color: colors.red,
   },
   button: {
     backgroundColor: colors.primary,
