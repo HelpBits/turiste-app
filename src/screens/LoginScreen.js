@@ -29,13 +29,12 @@ export default function LoginScreen({ navigation }) {
   const [errorMessages, setErrorMessages] = useState(['', '']);
   const [dirtyInputs, setDirtyInputs] = useState([false, false]);
 
-  const setErrorAtIndex = useCallback((errorMessage, index) => {
+  const setErrorAtIndex = (errorMessage, index) => {
     let errorsTemp = [...errorMessages];
     errorsTemp[index] = errorMessage;
 
     setErrorMessages([...errorsTemp]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
   const setDirtyAtIndex = (index, value) => {
     let dirtyInputsTemp = [...dirtyInputs];
@@ -50,35 +49,35 @@ export default function LoginScreen({ navigation }) {
     setCanCreate(noError && isDirty);
   }, [dirtyInputs, errorMessages]);
 
-  const handleEmailState = (value) => {
-    setEmail(value.trim());
-    setDirtyAtIndex(ErrorEnum.MAIL, value.length !== 0);
+  useEffect(() => {
+    setDirtyAtIndex(ErrorEnum.MAIL, email.length !== 0);
 
     let message = '';
-    if (!value || value.length === 0) {
+    if (!email || email.length === 0) {
       message = 'Email es requerido';
     } else if (!validations.validateEmail(email)) {
       message = 'Formato de correo incorrecto';
     }
 
     setErrorAtIndex(message, ErrorEnum.MAIL);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [email]);
 
-  const handlePasswordState = (value) => {
-    setPassword(value);
-    setDirtyAtIndex(ErrorEnum.PASSWORD, value.length !== 0);
+  useEffect(() => {
+    setDirtyAtIndex(ErrorEnum.PASSWORD, password.length !== 0);
 
     let message = '';
-    if (!value) {
+    if (!password) {
       message = 'Contraseña es requerida';
-    } else if (value.length < 6) {
+    } else if (password.length < 6) {
       message = 'Contraseña debe tener al menos 6 caracteres';
-    } else if (value.length > 15) {
+    } else if (password.length > 15) {
       message = 'Contraseña debe tener máximo 15 caracteres';
     }
 
     setErrorAtIndex(message, ErrorEnum.PASSWORD);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [password]);
 
   const onFooterLinkPress = () => {
     navigation.navigate('SignUpScreen');
@@ -127,7 +126,7 @@ export default function LoginScreen({ navigation }) {
             style={styles.input}
             placeholder="Correo"
             placeholderTextColor="#aaaaaa"
-            onChangeText={handleEmailState}
+            onChangeText={(value) => setEmail(value.trim())}
             value={email}
             underlineColorAndroid="transparent"
             autoCapitalize="none"
@@ -147,7 +146,7 @@ export default function LoginScreen({ navigation }) {
             placeholderTextColor="#aaaaaa"
             secureTextEntry
             placeholder="Contraseña"
-            onChangeText={handlePasswordState}
+            onChangeText={setPassword}
             value={password}
             underlineColorAndroid="transparent"
             autoCapitalize="none"

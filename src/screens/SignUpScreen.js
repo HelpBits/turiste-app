@@ -100,13 +100,13 @@ export default function RegistrationScreen({ navigation }) {
     navigation.navigate('LoginScreen');
   };
 
-  const setErrorAtIndex = useCallback((errorMessage, index) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const setErrorAtIndex = (errorMessage, index) => {
     let errorsTemp = [...errorMessages];
     errorsTemp[index] = errorMessage;
 
     setErrorMessages([...errorsTemp]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  };
 
   const setDirtyAtIndex = (index, value) => {
     let dirtyInputsTemp = [...dirtyInputs];
