@@ -37,7 +37,7 @@ export default function RegistrationScreen({ navigation }) {
   const [errorMessages, setErrorMessages] = useState(['', '', '', '', '']);
   const [dirtyInputs, setDirtyInputs] = useState([
     false,
-    false,
+    true,
     false,
     false,
     false,
@@ -57,7 +57,7 @@ export default function RegistrationScreen({ navigation }) {
     const noError = errorMessages.reduce((a, e) => a && e === '', true);
     const isDirty = dirtyInputs.reduce((a, e) => a && e, true);
 
-    setCanCreate(noError && !isDirty);
+    setCanCreate(noError && isDirty);
   }, [dirtyInputs, errorMessages]);
 
   useEffect(() => {
@@ -116,7 +116,7 @@ export default function RegistrationScreen({ navigation }) {
 
   const handleUsernameState = (value) => {
     setUsername(value.trim());
-    setDirtyAtIndex(ErrorEnum.USERNAME, value.length === 0);
+    setDirtyAtIndex(ErrorEnum.USERNAME, value.length !== 0);
 
     let message = '';
     if (!value || value.trim() === '') {
@@ -141,7 +141,7 @@ export default function RegistrationScreen({ navigation }) {
     }
 
     setBirthdate(dateArray.join('').trim());
-    setDirtyAtIndex(ErrorEnum.BIRTHDATE, value.length === 0);
+    setDirtyAtIndex(ErrorEnum.BIRTHDATE, value.length !== 0);
 
     let message = '';
     const dateInFormat =
@@ -161,7 +161,7 @@ export default function RegistrationScreen({ navigation }) {
 
   const handleEmailState = (value) => {
     setEmail(value.trim());
-    setDirtyAtIndex(ErrorEnum.MAIL, value.length === 0);
+    setDirtyAtIndex(ErrorEnum.MAIL, value.length !== 0);
 
     let message = '';
     if (!value || value.length === 0) {
@@ -175,7 +175,7 @@ export default function RegistrationScreen({ navigation }) {
 
   const handlePasswordState = (value) => {
     setPassword(value);
-    setDirtyAtIndex(ErrorEnum.PASSWORD, value.length === 0);
+    setDirtyAtIndex(ErrorEnum.PASSWORD, value.length !== 0);
 
     let message = '';
     if (!value) {
@@ -183,7 +183,7 @@ export default function RegistrationScreen({ navigation }) {
     } else if (value.length < 6) {
       message = 'Contraseña debe tener al menos 6 caracteres';
     } else if (value.length > 15) {
-      message = 'Contraseña debe máximo 15 caracteres';
+      message = 'Contraseña debe tener máximo 15 caracteres';
     }
 
     setErrorAtIndex(message, ErrorEnum.PASSWORD);
@@ -191,7 +191,7 @@ export default function RegistrationScreen({ navigation }) {
 
   const handleConfirmPasswordState = (value) => {
     setConfirmPassword(value);
-    setDirtyAtIndex(ErrorEnum.CONFIRM_PASSWORD, value.length === 0);
+    setDirtyAtIndex(ErrorEnum.CONFIRM_PASSWORD, value.length !== 0);
 
     let message = '';
     if (value !== password) {
