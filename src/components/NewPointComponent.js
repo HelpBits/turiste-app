@@ -85,7 +85,6 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
     const noError = errorMessages.reduce((a, e) => a && e === '', true);
     const isDirty = dirtyInputs.reduce((a, e) => a && e, true);
 
-    console.log('CAN CREATE? ', noError && isDirty, errorMessages, dirtyInputs);
     setCanCreate(noError && isDirty);
   }, [dirtyInputs, errorMessages]);
 
