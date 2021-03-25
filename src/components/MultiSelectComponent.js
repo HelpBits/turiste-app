@@ -23,14 +23,14 @@ const MultiselectComponent = ({
           selectedItems={selectedTags}
           selectText="Seleccionar Etiquetas"
           searchInputPlaceholderText="Buscando..."
-          onChangeInput={(text) => console.log(text)}
+          onChangeInput={() => {}}
           altFontFamily="ProximaNova-Light"
           tagRemoveIconColor={colors.grey}
           tagBorderColor={colors.grey}
           tagTextColor={colors.black}
-          selectedItemTextColor={colors.grey}
-          selectedItemIconColor={colors.grey}
-          itemTextColor="red"
+          selectedItemTextColor={colors.green}
+          selectedItemIconColor={colors.green}
+          itemTextColor={colors.black}
           displayKey="name"
           searchInputStyle={{ color: colors.grey }}
           submitButtonColor={colors.grey}

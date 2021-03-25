@@ -126,12 +126,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
     }
   };
 
-  const closeModal = () => {
-    modalizeRef.current.close();
-
-    onClose && onClose();
-  };
-
   const markCheckin = async () => {
     if (!userModel) {
       return;

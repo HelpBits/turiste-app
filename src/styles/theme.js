@@ -10,6 +10,7 @@ export const colors = {
   green: 'green',
   white: 'white',
   red: 'red',
+  lightGray: 'lightgray',
 };
 
 export const globalStyleSheet = StyleSheet.create({
