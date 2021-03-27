@@ -3,20 +3,43 @@ import { View, StyleSheet, Alert, Platform } from 'react-native';
 import MapboxGL from '@react-native-mapbox-gl/maps';
 import ChallengePointComponent from '../components/ChallengePointComponent';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Geolocation from 'react-native-geolocation-service';
+import { MAPBOX_ACCESSTOKEN } from '@env';
 
-MapboxGL.setAccessToken(
-  'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA',
-);
+// Eliminar antes de realizar algun release
+// MapboxGL.setAccessToken(
+//   'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA',
+// );
+MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
 
 const DEFAULT_ZOOM = 6.3;
+
 const MapComponent = ({ mapPoints, hasHeader }) => {
   const [zoom, setZoom] = useState(DEFAULT_ZOOM);
   const [center, changeCenter] = useState([-84.0795, 9.9328]);
   const [selectedPoint, setSelectedPoint] = useState(null);
+
   useEffect(() => {
     if (Platform.OS !== 'ios') {
       MapboxGL.requestAndroidLocationPermissions()
-        .then((res) => console.log(res))
+        .then((res) => {
+          if (res) {
+            Geolocation.getCurrentPosition(
+              (position) => {
+                changeCenter([
+                  position.coords.longitude,
+                  position.coords.latitude,
+                ]);
+                setZoom(10);
+              },
+              (error) => {
+                console.log(error.code, error.message);
+                Alert.alert('Error obteniendo permisos de ubicacion');
+              },
+              { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+            );
+          }
+        })
         .catch(() => Alert.alert('Error obteniendo permisos de ubicacion'));
     }
   }, []);
