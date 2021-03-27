@@ -23,7 +23,7 @@ const MapComponent = ({ mapPoints, hasHeader }) => {
 
   const zoomAndSelectPoint = (mapPoint) => {
     changeCenter([mapPoint.geometry.latitude, mapPoint.geometry.longitude]);
-    setZoom(8);
+    setZoom(10);
     setSelectedPoint(mapPoint);
   };
 
