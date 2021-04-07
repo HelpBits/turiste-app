@@ -157,6 +157,39 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
     }
   };
 
+  const removeCheckin = async () => {
+    Alert.alert(
+      'Remover Check-In',
+      '¿Seguro que no has visitado este lugar antes?',
+      [
+        {
+          text: 'Cancelar',
+          onPress: () => {},
+          style: 'cancel',
+        },
+        {
+          text: 'Si, seguro',
+          onPress: async () => {
+            if (!userModel) {
+              return;
+            }
+            try {
+              const newCheckins = {
+                checkIns: [],
+              };
+              await pointsRef.doc(selectedPoint.id).update(newCheckins);
+              setArrivesNumber(0);
+              updateUserCheckins();
+              Alert.alert('Se han removido los check-ins de este punto');
+            } catch (error) {
+              Alert.alert('No se puedo remover los chek-ins');
+            }
+          },
+        },
+      ],
+    );
+  };
+
   const updateUserCheckins = async () => {
     // update only if the id don't exist
     try {
@@ -184,23 +217,35 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
             {selectedPoint.description}
           </Text>
         </View>
-        <TouchableOpacity onPress={markCheckin}>
-          {arrivesNumber <= 0 ? (
-            <Icon
-              style={styles.summaryHeaderButton}
-              name="checkbox-blank-circle-outline"
-              size={40}
-              color={colors.red}
-            />
-          ) : (
-            <Icon
-              style={styles.summaryHeaderButton}
-              name="check-circle-outline"
-              size={40}
-              color={colors.green}
-            />
+        <View style={{ flexDirection: 'column' }}>
+          <TouchableOpacity onPress={markCheckin}>
+            {arrivesNumber <= 0 ? (
+              <Icon
+                style={styles.summaryHeaderButton}
+                name="checkbox-blank-circle-outline"
+                size={30}
+                color={colors.gray}
+              />
+            ) : (
+              <Icon
+                style={styles.summaryHeaderButton}
+                name="check-circle-outline"
+                size={30}
+                color={colors.green}
+              />
+            )}
+          </TouchableOpacity>
+          {arrivesNumber > 0 && (
+            <TouchableOpacity onPress={removeCheckin}>
+              <Icon
+                style={styles.summaryHeaderButton}
+                name="close"
+                size={30}
+                color={colors.red}
+              />
+            </TouchableOpacity>
           )}
-        </TouchableOpacity>
+        </View>
       </View>
     );
   };
