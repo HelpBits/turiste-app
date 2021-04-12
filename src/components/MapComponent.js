@@ -7,15 +7,16 @@ import Geolocation from 'react-native-geolocation-service';
 import { MAPBOX_ACCESSTOKEN } from '@env';
 
 // Eliminar antes de realizar algun release
-// MapboxGL.setAccessToken(
-//   'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA',
-// );
-MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
+MapboxGL.setAccessToken(
+  'pk.eyJ1IjoiZ2VvdmFubnkxOSIsImEiOiJja2V3OXI0ZTYwN3BmMnNrM3F2YzYyeHdsIn0.V5sZS_dLZez1_0iLog3NlA',
+);
+// MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
 
-const DEFAULT_ZOOM = 6.3;
+const DEFAULT_ZOOM_OUT = 6.3;
+const DEFAULT_ZOOM_IN = 10;
 
 const MapComponent = ({ mapPoints, hasHeader }) => {
-  const [zoom, setZoom] = useState(DEFAULT_ZOOM);
+  const [zoom, setZoom] = useState(DEFAULT_ZOOM_OUT);
   const [center, changeCenter] = useState([-84.0795, 9.9328]);
   const [selectedPoint, setSelectedPoint] = useState(null);
 
@@ -30,7 +31,7 @@ const MapComponent = ({ mapPoints, hasHeader }) => {
                   position.coords.longitude,
                   position.coords.latitude,
                 ]);
-                setZoom(10);
+                setZoom(DEFAULT_ZOOM_IN);
               },
               (error) => {
                 console.log(error.code, error.message);
@@ -51,7 +52,7 @@ const MapComponent = ({ mapPoints, hasHeader }) => {
   };
 
   const onSelectedPointClose = () => {
-    setZoom(DEFAULT_ZOOM);
+    setZoom(DEFAULT_ZOOM_OUT);
     setSelectedPoint(null);
   };
 

@@ -144,7 +144,7 @@ const AddPost = ({ firebase, challengePoint, setShowPostCreationModal }) => {
       </Text>
       <View>
         {image ? (
-          <Image source={image} style={{ width: '100%', height: 300 }} />
+          <Image source={image} style={styles.image} resizeMode="contain" />
         ) : (
           <Button
             appearance="outline"
@@ -202,6 +202,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     marginTop: 20,
+  },
+  image: {
+    aspectRatio: 1,
   },
   disabledButton: {
     backgroundColor: colors.grey,

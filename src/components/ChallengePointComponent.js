@@ -254,13 +254,10 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
     <Modalize
       ref={modalizeRef}
       alwaysOpen={modalSize}
-      modalStyle={{ marginTop: '10%' }}
-      onPositionChange={(value) => console.log('position change', value)}
-      scrollViewProps={{
-        showsVerticalScrollIndicator: true,
-        stickyHeaderIndices: [0],
-      }}>
-      <HeaderComponent />
+      HeaderComponent={HeaderComponent}
+      withHandle={false}
+      tapGestureEnabled={true}
+      panGestureComponentEnabled={true}>
       <FeedScreen selectedChallengePoint={selectedPoint} />
     </Modalize>
   );
@@ -271,13 +268,14 @@ const styles = StyleSheet.create({
     width: '90%',
   },
   summaryHeader: {
+    display: 'flex',
     flexDirection: 'row',
-    flex: 1,
-    minHeight: 30,
+    minHeight: 100,
     justifyContent: 'space-between',
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
     padding: 15,
+    paddingBottom: 0,
     backgroundColor: colors.white,
   },
   summaryHeaderTitle: {

@@ -127,7 +127,11 @@ const PostComponent = ({ post }) => {
         <Text> {creatorUsername} </Text>
       </View>
       <View style={styles.cardBody}>
-        <Image source={{ uri: post.photo.uri }} style={styles.cardImage} />
+        <Image
+          source={{ uri: post.photo.uri }}
+          style={styles.cardImage}
+          resizeMode="contain"
+        />
         <View style={styles.cardActions}>
           <View style={styles.cardBottons}>
             <TouchableOpacity onPress={likePost}>
@@ -139,13 +143,13 @@ const PostComponent = ({ post }) => {
                   color="red"
                 />
               ) : (
-                  <Icon
-                    style={styles.buttonIcon}
-                    name="heart-o"
-                    size={30}
-                    color="red"
-                  />
-                )}
+                <Icon
+                  style={styles.buttonIcon}
+                  name="heart-o"
+                  size={30}
+                  color="red"
+                />
+              )}
             </TouchableOpacity>
           </View>
           <Text> {likesNumber} likes</Text>
@@ -167,9 +171,7 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   cardImage: {
-    width: '100%',
-    height: 300,
-    marginBottom: 5,
+    aspectRatio: 1,
   },
   cardHeader: {
     padding: 5,

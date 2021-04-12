@@ -152,7 +152,6 @@ const ChallengeScreen = ({ navigation }) => {
   }, [handleChangeChallengeState, userModel]);
 
   useEffect(() => {
-    console.log('challenges has changed', challenges.length);
     setFilteredChallenges(challenges);
   }, [challenges]);
 
