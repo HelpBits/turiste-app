@@ -25,9 +25,15 @@ export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [canCreate, setCanCreate] = useState(false);
-
   const [errorMessages, setErrorMessages] = useState(['', '']);
   const [dirtyInputs, setDirtyInputs] = useState([false, false]);
+
+  useEffect(() => {
+    const noError = errorMessages.reduce((a, e) => a && e === '', true);
+    const isDirty = dirtyInputs.reduce((a, e) => a && e, true);
+
+    setCanCreate(noError && isDirty);
+  }, [dirtyInputs, errorMessages]);
 
   const setErrorAtIndex = (errorMessage, index) => {
     let errorsTemp = [...errorMessages];
@@ -42,42 +48,35 @@ export default function LoginScreen({ navigation }) {
     setDirtyInputs([...dirtyInputsTemp]);
   };
 
-  useEffect(() => {
-    const noError = errorMessages.reduce((a, e) => a && e === '', true);
-    const isDirty = dirtyInputs.reduce((a, e) => a && e, true);
-
-    setCanCreate(noError && isDirty);
-  }, [dirtyInputs, errorMessages]);
-
-  useEffect(() => {
-    setDirtyAtIndex(ErrorEnum.MAIL, email.length !== 0);
+  const handleEmailState = (value) => {
+    setEmail(value.trim());
+    setDirtyAtIndex(ErrorEnum.MAIL, value.length !== 0);
 
     let message = '';
-    if (!email || email.length === 0) {
+    if (!value || value.length === 0) {
       message = 'Email es requerido';
     } else if (!validations.validateEmail(email)) {
       message = 'Formato de correo incorrecto';
     }
 
     setErrorAtIndex(message, ErrorEnum.MAIL);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [email]);
+  };
 
-  useEffect(() => {
-    setDirtyAtIndex(ErrorEnum.PASSWORD, password.length !== 0);
+  const handlePasswordState = (value) => {
+    setPassword(value);
+    setDirtyAtIndex(ErrorEnum.PASSWORD, value.length !== 0);
 
     let message = '';
-    if (!password) {
+    if (!value) {
       message = 'Contraseña es requerida';
-    } else if (password.length < 6) {
+    } else if (value.length < 6) {
       message = 'Contraseña debe tener al menos 6 caracteres';
-    } else if (password.length > 15) {
+    } else if (value.length > 15) {
       message = 'Contraseña debe tener máximo 15 caracteres';
     }
 
     setErrorAtIndex(message, ErrorEnum.PASSWORD);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [password]);
+  };
 
   const onFooterLinkPress = () => {
     navigation.navigate('SignUpScreen');
@@ -126,7 +125,7 @@ export default function LoginScreen({ navigation }) {
             style={styles.input}
             placeholder="Correo"
             placeholderTextColor="#aaaaaa"
-            onChangeText={(value) => setEmail(value.trim())}
+            onChangeText={handleEmailState}
             value={email}
             underlineColorAndroid="transparent"
             autoCapitalize="none"
@@ -146,7 +145,7 @@ export default function LoginScreen({ navigation }) {
             placeholderTextColor="#aaaaaa"
             secureTextEntry
             placeholder="Contraseña"
-            onChangeText={setPassword}
+            onChangeText={handlePasswordState}
             value={password}
             underlineColorAndroid="transparent"
             autoCapitalize="none"
