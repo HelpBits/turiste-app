@@ -15,6 +15,7 @@ import auth from '@react-native-firebase/auth';
 import ChallengeComponent from '../components/ChallengeComponent';
 import Modal from 'react-native-modal';
 import { colors } from '../styles/theme';
+import { NavigationEvents } from 'react-navigation';
 
 const ChallengeStatesEnum = {
   InProgress: 'En progreso',
@@ -52,6 +53,7 @@ const ChallengeScreen = ({ navigation }) => {
   const [inProgressChallenges, setinProgressChallenges] = useState([]);
   const [pickerVisible, setPickerVisible] = useState(false);
   const [userModel, setUserModel] = useState(null);
+  const [focusCount, setFocusCount] = useState(0);
 
   useEffect(() => {
     setChallengeState(ChallengeStatesEnum.All);
@@ -79,6 +81,10 @@ const ChallengeScreen = ({ navigation }) => {
     if (!userModel) {
       return;
     }
+
+    setAvailableChallenges([]);
+    setCompletedChallenges([]);
+    setinProgressChallenges([]);
 
     challengesRef.onSnapshot(async (snapshot) => {
       let newChallenges = snapshot.docs.map(
@@ -149,7 +155,7 @@ const ChallengeScreen = ({ navigation }) => {
 
       setChallengeState(ChallengeStatesEnum.All);
     });
-  }, [handleChangeChallengeState, userModel]);
+  }, [handleChangeChallengeState, userModel, focusCount]);
 
   useEffect(() => {
     setFilteredChallenges(challenges);
@@ -196,6 +202,11 @@ const ChallengeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <NavigationEvents
+        onWillFocus={() => {
+          setFocusCount(focusCount + 1);
+        }}
+      />
       {Platform.OS === 'ios' && (
         <Modal
           isVisible={pickerVisible}
