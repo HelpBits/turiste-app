@@ -22,7 +22,8 @@ const challengesRef = firestore().collection(
 const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
   const [userModel, setUserModel] = useState(null);
   const [arrivesNumber, setArrivesNumber] = useState(0);
-  const [modalSize, setModalSize] = useState(-1);
+  const [modalSize, setModalSize] = useState(75);
+  const [modalTopOffset, setModalTopOffset] = useState(50);
 
   const modalizeRef = useRef(null);
 
@@ -32,9 +33,10 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
     }
 
     if (Platform.OS === 'ios') {
-      setModalSize(hasHeader ? 230 : 139);
+      setModalTopOffset(hasHeader ? 140 : 80);
+      setModalSize(hasHeader ? 155 : 95);
     } else {
-      setModalSize(hasHeader ? 166 : 110);
+      setModalTopOffset(hasHeader ? 0 : 0);
     }
   }, [hasHeader]);
 
@@ -217,7 +219,17 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
             {selectedPoint.description}
           </Text>
         </View>
-        <View style={{ flexDirection: 'column' }}>
+        <View style={{ flexDirection: 'row' }}>
+          {arrivesNumber > 0 && (
+            <TouchableOpacity onPress={removeCheckin}>
+              <Icon
+                style={styles.summaryHeaderButton}
+                name="close"
+                size={30}
+                color={colors.red}
+              />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity onPress={markCheckin}>
             {arrivesNumber <= 0 ? (
               <Icon
@@ -235,16 +247,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
               />
             )}
           </TouchableOpacity>
-          {arrivesNumber > 0 && (
-            <TouchableOpacity onPress={removeCheckin}>
-              <Icon
-                style={styles.summaryHeaderButton}
-                name="close"
-                size={30}
-                color={colors.red}
-              />
-            </TouchableOpacity>
-          )}
         </View>
       </View>
     );
@@ -252,10 +254,10 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
 
   return (
     <Modalize
+      modalTopOffset={modalTopOffset}
       ref={modalizeRef}
       alwaysOpen={modalSize}
       HeaderComponent={HeaderComponent}
-      withHandle={false}
       tapGestureEnabled={true}
       panGestureComponentEnabled={true}>
       <FeedScreen selectedChallengePoint={selectedPoint} />
@@ -265,7 +267,7 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
 
 const styles = StyleSheet.create({
   headerContainer: {
-    width: '90%',
+    width: '80%',
   },
   summaryHeader: {
     display: 'flex',
