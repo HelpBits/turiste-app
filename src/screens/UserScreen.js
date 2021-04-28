@@ -10,6 +10,7 @@ const UserScreen = () => {
   const user = auth().currentUser._user;
   const logOut = () => auth().signOut();
   const [userInfo, setUserInfo] = useState({});
+  const [birthdate, setBirthdate] = useState('');
   const users = firestore().collection(FirebaseCollectionEnum.MFUser);
 
   useEffect(() => {
@@ -19,6 +20,7 @@ const UserScreen = () => {
           const userData = snapshot.docs.map((doc) => ({
             ...doc.data(),
           }));
+
           setUserInfo(userData[0]);
         },
         (error) => console.log(error),
@@ -28,6 +30,19 @@ const UserScreen = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const birthdateString = userInfo?.birthdate
+      .toDate()
+      .toISOString()
+      .substring(0, 10);
+
+    const year = birthdateString.substring(0, 4);
+    const month = birthdateString.substring(5, 7);
+    const day = birthdateString.substring(8, 10);
+
+    setBirthdate(`${day}-${month}-${year}`);
+  }, [userInfo]);
 
   return (
     <View style={styles.mainView}>
@@ -43,7 +58,7 @@ const UserScreen = () => {
         </Text>
         <Text style={styles.fieldText}>
           <Text style={styles.fieldTextKey}>Fecha de Nacimiento: </Text>
-          {moment(userInfo.birthdate).format('DD / MM / YYYY')}
+          {birthdate}
         </Text>
         <View style={{ marginVertical: 15 }} />
         <Text style={styles.fieldTextAlt}>

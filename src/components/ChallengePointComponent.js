@@ -49,6 +49,8 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
           ...doc.data(),
         }));
 
+        console.log('user model has changed');
+
         setUserModel(userData[0]);
       });
     return unsubscribe;
@@ -121,6 +123,7 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
   };
 
   const markCheckIn = async () => {
+    console.log('marking a new checking');
     if (!userModel) {
       return;
     }
@@ -168,9 +171,20 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
             pointsRef
               .doc(selectedPoint.id)
               .update(newCheckins)
-              .then(() => {
+              .then(async () => {
                 setArrivesNumber(-1);
-                updateUserCheckins();
+                await updateUserCheckins();
+                console.log('removing a new checking');
+
+                selectedPoint.challengeIds &&
+                  (await usersRef.doc(userModel.id).update({
+                    completedChallengePointIds: firestore.FieldValue.arrayRemove(
+                      ...selectedPoint.challengeIds,
+                    ),
+                    visitedChallengePointIds: firestore.FieldValue.arrayRemove(
+                      selectedPoint.id,
+                    ),
+                  }));
                 Alert.alert('Se han removido los check-ins de este punto');
               })
               .catch((error) => {
