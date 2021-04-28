@@ -49,8 +49,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
           ...doc.data(),
         }));
 
-        console.log('user model has changed');
-
         setUserModel(userData[0]);
       });
     return unsubscribe;
@@ -123,7 +121,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
   };
 
   const markCheckIn = async () => {
-    console.log('marking a new checking');
     if (!userModel) {
       return;
     }
@@ -174,7 +171,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
               .then(async () => {
                 setArrivesNumber(-1);
                 await updateUserCheckins();
-                console.log('removing a new checking');
 
                 selectedPoint.challengeIds &&
                   (await usersRef.doc(userModel.id).update({
@@ -224,7 +220,17 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
             {selectedPoint.description}
           </Text>
         </View>
-        <View style={{ flexDirection: 'column' }}>
+        <View style={{ flexDirection: 'row' }}>
+          {arrivesNumber > 0 && (
+            <TouchableOpacity onPress={removeCheckIn}>
+              <Icon
+                style={styles.summaryHeaderButton}
+                name="close"
+                size={30}
+                color={colors.red}
+              />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity onPress={markCheckIn}>
             {arrivesNumber < 1 && (
               <Icon
@@ -243,16 +249,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
               />
             )}
           </TouchableOpacity>
-          {arrivesNumber > 0 && (
-            <TouchableOpacity onPress={removeCheckIn}>
-              <Icon
-                style={styles.summaryHeaderButton}
-                name="close"
-                size={30}
-                color={colors.red}
-              />
-            </TouchableOpacity>
-          )}
         </View>
       </View>
     );
