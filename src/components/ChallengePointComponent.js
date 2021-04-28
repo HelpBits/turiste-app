@@ -161,9 +161,14 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
             if (!userModel) {
               return;
             }
-            selectedPoint.checkIns = [];
+
+            const filteredCheckIns = selectedPoint.checkIns.filter(
+              (item) => item.userId !== userModel.id,
+            );
+            console.log('FILTERED ==> ', filteredCheckIns);
+            selectedPoint.checkIns = [...filteredCheckIns];
             const newCheckins = {
-              checkIns: [],
+              checkIns: [...filteredCheckIns],
             };
             pointsRef
               .doc(selectedPoint.id)
