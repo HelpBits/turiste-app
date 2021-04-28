@@ -24,25 +24,22 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
   const [arrivesNumber, setArrivesNumber] = useState(0);
   const [modalSize, setModalSize] = useState(75);
   const [modalTopOffset, setModalTopOffset] = useState(50);
-
   const modalizeRef = useRef(null);
 
   useEffect(() => {
     if (hasHeader === undefined) {
       return;
     }
-
     if (Platform.OS === 'ios') {
       setModalTopOffset(hasHeader ? 140 : 80);
       setModalSize(hasHeader ? 155 : 95);
     } else {
-      setModalTopOffset(hasHeader ? 0 : 0);
+      setModalTopOffset(0);
     }
   }, [hasHeader]);
 
   useEffect(() => {
     const user = auth().currentUser;
-
     // get user data
     const unsubscribe = usersRef
       .where('mail', '==', user.email)
@@ -54,7 +51,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
 
         setUserModel(userData[0]);
       });
-
     return unsubscribe;
   }, []);
 
@@ -67,7 +63,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
     if (!userModel || !userModel.id || !selectedPoint.checkIns) {
       return;
     }
-
     const checkinNumber = selectedPoint.checkIns.filter(
       (checkin) => checkin.userId === userModel.id,
     ).length;
@@ -79,12 +74,10 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
     if (!selectedPoint || !userModel) {
       return;
     }
-
     if (!selectedPoint.challengeIds) {
       console.error('missing property challenge point', selectedPoint.id);
       return;
     }
-
     // create a dictionary
     const completedChallengesMap = {};
     userModel.completedChallengePointIds &&
@@ -98,7 +91,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
       if (completedChallengesMap[challengeId]) {
         return;
       }
-
       try {
         const challengeRef = await challengesRef.doc(challengeId).get();
         const challengeModel = challengeRef.data();
@@ -128,29 +120,23 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
     }
   };
 
-  const markCheckin = async () => {
+  const markCheckIn = async () => {
     if (!userModel) {
       return;
     }
-
     try {
       const point = await pointsRef.doc(selectedPoint.id).get();
       const currentCheckin = new MFCheckin(userModel.id, new Date());
-
       // update chekins
       selectedPoint.checkIns = point.data().checkIns
         ? point.data().checkIns
         : [];
       selectedPoint.checkIns.push(currentCheckin);
-
       const newCheckins = {
         checkIns: selectedPoint.checkIns,
       };
-
       await pointsRef.doc(selectedPoint.id).update(newCheckins);
-
       setArrivesNumber(arrivesNumber + 1);
-
       updateUserCheckins();
       Alert.alert('Check-in realizado correctamente');
     } catch (error) {
@@ -159,7 +145,7 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
     }
   };
 
-  const removeCheckin = async () => {
+  const removeCheckIn = () => {
     Alert.alert(
       'Remover Check-In',
       '¿Seguro que no has visitado este lugar antes?',
@@ -171,21 +157,26 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
         },
         {
           text: 'Si, seguro',
-          onPress: async () => {
+          onPress: () => {
             if (!userModel) {
               return;
             }
-            try {
-              const newCheckins = {
-                checkIns: [],
-              };
-              await pointsRef.doc(selectedPoint.id).update(newCheckins);
-              setArrivesNumber(0);
-              updateUserCheckins();
-              Alert.alert('Se han removido los check-ins de este punto');
-            } catch (error) {
-              Alert.alert('No se puedo remover los chek-ins');
-            }
+            selectedPoint.checkIns = [];
+            const newCheckins = {
+              checkIns: [],
+            };
+            pointsRef
+              .doc(selectedPoint.id)
+              .update(newCheckins)
+              .then(() => {
+                setArrivesNumber(-1);
+                updateUserCheckins();
+                Alert.alert('Se han removido los check-ins de este punto');
+              })
+              .catch((error) => {
+                console.log('error updating check-ins, ', error);
+                Alert.alert('No se puedo remover los chek-ins');
+              });
           },
         },
       ],
@@ -210,7 +201,7 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
       <View style={styles.summaryHeader}>
         <View style={styles.headerContainer}>
           <Text style={styles.summaryHeaderTitle}>{selectedPoint.name}</Text>
-          {arrivesNumber <= 0 ? (
+          {arrivesNumber < 1 ? (
             <Text>Aún no lo has visitado</Text>
           ) : (
             <Text>Has visitado este lugar {arrivesNumber} veces</Text>
@@ -219,9 +210,27 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
             {selectedPoint.description}
           </Text>
         </View>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'column' }}>
+          <TouchableOpacity onPress={markCheckIn}>
+            {arrivesNumber < 1 && (
+              <Icon
+                style={styles.summaryHeaderButton}
+                name="check-circle"
+                size={30}
+                color={colors.gray}
+              />
+            )}
+            {arrivesNumber > 0 && (
+              <Icon
+                style={styles.summaryHeaderButton}
+                name="check-circle"
+                size={30}
+                color={colors.green}
+              />
+            )}
+          </TouchableOpacity>
           {arrivesNumber > 0 && (
-            <TouchableOpacity onPress={removeCheckin}>
+            <TouchableOpacity onPress={removeCheckIn}>
               <Icon
                 style={styles.summaryHeaderButton}
                 name="close"
@@ -230,23 +239,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
               />
             </TouchableOpacity>
           )}
-          <TouchableOpacity onPress={markCheckin}>
-            {arrivesNumber <= 0 ? (
-              <Icon
-                style={styles.summaryHeaderButton}
-                name="checkbox-blank-circle-outline"
-                size={30}
-                color={colors.gray}
-              />
-            ) : (
-              <Icon
-                style={styles.summaryHeaderButton}
-                name="check-circle-outline"
-                size={30}
-                color={colors.green}
-              />
-            )}
-          </TouchableOpacity>
         </View>
       </View>
     );

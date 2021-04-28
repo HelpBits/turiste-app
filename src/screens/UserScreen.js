@@ -3,9 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import { globalStyleSheet } from '../styles/theme';
-
 import moment from 'moment';
-
 import auth from '@react-native-firebase/auth';
 
 const UserScreen = () => {
