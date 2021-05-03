@@ -160,11 +160,10 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
           const items = [...selectedPoint.checkIns];
           const index = items.find((item) => item.userId === userModel.id);
 
-          if (index <= 0) return;
-
+          if (index < 0) return;
           items.splice(index, 1);
-          const filteredCheckIns = [...items];
 
+          const filteredCheckIns = [...items];
           selectedPoint.checkIns = [...filteredCheckIns];
           const newCheckins = {
             checkIns: [...filteredCheckIns],
@@ -173,7 +172,7 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
             .doc(selectedPoint.id)
             .update(newCheckins)
             .then(async () => {
-              setArrivesNumber(-1);
+              setArrivesNumber(arrivesNumber - 1);
               await updateUserCheckins();
 
               selectedPoint.challengeIds &&
