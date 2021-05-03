@@ -4,6 +4,7 @@ import MapboxGL from '@react-native-mapbox-gl/maps';
 import { MAPBOX_ACCESSTOKEN } from '@env';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Geolocation from '@react-native-community/geolocation';
+import { colors } from '../styles/theme';
 
 MapboxGL.setAccessToken(MAPBOX_ACCESSTOKEN);
 
@@ -91,10 +92,10 @@ const SelectNewPointComponent = ({
       </View>
       <View style={styles.actionButtons}>
         <TouchableOpacity onPress={cleanSelectedPoint} style={styles.hideModal}>
-          <Text>OCULTAR</Text>
+          <Text>Ocultar</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={addNewPoint} style={styles.hideModal}>
-          <Text>AGREGAR</Text>
+        <TouchableOpacity onPress={addNewPoint} style={styles.button}>
+          <Text>Agregar</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
   },
   mapContainer: {
     marginTop: '10%',
-    borderRadius: 30,
+    borderRadius: 5,
     height: '85%',
     width: '100%',
   },
@@ -117,20 +118,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   hideModal: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 20,
-    backgroundColor: 'lightgray',
-    padding: 10,
+    backgroundColor: colors.lightGray,
+    marginTop: 20,
+    height: 48,
     width: '45%',
-    paddingHorizontal: 30,
-    borderRadius: 10,
-    marginHorizontal: 10,
-    borderWidth: 0.3,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   actionButtons: {
+    display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  button: {
+    backgroundColor: colors.primary,
+    marginTop: 20,
+    height: 48,
+    width: '45%',
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

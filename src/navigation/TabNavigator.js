@@ -30,7 +30,7 @@ const TabNavigator = createBottomTabNavigator({
   Agregar: {
     screen: AddNavigator,
     navigationOptions: {
-      tabBarLabel: 'Agregar Punto',
+      tabBarLabel: 'Agregar',
       tabBarIcon: ({ focused }) => (
         <Icon name="plus" size={20} color={focused ? '#111' : '#939393'} />
       ),
