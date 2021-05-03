@@ -47,8 +47,9 @@ const TabNavigator = createBottomTabNavigator({
   Ayuda: {
     screen: HelpScreen,
     navigationOptions: {
+      tabBarLabel: 'Acerca de',
       tabBarIcon: ({ focused }) => (
-        <Icon name="question" size={20} color={focused ? '#111' : '#939393'} />
+        <Icon name="info" size={20} color={focused ? '#111' : '#939393'} />
       ),
     },
   },
