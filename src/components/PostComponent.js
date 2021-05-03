@@ -78,7 +78,7 @@ const PostComponent = ({ post }) => {
   }, []);
 
   useEffect(() => {
-    if (!userModel || !postModel) {
+    if (!userModel || !postModel || postModel.likedByUsersId) {
       return;
     }
 

@@ -55,10 +55,6 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
   }, []);
 
   useEffect(() => {
-    setArrivesNumber(0);
-  }, [selectedPoint]);
-
-  useEffect(() => {
     handleOpen();
     if (!userModel || !userModel.id || !selectedPoint.checkIns) {
       return;
@@ -138,64 +134,66 @@ const ChallengePointComponent = ({ selectedPoint, hasHeader = false }) => {
       await pointsRef.doc(selectedPoint.id).update(newCheckins);
       setArrivesNumber(arrivesNumber + 1);
       updateUserCheckins();
-      Alert.alert('Check-in realizado correctamente');
+      Alert.alert('Visita registrada correctamente');
     } catch (error) {
       console.error('No se puedo marcar el chek-in ', error);
-      Alert.alert('No se puedo marcar el chek-in');
+      Alert.alert('No se puedo marcar la visita');
     }
   };
 
   const removeCheckIn = () => {
-    Alert.alert(
-      'Remover Check-In',
-      '¿Seguro que no has visitado este lugar antes?',
-      [
-        {
-          text: 'Cancelar',
-          onPress: () => {},
-          style: 'cancel',
-        },
-        {
-          text: 'Si, seguro',
-          onPress: () => {
-            if (!userModel) {
-              return;
-            }
+    Alert.alert('Remover visita', '¿Seguro que desea remover última visita?', [
+      {
+        text: 'Cancelar',
+        onPress: () => {},
+        style: 'cancel',
+      },
+      {
+        text: 'Si, seguro',
+        onPress: () => {
+          if (!userModel) {
+            return;
+          }
 
-            const filteredCheckIns = selectedPoint.checkIns.filter(
-              (item) => item.userId !== userModel.id,
-            );
-            console.log('FILTERED ==> ', filteredCheckIns);
-            selectedPoint.checkIns = [...filteredCheckIns];
-            const newCheckins = {
-              checkIns: [...filteredCheckIns],
-            };
-            pointsRef
-              .doc(selectedPoint.id)
-              .update(newCheckins)
-              .then(async () => {
-                setArrivesNumber(-1);
-                await updateUserCheckins();
+          if (!selectedPoint || !selectedPoint.checkIns) return;
 
-                selectedPoint.challengeIds &&
-                  (await usersRef.doc(userModel.id).update({
-                    completedChallengePointIds: firestore.FieldValue.arrayRemove(
-                      ...selectedPoint.challengeIds,
-                    ),
-                    visitedChallengePointIds: firestore.FieldValue.arrayRemove(
-                      selectedPoint.id,
-                    ),
-                  }));
-                Alert.alert('Se han removido los check-ins de este punto');
-              })
-              .catch((error) => {
-                console.log('error updating check-ins, ', error);
-                Alert.alert('No se puedo remover los chek-ins');
-              });
-          },
+          const items = [...selectedPoint.checkIns];
+          const index = items.find((item) => item.userId === userModel.id);
+
+          if (index <= 0) return;
+
+          items.splice(index, 1);
+          const filteredCheckIns = [...items];
+
+          selectedPoint.checkIns = [...filteredCheckIns];
+          const newCheckins = {
+            checkIns: [...filteredCheckIns],
+          };
+          pointsRef
+            .doc(selectedPoint.id)
+            .update(newCheckins)
+            .then(async () => {
+              setArrivesNumber(-1);
+              await updateUserCheckins();
+
+              selectedPoint.challengeIds &&
+                (await usersRef.doc(userModel.id).update({
+                  completedChallengePointIds: firestore.FieldValue.arrayRemove(
+                    ...selectedPoint.challengeIds,
+                  ),
+                  visitedChallengePointIds: firestore.FieldValue.arrayRemove(
+                    selectedPoint.id,
+                  ),
+                }));
+              Alert.alert('Se ha removido la última visita de este punto');
+            })
+            .catch((error) => {
+              console.log('error updating check-ins, ', error);
+              Alert.alert('No se puedo remover la visita');
+            });
         },
-      ],
-    );
+      },
+    ]);
   };
 
   const updateUserCheckins = async () => {

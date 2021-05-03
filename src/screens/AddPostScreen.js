@@ -14,9 +14,9 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 import { withFirebaseHOC } from '../utils';
 import { colors } from '../styles/theme';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Platform } from 'react-native';
+import uuid from 'react-native-uuid';
 
 const ErrorEnum = {
   PHOTO: 0,
@@ -81,16 +81,20 @@ const AddPost = ({ firebase, challengePoint, setShowPostCreationModal }) => {
     reference
       .getDownloadURL()
       .then((res) => {
-        image.uri = res;
+        handleImageState({ uri: res });
       })
       .catch((err) => console.log(err));
   };
 
-  const uploadImageToStorage = (path) => {
-    let reference = storage().ref(
-      `media/photos/posts/${Math.floor(Date.now())}`,
-    );
-    let task = reference.putFile(path);
+  const uploadImageToStorage = (source) => {
+    const { uri } = source;
+    const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+    const fileExtension = uri.substring(uri.lastIndexOf('.') + 1);
+    const random = uuid.v4(); // ⇨ '11edc52b-2918-4d71-9058-f7285e29d894'
+    const filename = `${random}_${Math.floor(Date.now())}.${fileExtension}`;
+
+    const reference = storage().ref(`media/photos/posts/${filename}`);
+    const task = reference.putFile(uploadUri);
 
     task
       .then(() => {
@@ -123,7 +127,12 @@ const AddPost = ({ firebase, challengePoint, setShowPostCreationModal }) => {
 
   const selectImage = () => {
     const options = {
-      noData: true,
+      maxWidth: 2000,
+      maxHeight: 2000,
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
     };
     launchImageLibrary(options, (response) => {
       if (response.didCancel) {
@@ -133,9 +142,7 @@ const AddPost = ({ firebase, challengePoint, setShowPostCreationModal }) => {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        const source = { uri: response.uri };
-        uploadImageToStorage(response.uri);
-        handleImageState(source);
+        uploadImageToStorage(response);
       }
     });
   };

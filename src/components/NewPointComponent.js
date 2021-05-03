@@ -20,6 +20,7 @@ import storage from '@react-native-firebase/storage';
 import { colors } from '../styles/theme';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Platform } from 'react-native';
+import uuid from 'react-native-uuid';
 
 const ErrorEnum = {
   NAME: 0,
@@ -51,16 +52,21 @@ const NewPointComponent = ({ navigation }) => {
     reference
       .getDownloadURL()
       .then((res) => {
-        photo.uri = res;
+        handlePhotoState({ uri: res });
       })
       .catch((err) => console.log('error on setImageUrl method', err));
   };
 
-  const uploadImageToStorage = (path) => {
-    const reference = storage().ref(
-      `media/photos/${Math.floor(Math.random() * 100000000 + 1)}`,
-    );
-    let task = reference.putFile(path);
+  const uploadImageToStorage = (source) => {
+    const { uri } = source;
+    const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+    const fileExtension = uri.substring(uri.lastIndexOf('.') + 1);
+    const random = uuid.v4(); // ⇨ '11edc52b-2918-4d71-9058-f7285e29d894'
+    const filename = `${random}_${Math.floor(Date.now())}.${fileExtension}`;
+
+    console.log('UPLOAD URI', uploadUri, 'FILENAME', filename);
+    const reference = storage().ref(`media/photos/points/${filename}`);
+    const task = reference.putFile(uploadUri);
 
     task
       .then(() => {
@@ -150,8 +156,16 @@ const NewPointComponent = ({ navigation }) => {
   };
 
   const selectPhotoFromLibrary = () => {
+    const options = {
+      maxWidth: 2000,
+      maxHeight: 2000,
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
     launchImageLibrary(
-      { noData: true },
+      options,
       (response) => {
         if (response.didCancel) {
           console.log('User cancelled image picker');
@@ -160,9 +174,7 @@ const NewPointComponent = ({ navigation }) => {
         } else if (response.customButton) {
           console.log('User tapped custom button: ', response.customButton);
         } else {
-          const source = { uri: response.uri };
-          handlePhotoState(response);
-          uploadImageToStorage(source);
+          uploadImageToStorage(response);
         }
       },
       (error) => {
