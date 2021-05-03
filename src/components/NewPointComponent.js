@@ -6,8 +6,8 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Image,
 } from 'react-native';
-import { globalStyleSheet } from '../styles/theme';
 import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
@@ -18,6 +18,8 @@ import Modal from 'react-native-modal';
 import { launchImageLibrary } from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 import { colors } from '../styles/theme';
+import { ScrollView } from 'react-native-gesture-handler';
+import { Platform } from 'react-native';
 
 const ErrorEnum = {
   NAME: 0,
@@ -26,7 +28,7 @@ const ErrorEnum = {
   PHOTO: 3,
 };
 
-const NewPointComponent = ({ setShowPointCreationModal }) => {
+const NewPointComponent = ({ navigation }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState([]);
@@ -36,12 +38,7 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
   const [showSelectPointModal, setShowSelectPointModal] = useState(false);
   const [showSelectTagsModal, setShowSelectTagsModal] = useState(false);
 
-  const [errorMessages, setErrorMessages] = useState([
-    'Nombre es requerido',
-    'Descripción es requerida',
-    'Punto es requerido',
-    'Foto es requerida',
-  ]);
+  const [errorMessages, setErrorMessages] = useState(['', '', '', '']);
   const [dirtyInputs, setDirtyInputs] = useState([false, false, false, false]);
   const [canCreate, setCanCreate] = useState(false);
 
@@ -53,7 +50,9 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
   const setImageUrl = (reference) => {
     reference
       .getDownloadURL()
-      .then((res) => setPhoto(res))
+      .then((res) => {
+        photo.uri = res;
+      })
       .catch((err) => console.log('error on setImageUrl method', err));
   };
 
@@ -61,7 +60,8 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
     const reference = storage().ref(
       `media/photos/${Math.floor(Math.random() * 100000000 + 1)}`,
     );
-    const task = reference.putFile(path);
+    let task = reference.putFile(path);
+
     task
       .then(() => {
         setImageUrl(reference);
@@ -151,12 +151,7 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
 
   const selectPhotoFromLibrary = () => {
     launchImageLibrary(
-      {
-        mediaType: 'photo',
-        includeBase64: false,
-        maxHeight: 200,
-        maxWidth: 200,
-      },
+      { noData: true },
       (response) => {
         if (response.didCancel) {
           console.log('User cancelled image picker');
@@ -165,8 +160,9 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
         } else if (response.customButton) {
           console.log('User tapped custom button: ', response.customButton);
         } else {
-          handlePhotoState(response.uri);
-          uploadImageToStorage(response.uri);
+          const source = { uri: response.uri };
+          handlePhotoState(response);
+          uploadImageToStorage(source);
         }
       },
       (error) => {
@@ -196,7 +192,7 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
       description,
       geometry,
       popularity,
-      photo,
+      photo.uri,
       labels,
       checkIns,
       creationDate,
@@ -205,7 +201,7 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
       .add(newPoint)
       .then(() => {
         Alert.alert('Punto Creado');
-        setShowPointCreationModal(false);
+        navigation.goBack();
       })
       .catch(() => {
         Alert.alert('Error al crear el punto');
@@ -239,102 +235,119 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
           setShowSelectTagsModal={setShowSelectTagsModal}
         />
       </Modal>
-      <Text style={globalStyleSheet.title}>Información del Nuevo Punto</Text>
-
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.inputStyle}
-          onChangeText={handleNameState}
-          placeholder="Nombre"
-          value={name}
-        />
-        {errorMessages[ErrorEnum.NAME] !== '' && (
-          <Text style={styles.errorText}>{errorMessages[ErrorEnum.NAME]}</Text>
-        )}
-      </View>
-
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.inputStyle}
-          onChangeText={handleDescriptionState}
-          placeholder="Descripcion"
-          value={description}
-        />
-        {errorMessages[ErrorEnum.DESCRIPTION] !== '' && (
-          <Text style={styles.errorText}>
-            {errorMessages[ErrorEnum.DESCRIPTION]}
-          </Text>
-        )}
-      </View>
-
-      <View style={styles.inputContainer}>
-        <TouchableOpacity
-          style={{
-            ...styles.selectPointTouchable,
-            ...styles.inputStyle,
-          }}
-          onPress={() => setShowSelectPointModal(true)}>
-          <View style={styles.selectPointContainer}>
-            <Text>Seleccionar Punto</Text>
-            <Icon name="map" color="red" style={{ marginLeft: 5 }} />
+      <ScrollView>
+        <View style={styles.inputContainer}>
+          <View>
+            {!photo && (
+              <Image
+                source={require('../../assets/no-image.jpeg')}
+                style={styles.image}
+                resizeMode="contain"
+              />
+            )}
+            {photo && (
+              <Image source={photo} style={styles.image} resizeMode="contain" />
+            )}
           </View>
-        </TouchableOpacity>
-        {errorMessages[ErrorEnum.POINT] !== '' && (
-          <Text style={styles.errorText}>{errorMessages[ErrorEnum.POINT]}</Text>
-        )}
-      </View>
 
-      <TouchableOpacity
-        style={{
-          ...styles.addPointTouchable,
-          ...styles.inputStyle,
-          ...styles.inputContainer,
-        }}
-        onPress={() => setShowSelectTagsModal(true)}>
-        <Text>Etiquetas</Text>
-        <Icon name="tag" style={{ marginLeft: 5 }} />
-      </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              ...styles.addPointTouchable,
+              ...styles.inputStyle,
+            }}
+            onPress={selectPhotoFromLibrary}>
+            <Text>Agregar Foto*</Text>
+            <Icon name="image" style={{ marginLeft: 5 }} />
+          </TouchableOpacity>
+          {errorMessages[ErrorEnum.PHOTO] !== '' && (
+            <Text style={styles.errorText}>
+              {errorMessages[ErrorEnum.PHOTO]}
+            </Text>
+          )}
+        </View>
 
-      <View style={styles.tagsContainer}>
-        {selectedTags &&
-          selectedTags
-            .map((tagId) => tags.find((tag) => tag.id === tagId).name)
-            .map((tag) => (
-              <View style={styles.tagChip} key={tag}>
-                <Icon name="tag" size={10} color="white" />
-                <Text style={styles.chipText}>{tag}</Text>
-              </View>
-            ))}
-      </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Nombre*"
+            placeholderTextColor="#aaaaaa"
+            onChangeText={handleNameState}
+            underlineColorAndroid="transparent"
+            value={name}
+          />
+          {errorMessages[ErrorEnum.NAME] !== '' && (
+            <Text style={styles.errorText}>
+              {errorMessages[ErrorEnum.NAME]}
+            </Text>
+          )}
+        </View>
 
-      <View style={styles.inputContainer}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.inputStyle}
+            onChangeText={handleDescriptionState}
+            placeholder="Descripción*"
+            value={description}
+          />
+          {errorMessages[ErrorEnum.DESCRIPTION] !== '' && (
+            <Text style={styles.errorText}>
+              {errorMessages[ErrorEnum.DESCRIPTION]}
+            </Text>
+          )}
+        </View>
+
+        <View style={styles.inputContainer}>
+          <TouchableOpacity
+            style={{
+              ...styles.selectPointTouchable,
+              ...styles.inputStyle,
+            }}
+            onPress={() => setShowSelectPointModal(true)}>
+            <View style={styles.selectPointContainer}>
+              <Text>Seleccionar Punto*</Text>
+              <Icon name="map" color="red" style={{ marginLeft: 5 }} />
+            </View>
+          </TouchableOpacity>
+          {errorMessages[ErrorEnum.POINT] !== '' && (
+            <Text style={styles.errorText}>
+              {errorMessages[ErrorEnum.POINT]}
+            </Text>
+          )}
+        </View>
+
         <TouchableOpacity
           style={{
             ...styles.addPointTouchable,
             ...styles.inputStyle,
+            ...styles.inputContainer,
           }}
-          onPress={selectPhotoFromLibrary}>
-          <Text>Agregar Foto</Text>
-          <Icon name="image" style={{ marginLeft: 5 }} />
+          onPress={() => setShowSelectTagsModal(true)}>
+          <Text>Etiquetas</Text>
+          <Icon name="tag" style={{ marginLeft: 5 }} />
         </TouchableOpacity>
-        {errorMessages[ErrorEnum.PHOTO] !== '' && (
-          <Text style={styles.errorText}>{errorMessages[ErrorEnum.PHOTO]}</Text>
-        )}
-      </View>
 
-      <View style={styles.actionButtons}>
-        <TouchableOpacity
-          style={{ ...styles.button, backgroundColor: colors.lightGray }}
-          onPress={() => setShowPointCreationModal(false)}>
-          <Text>Cancelar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          disabled={!canCreate}
-          style={canCreate ? styles.button : styles.disabledButton}
-          onPress={addNewPoint}>
-          <Text>Agregar</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={styles.tagsContainer}>
+          {selectedTags &&
+            selectedTags
+              .map((tagId) => tags.find((tag) => tag.id === tagId).name)
+              .map((tag) => (
+                <View style={styles.tagChip} key={tag}>
+                  <Icon name="tag" size={10} color="white" />
+                  <Text style={styles.chipText}>{tag}</Text>
+                </View>
+              ))}
+        </View>
+        <Text style={styles.requiredStyle}>Campos requeridos *</Text>
+
+        <View style={styles.actionButtons}>
+          <TouchableOpacity
+            disabled={!canCreate}
+            style={canCreate ? styles.button : styles.disabledButton}
+            onPress={addNewPoint}>
+            <Text>Agregar</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -342,11 +355,8 @@ const NewPointComponent = ({ setShowPointCreationModal }) => {
 const styles = StyleSheet.create({
   mainView: {
     flex: 1,
-    marginBottom: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.white,
     width: '100%',
+    padding: 10,
   },
   selectPointContainer: {
     display: 'flex',
@@ -355,10 +365,6 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginTop: 10,
-    marginBottom: 10,
-    marginLeft: 30,
-    marginRight: 30,
-    width: '100%',
   },
   inputStyle: {
     height: 48,
@@ -366,7 +372,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: colors.white,
     paddingLeft: 10,
-    borderWidth: 1,
   },
   addPointTouchable: {
     flexDirection: 'row',
@@ -383,7 +388,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: colors.white,
     width: '100%',
-    marginTop: 10,
   },
   errorText: {
     color: colors.red,
@@ -402,15 +406,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '40%',
+    width: '100%',
   },
   button: {
     backgroundColor: colors.primary,
+    marginTop: 20,
     height: 48,
+    width: '100%',
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '40%',
   },
   tagsContainer: {
     display: 'flex',
@@ -429,6 +434,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   chipText: { marginLeft: 5 },
+  image: {
+    aspectRatio: 1,
+    height: 300,
+    width: '100%',
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  requiredStyle: {
+    color: colors.red,
+  },
 });
 
 export default NewPointComponent;

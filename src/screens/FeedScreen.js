@@ -49,8 +49,7 @@ const FeedScreen = ({ selectedChallengePoint }) => {
       <Modal
         animationIn="slideInRight"
         animationOut="slideOutRight"
-        backdropColor="white"
-        backdropOpacity={1}
+        transparent={true}
         isVisible={newPostModalVisible}>
         <AddPostScreen
           setShowPostCreationModal={setNewPostModalVisible}
@@ -62,6 +61,7 @@ const FeedScreen = ({ selectedChallengePoint }) => {
         source={{
           uri: selectedChallengePoint.photo,
         }}
+        resizeMode="contain"
       />
       <Button
         onPress={() => setNewPostModalVisible(true)}

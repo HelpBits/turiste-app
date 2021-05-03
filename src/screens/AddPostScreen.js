@@ -14,6 +14,9 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 import { withFirebaseHOC } from '../utils';
 import { colors } from '../styles/theme';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import Icon from 'react-native-vector-icons/AntDesign';
+import { Platform } from 'react-native';
 
 const ErrorEnum = {
   PHOTO: 0,
@@ -24,7 +27,7 @@ const MAX_CHARS = 500;
 const AddPost = ({ firebase, challengePoint, setShowPostCreationModal }) => {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
-  const [errorMessages, setErrorMessages] = useState(['Foto es requerida', '']);
+  const [errorMessages, setErrorMessages] = useState(['', '']);
   const [dirtyInputs, setDirtyInputs] = useState([false, false]);
   const [canCreate, setCanCreate] = useState(false);
 
@@ -138,73 +141,123 @@ const AddPost = ({ firebase, challengePoint, setShowPostCreationModal }) => {
   };
 
   return (
-    <ScrollView style={{ flex: 1, marginTop: 60 }}>
-      <Text style={styles.postTitle}>
-        Agregar nuevo post a feed de {challengePoint.name}
-      </Text>
-      <View>
-        {image ? (
-          <Image source={image} style={styles.image} resizeMode="contain" />
-        ) : (
-          <Button
-            appearance="outline"
-            status="primary"
-            onPress={selectImage}
-            style={styles.addImageBtn}>
-            + Agrega una imagen
-          </Button>
-        )}
-        {errorMessages[ErrorEnum.PHOTO] !== '' && (
-          <Text style={styles.errorText}>{errorMessages[ErrorEnum.PHOTO]}</Text>
-        )}
-      </View>
-      <View style={styles.postCommentContainer}>
-        <TextInput
-          multiline={true}
-          placeholder="Escribe algo sobre tu visita..."
-          style={styles.postComment}
-          value={description}
-          onChangeText={handleDescriptionState}
-        />
-        <Text>
-          {description.length}/{MAX_CHARS}
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.postTitle}>
+          Agregar nuevo post a {challengePoint.name}
         </Text>
-        {errorMessages[ErrorEnum.DESCRIPTION] !== '' && (
-          <Text style={styles.errorText}>
-            {errorMessages[ErrorEnum.DESCRIPTION]}
-          </Text>
-        )}
-      </View>
-
-      <View style={styles.actionButtons}>
         <TouchableOpacity
-          style={styles.disabledButton}
+          style={styles.closeBtn}
           onPress={() => setShowPostCreationModal(false)}>
-          <Text>Cancelar</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          disabled={!canCreate}
-          style={canCreate ? styles.button : styles.disabledButton}
-          onPress={onSubmit}>
-          <Text>Publicar</Text>
+          <Icon name="closecircleo" size={20} color={'black'} />
         </TouchableOpacity>
       </View>
-    </ScrollView>
+      {/* <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        enableAutomaticScroll={Platform.OS === 'ios'}
+        contentContainerStyle={styles.keyboardContainer}> */}
+      <View style={styles.scrollContainer}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={styles.bodyContainer}>
+            <View>
+              <View>
+                {!image && (
+                  <Image
+                    source={require('../../assets/no-image.jpeg')}
+                    style={styles.image}
+                    resizeMode="contain"
+                  />
+                )}
+                {image ? (
+                  <Image
+                    source={image}
+                    style={styles.image}
+                    resizeMode="contain"
+                  />
+                ) : (
+                  <Button
+                    appearance="outline"
+                    status="primary"
+                    onPress={selectImage}
+                    style={styles.addImageBtn}>
+                    + Agrega una imagen*
+                  </Button>
+                )}
+                {errorMessages[ErrorEnum.PHOTO] !== '' && (
+                  <Text style={styles.errorText}>
+                    {errorMessages[ErrorEnum.PHOTO]}
+                  </Text>
+                )}
+              </View>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.inputStyle}
+                  multiline={true}
+                  placeholder="Escribe algo sobre tu visita...*"
+                  value={description}
+                  placeholderTextColor="#aaaaaa"
+                  onChangeText={handleDescriptionState}
+                  maxLength={MAX_CHARS}
+                />
+                <Text>
+                  {description.length}/{MAX_CHARS}
+                </Text>
+                {errorMessages[ErrorEnum.DESCRIPTION] !== '' && (
+                  <Text style={styles.errorText}>
+                    {errorMessages[ErrorEnum.DESCRIPTION]}
+                  </Text>
+                )}
+              </View>
+            </View>
+            <Text style={styles.requiredStyle}>Campos requeridos *</Text>
+
+            <View style={styles.actionButtons}>
+              <TouchableOpacity
+                disabled={!canCreate}
+                style={canCreate ? styles.button : styles.disabledButton}
+                onPress={onSubmit}>
+                <Text>Publicar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+      {/* </KeyboardAwareScrollView> */}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    maxHeight: '85%',
+    minHeight: '85%',
+    backgroundColor: colors.lightGray,
+    borderRadius: 5,
+    padding: 10,
+  },
+  scrollContainer: {
+    display: 'flex',
+    flex: 1,
+  },
+  headerContainer: {
+    display: 'flex',
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  bodyContainer: {
+    display: 'flex',
+    flex: 1,
   },
   addImageBtn: {
     alignItems: 'center',
     width: '100%',
-    marginTop: 20,
+    marginTop: 10,
   },
   image: {
     aspectRatio: 1,
+    alignSelf: 'center',
+    // width: '100%',
+    height: 280,
   },
   disabledButton: {
     backgroundColor: colors.grey,
@@ -212,7 +265,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '40%',
+    width: '100%',
   },
   button: {
     backgroundColor: colors.primary,
@@ -220,7 +273,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '40%',
+    width: '100%',
   },
   controlContainer: {
     borderRadius: 4,
@@ -231,25 +284,34 @@ const styles = StyleSheet.create({
   },
   postTitle: {
     fontSize: 20,
-    alignSelf: 'center',
     paddingBottom: 20,
+    flex: 0.95,
   },
   postCommentContainer: {
     marginTop: 30,
-  },
-  postComment: {
-    borderWidth: 1,
-    width: '100%',
-    padding: 5,
   },
   actionButtons: {
     display: 'flex',
     justifyContent: 'space-evenly',
     flexDirection: 'row',
     width: '100%',
-    marginTop: 20,
+    marginBottom: 10,
+    marginTop: 10,
   },
   errorText: {
+    color: colors.red,
+  },
+  inputStyle: {
+    minHeight: 48,
+    borderRadius: 5,
+    overflow: 'hidden',
+    backgroundColor: colors.white,
+    paddingLeft: 10,
+  },
+  inputContainer: {
+    marginTop: 10,
+  },
+  requiredStyle: {
     color: colors.red,
   },
 });

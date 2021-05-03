@@ -33,7 +33,7 @@ const MultiselectComponent = ({
           itemTextColor={colors.black}
           displayKey="name"
           searchInputStyle={{ color: colors.grey }}
-          submitButtonColor={colors.grey}
+          submitButtonColor={colors.primary}
           submitButtonText="Listo"
           submitButtonStyle={{ borderRadius: 5 }}
         />
@@ -52,8 +52,8 @@ const MultiselectComponent = ({
 
 const styles = StyleSheet.create({
   mainView: {
-    padding: 30,
-    borderRadius: 20,
+    padding: 10,
+    borderRadius: 5,
     backgroundColor: '#f2f2f2',
     justifyContent: 'space-between',
   },
@@ -66,9 +66,9 @@ const styles = StyleSheet.create({
   closeButton: {
     padding: 10,
     marginTop: 20,
-    borderRadius: 10,
+    borderRadius: 5,
     alignItems: 'center',
-    backgroundColor: 'lightgray',
+    backgroundColor: colors.primary,
     borderWidth: 0.3,
   },
 });

@@ -3,7 +3,6 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { FirebaseCollectionEnum } from '../constants/FirebaseCollections';
 import { globalStyleSheet } from '../styles/theme';
-import moment from 'moment';
 import auth from '@react-native-firebase/auth';
 
 const UserScreen = () => {
@@ -32,16 +31,9 @@ const UserScreen = () => {
   }, []);
 
   useEffect(() => {
-    const birthdateString = userInfo?.birthdate
-      .toDate()
-      .toISOString()
-      .substring(0, 10);
+    if (!userInfo || !userInfo.birthdate) return;
 
-    const year = birthdateString.substring(0, 4);
-    const month = birthdateString.substring(5, 7);
-    const day = birthdateString.substring(8, 10);
-
-    setBirthdate(`${day}-${month}-${year}`);
+    setBirthdate(userInfo.birthdate);
   }, [userInfo]);
 
   return (

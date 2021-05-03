@@ -257,7 +257,7 @@ export default function RegistrationScreen({ navigation }) {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Usuario"
+            placeholder="Usuario*"
             placeholderTextColor="#aaaaaa"
             onChangeText={handleUsernameState}
             value={username}
@@ -274,7 +274,7 @@ export default function RegistrationScreen({ navigation }) {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Fecha de nacimiento (DD/MM/YYYY)"
+            placeholder="Fecha de nacimiento (DD/MM/YYYY)*"
             placeholderTextColor="#aaaaaa"
             onChangeText={handleBirthdateState}
             value={birthdate}
@@ -293,7 +293,7 @@ export default function RegistrationScreen({ navigation }) {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Correo"
+            placeholder="Correo*"
             placeholderTextColor="#aaaaaa"
             onChangeText={handleEmailState}
             value={email}
@@ -314,7 +314,7 @@ export default function RegistrationScreen({ navigation }) {
             style={styles.input}
             placeholderTextColor="#aaaaaa"
             secureTextEntry={true}
-            placeholder="Contraseña"
+            placeholder="Contraseña*"
             onChangeText={handlePasswordState}
             value={password}
             underlineColorAndroid="transparent"
@@ -332,7 +332,7 @@ export default function RegistrationScreen({ navigation }) {
             style={styles.input}
             placeholderTextColor="#aaaaaa"
             secureTextEntry
-            placeholder="Confirmar contraseña"
+            placeholder="Confirmar contraseña*"
             onChangeText={handleConfirmPasswordState}
             value={confirmPassword}
             underlineColorAndroid="transparent"
@@ -345,6 +345,8 @@ export default function RegistrationScreen({ navigation }) {
             </Text>
           )}
         </View>
+        <Text style={styles.requiredStyle}>Campos requeridos *</Text>
+
         <TouchableOpacity
           style={canCreate ? styles.button : styles.disabledButton}
           disabled={!canCreate}
@@ -370,6 +372,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    marginLeft: 30,
+    marginRight: 30,
   },
   logo: {
     flex: 1,
@@ -388,16 +392,12 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginTop: 10,
     marginBottom: 10,
-    marginLeft: 30,
-    marginRight: 30,
   },
   errorText: {
     color: colors.red,
   },
   disabledButton: {
     backgroundColor: colors.grey,
-    marginLeft: 30,
-    marginRight: 30,
     marginTop: 20,
     height: 48,
     borderRadius: 5,
@@ -406,8 +406,6 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: colors.primary,
-    marginLeft: 30,
-    marginRight: 30,
     marginTop: 20,
     height: 48,
     borderRadius: 5,
@@ -448,5 +446,8 @@ const styles = StyleSheet.create({
   birthdatePhoto: {
     height: 40,
     width: 40,
+  },
+  requiredStyle: {
+    color: colors.red,
   },
 });

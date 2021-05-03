@@ -3,8 +3,9 @@ import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import UserScreen from '../screens/UserScreen';
 import MapScreen from '../screens/MapScreen';
-import AddScreen from '../screens/AddScreen';
 import { ChallengeNavigator } from '../navigation/ChallengeNavigator';
+import { AddNavigator } from './AddNavigator';
+
 import HelpScreen from '../screens/HelpScreen';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -27,8 +28,9 @@ const TabNavigator = createBottomTabNavigator({
     },
   },
   Agregar: {
-    screen: AddScreen,
+    screen: AddNavigator,
     navigationOptions: {
+      tabBarLabel: 'Agregar Punto',
       tabBarIcon: ({ focused }) => (
         <Icon name="plus" size={20} color={focused ? '#111' : '#939393'} />
       ),

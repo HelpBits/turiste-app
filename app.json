@@ -1,4 +1,7 @@
 {
   "name": "turisteApp",
-  "displayName": "turisteApp"
+  "displayName": "turisteApp",
+  "androidStatusBar": {
+    "backgroundColor": "#000000"
+  }
 }

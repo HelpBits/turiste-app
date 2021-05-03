@@ -17,5 +17,6 @@ export class MFChallengePoint {
     this.labels = labels;
     this.checkIns = checkIns;
     this.creationDate = creationDate;
+    this.challengeIds = [];
   }
 }

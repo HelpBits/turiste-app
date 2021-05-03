@@ -123,7 +123,7 @@ export default function LoginScreen({ navigation }) {
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
-            placeholder="Correo"
+            placeholder="Correo*"
             placeholderTextColor="#aaaaaa"
             onChangeText={handleEmailState}
             value={email}
@@ -144,7 +144,7 @@ export default function LoginScreen({ navigation }) {
             style={styles.input}
             placeholderTextColor="#aaaaaa"
             secureTextEntry
-            placeholder="Contraseña"
+            placeholder="Contraseña*"
             onChangeText={handlePasswordState}
             value={password}
             underlineColorAndroid="transparent"
@@ -156,6 +156,7 @@ export default function LoginScreen({ navigation }) {
             </Text>
           )}
         </View>
+        <Text style={styles.requiredStyle}>Campos requeridos *</Text>
 
         <TouchableOpacity
           style={canCreate ? styles.button : styles.disabledButton}
@@ -181,6 +182,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     marginTop: 30,
+    paddingLeft: 30,
+    paddingRight: 30,
   },
   logo: {
     flex: 1,
@@ -192,8 +195,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginTop: 10,
     marginBottom: 10,
-    marginLeft: 30,
-    marginRight: 30,
   },
   input: {
     height: 48,
@@ -206,8 +207,6 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: colors.primary,
-    marginLeft: 30,
-    marginRight: 30,
     marginTop: 20,
     height: 48,
     borderRadius: 5,
@@ -216,8 +215,6 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     backgroundColor: colors.grey,
-    marginLeft: 30,
-    marginRight: 30,
     marginTop: 20,
     height: 48,
     borderRadius: 5,
@@ -242,5 +239,8 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  requiredStyle: {
+    color: colors.red,
   },
 });
